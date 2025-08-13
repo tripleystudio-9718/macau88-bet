@@ -61,14 +61,25 @@
         </button>
       </div>
     </div>
+
+    <!-- Mobile Menu Component -->
+    <MobileMenu 
+      :isOpen="showMobileMenu" 
+      @close="handleMobileMenuClose"
+      @menu-click="handleMobileMenuClick"
+    />
   </header>
 </template>
 
 <script>
 import { getCurrentLocale, switchLocale, supportedLocales } from '@/router'
+import MobileMenu from './MobileMenu.vue'
 
 export default {
   name: 'Header',
+  components: {
+    MobileMenu
+  },
   emits: ['login', 'register'],
   data() {
     return {
@@ -88,6 +99,30 @@ export default {
   methods: {
     toggleMobileMenu() {
       this.showMobileMenu = !this.showMobileMenu
+    },
+    handleMobileMenuClose() {
+      this.showMobileMenu = false
+    },
+    handleMobileMenuClick(menuItem) {
+      console.log('Mobile menu clicked:', menuItem)
+      // Handle navigation or emit events based on menuItem
+      switch(menuItem) {
+        case 'home':
+          this.$router.push('/')
+          break
+        case 'deposit':
+          this.$emit('deposit')
+          break
+        case 'withdraw':
+          this.$emit('withdraw')
+          break
+        case 'contact':
+          this.$emit('contact')
+          break
+        // Add more cases as needed
+        default:
+          console.log('Menu item not handled:', menuItem)
+      }
     },
     changeLocale() {
       switchLocale(this.$router, this.currentLocale)
