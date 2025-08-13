@@ -1,113 +1,61 @@
 <template>
-  <header class="bg-gradient-to-r from-red-800 to-red-900 text-white shadow-lg">
+  <!-- <CHANGE> Updated header background to use linear gradient instead of solid color -->
+  <header class="bg-gradient-to-r from-red-900 via-red-800 to-red-900 text-white shadow-lg">
+    <!-- ... existing code ... -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <div class="flex items-center">
-          <router-link to="/" class="flex items-center space-x-2">
-            <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
-              <span class="text-red-900 font-bold text-xl">M</span>
-            </div>
-            <span class="text-xl font-bold">MACAU888</span>
+          <router-link to="/" class="flex items-center">
+            <img 
+              src="@/assets/macau888-logo.png" 
+              alt="MACAU888" 
+              class="h-8 w-auto"
+            />
           </router-link>
         </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center space-x-8">
-          <router-link 
-            to="/" 
-            class="hover:text-yellow-400 transition-colors duration-200"
-            :class="{ 'text-yellow-400': $route.name === 'Home' }"
-          >
-            Home
-          </router-link>
-          <router-link 
-            to="/games" 
-            class="hover:text-yellow-400 transition-colors duration-200"
-            :class="{ 'text-yellow-400': $route.name === 'Games' }"
-          >
-            Games
-          </router-link>
-          <router-link 
-            to="/promotions" 
-            class="hover:text-yellow-400 transition-colors duration-200"
-            :class="{ 'text-yellow-400': $route.name === 'Promotions' }"
-          >
-            Promotions
-          </router-link>
-        </nav>
-
         <!-- Right Section -->
-        <div class="flex items-center space-x-4">
-          <!-- Language Selector -->
-          <div class="relative">
+        <div class="flex items-center space-x-3">
+          <button 
+            @click="$emit('register')"
+            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-medium transition-colors duration-200 text-sm"
+          >
+            Register
+          </button>
+          
+          <button 
+            @click="$emit('login')"
+            class="bg-yellow-700 hover:bg-yellow-800 text-white px-6 py-2 rounded-full font-medium transition-colors duration-200 text-sm"
+          >
+            Log in
+          </button>
+
+          <div class="flex items-center space-x-1 px-3 py-2 text-sm">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd" />
+            </svg>
+            <!-- <CHANGE> Updated select options background to match new gradient -->
             <select 
               v-model="currentLocale"
               @change="changeLocale"
-              class="bg-red-700 border border-red-600 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              class="bg-transparent border-none text-white focus:outline-none cursor-pointer appearance-none"
             >
-              <option value="en">English</option>
-              <option value="zh">中文</option>
-              <option value="ms">Bahasa</option>
+              <option value="en" class="bg-red-800">English</option>
+              <option value="zh" class="bg-red-800">中文</option>
+              <option value="ms" class="bg-red-800">Bahasa</option>
             </select>
           </div>
 
-          <!-- Auth Buttons -->
-          <div class="flex items-center space-x-2">
-            <button 
-              @click="$emit('login')"
-              class="bg-yellow-500 hover:bg-yellow-600 text-red-900 px-4 py-2 rounded-lg font-semibold transition-colors duration-200"
-            >
-              Log In
-            </button>
-            <button 
-              @click="$emit('register')"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200"
-            >
-              Register
-            </button>
-          </div>
-
-          <!-- Mobile Menu Button -->
           <button 
             @click="toggleMobileMenu"
-            class="md:hidden p-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+            class="p-2 hover:bg-red-800 transition-colors duration-200"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
           </button>
         </div>
-      </div>
-
-      <!-- Mobile Navigation -->
-      <div v-if="showMobileMenu" class="md:hidden py-4 border-t border-red-700">
-        <nav class="flex flex-col space-y-4">
-          <router-link 
-            to="/" 
-            @click="closeMobileMenu"
-            class="hover:text-yellow-400 transition-colors duration-200 px-4 py-2"
-            :class="{ 'text-yellow-400': $route.name === 'Home' }"
-          >
-            Home
-          </router-link>
-          <router-link 
-            to="/games" 
-            @click="closeMobileMenu"
-            class="hover:text-yellow-400 transition-colors duration-200 px-4 py-2"
-            :class="{ 'text-yellow-400': $route.name === 'Games' }"
-          >
-            Games
-          </router-link>
-          <router-link 
-            to="/promotions" 
-            @click="closeMobileMenu"
-            class="hover:text-yellow-400 transition-colors duration-200 px-4 py-2"
-            :class="{ 'text-yellow-400': $route.name === 'Promotions' }"
-          >
-            Promotions
-          </router-link>
-        </nav>
       </div>
     </div>
   </header>
@@ -137,9 +85,6 @@ export default {
   methods: {
     toggleMobileMenu() {
       this.showMobileMenu = !this.showMobileMenu
-    },
-    closeMobileMenu() {
-      this.showMobileMenu = false
     },
     changeLocale() {
       switchLocale(this.$router, this.currentLocale)
