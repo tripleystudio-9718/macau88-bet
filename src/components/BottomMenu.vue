@@ -1,61 +1,75 @@
 <template>
   <div class="bottom-menu-container">
-    <nav class="flex items-center justify-around h-16 px-4">
-      <!-- Home -->
-      <router-link 
-        to="/" 
-        class="flex flex-col items-center justify-center space-y-1 py-2 px-3 rounded-lg transition-all duration-200"
-        :class="isActive() ? 'text-yellow-400 bg-red-700' : 'text-white hover:text-yellow-400'"
-      >
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-        </svg>
-        <span class="text-xs font-medium">Home</span>
-      </router-link>
+    <div class="bottom-menu-content">
+      <nav class="bottom-nav">
+        <!-- Home -->
+        <router-link 
+          to="/" 
+          class="footer-menu-item"
+        >
+          <img 
+            src="@/assets/icons/home.png" 
+            alt="Home" 
+            class="nav-image"
+          />
+          <span class="nav-text">Home</span>
+        </router-link>
 
-      <!-- Deposit -->
-      <button 
-        @click="$emit('deposit')"
-        class="flex flex-col items-center justify-center space-y-1 py-2 px-3 rounded-lg transition-all duration-200 text-white hover:text-yellow-400"
-      >
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-        </svg>
-        <span class="text-xs font-medium">Deposit</span>
-      </button>
+        <!-- Deposit -->
+        <button 
+          @click="$emit('deposit')"
+          class="footer-menu-item"
+        >
+          <img 
+            src="@/assets/icons/deposit.png" 
+            alt="Deposit" 
+            class="nav-image"
+          />
+          <span class="nav-text">Deposit</span>
+        </button>
 
-      <!-- Play (Center Button) -->
-      <button 
-        @click="$emit('play')"
-        class="flex items-center justify-center w-14 h-14 bg-yellow-500 hover:bg-yellow-600 rounded-full shadow-lg transform transition-all duration-200 hover:scale-105"
-      >
-        <svg class="w-8 h-8 text-red-900" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
-        </svg>
-      </button>
+        <!-- Play (Center Button - Half Outside) -->
+        <div class="footer-menu-item play-button-container">
+          <button 
+            @click="$emit('play')"
+            class="play-button"
+          >
+            <img 
+              src="@/assets/icons/play.png" 
+              alt="Play" 
+              class="play-image"
+            />
+          </button>
+          <span class="play-text">Play</span>
+        </div>
 
-      <!-- Withdraw -->
-      <button 
-        @click="$emit('withdraw')"
-        class="flex flex-col items-center justify-center space-y-1 py-2 px-3 rounded-lg transition-all duration-200 text-white hover:text-yellow-400"
-      >
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
-        </svg>
-        <span class="text-xs font-medium">Withdraw</span>
-      </button>
+        <!-- Withdraw -->
+        <button 
+          @click="$emit('withdraw')"
+          class="footer-menu-item"
+        >
+          <img 
+            src="@/assets/icons/withdraw.png" 
+            alt="Withdraw" 
+            class="nav-image"
+          />
+          <span class="nav-text">Withdraw</span>
+        </button>
 
-      <!-- Contact -->
-      <button 
-        @click="$emit('contact')"
-        class="flex flex-col items-center justify-center space-y-1 py-2 px-3 rounded-lg transition-all duration-200 text-white hover:text-yellow-400"
-      >
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
-        </svg>
-        <span class="text-xs font-medium">Contact</span>
-      </button>
-    </nav>
+        <!-- Contact -->
+        <button 
+          @click="$emit('contact')"
+          class="footer-menu-item"
+        >
+          <img 
+            src="@/assets/icons/contact.png" 
+            alt="Contact" 
+            class="nav-image"
+          />
+          <span class="nav-text">Contact</span>
+        </button>
+      </nav>
+    </div>
   </div>
 </template>
 
@@ -78,160 +92,179 @@ export default {
 </script>
 
 <style scoped>
+/* Main container */
 .bottom-menu-container {
-  position: fixed !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  background: linear-gradient(to right, #991b1b, #7f1d1d) !important;
-  border-top: 1px solid #b91c1c !important;
-  z-index: 9999 !important;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 980px;
+  z-index: 9999;
+  padding: 0 20px;
 }
 
-/* Ensure proper flex layout */
-.flex {
+/* Content wrapper with custom styling */
+.bottom-menu-content {
+  background: linear-gradient(to bottom, #6f010a, #360000);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 0 20px -5px #000;
+  border-top: 1px solid #fff;
+  position: relative;
+  overflow: visible;
+}
+
+/* Navigation layout */
+.bottom-nav {
   display: flex;
-}
-
-.items-center {
   align-items: center;
-}
-
-.justify-around {
   justify-content: space-around;
+  height: 80px;
+  padding: 0 24px;
+  position: relative;
 }
 
-.justify-center {
-  justify-content: center;
-}
-
-.flex-col {
+/* Footer menu items using your exact CSS */
+.footer-menu-item {
+  flex-grow: 1;
+  text-align: center;
+  width: 25%;
+  display: flex;
   flex-direction: column;
-}
-
-/* Text styles */
-.text-white {
-  color: white;
-}
-
-.text-yellow-400 {
-  color: #facc15;
-}
-
-.text-red-900 {
-  color: #7f1d1d;
-}
-
-.text-xs {
-  font-size: 0.75rem;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-/* Spacing */
-.space-y-1 > * + * {
-  margin-top: 0.25rem;
-}
-
-.h-16 {
-  height: 4rem;
-}
-
-.h-14 {
-  height: 3.5rem;
-}
-
-.w-6 {
-  width: 1.5rem;
-}
-
-.h-6 {
-  height: 1.5rem;
-}
-
-.w-8 {
-  width: 2rem;
-}
-
-.h-8 {
-  height: 2rem;
-}
-
-.w-14 {
-  width: 3.5rem;
-}
-
-/* Padding */
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.px-3 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-}
-
-/* Backgrounds */
-.bg-red-700 {
-  background-color: #b91c1c;
-}
-
-.bg-yellow-500 {
-  background-color: #eab308;
-}
-
-.hover\:bg-yellow-600:hover {
-  background-color: #ca8a04;
-}
-
-.hover\:text-yellow-400:hover {
-  color: #facc15;
-}
-
-/* Border radius */
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.rounded-full {
-  border-radius: 9999px;
-}
-
-/* Effects */
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.transition-all {
-  transition: all 0.2s ease;
-}
-
-.duration-200 {
-  transition-duration: 200ms;
-}
-
-.transform {
-  transform: translateZ(0);
-}
-
-.hover\:scale-105:hover {
-  transform: scale(1.05);
-}
-
-/* Button reset */
-button {
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 12px 8px 8px 8px;
   background: none;
   border: none;
   cursor: pointer;
   font-family: inherit;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.2s ease;
+  height: 80px;
+  box-sizing: border-box;
+}
+
+.footer-menu-item:hover {
+  transform: scale(1.1);
+}
+
+/* Navigation images */
+.nav-image {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: auto;
+}
+
+/* Navigation text */
+.nav-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  margin-top: auto;
+}
+
+/* Play button container - positioned to be half outside but with 25% width */
+.play-button-container {
+  position: relative;
+  justify-content: flex-end;
+}
+
+.play-button-container .play-button {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* Play button styling - just the image, no background */
+.play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.2s ease;
+}
+
+.play-button:hover {
+  transform: translateX(-50%) scale(1.1);
+}
+
+.play-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.play-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.play-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  margin-top: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .bottom-menu-container {
+    padding: 0 10px;
+  }
+  
+  .bottom-nav {
+    padding: 0 8px;
+  }
+  
+  .nav-item {
+    min-width: 50px;
+    padding: 6px 8px;
+  }
+  
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .nav-text {
+    font-size: 11px;
+  }
+  
+  .play-button {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .play-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .play-text {
+    font-size: 11px;
+  }
+}
+
+/* Ensure proper spacing for the page content above */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 80px;
+  }
 }
 </style>
