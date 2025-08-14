@@ -147,7 +147,7 @@ export default {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
+  height: 52px;
   padding: 0 24px;
   max-width: 980px;
   margin: 0 auto;
@@ -181,9 +181,9 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #164bb7, #3b82f6);
   color: white;
-  padding: 12px 24px;
+  padding: 7px 20px;
   border-radius: 25px;
   font-weight: 500;
   font-size: 14px;
@@ -192,11 +192,6 @@ export default {
   transition: all 0.3s ease;
   width: 140px;
   justify-content: center;
-}
-
-.register-btn:hover {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  transform: translateY(-1px);
 }
 
 /* Login button - golden brown gradient like in the image */
@@ -204,9 +199,9 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #d97706, #92400e);
+  background: linear-gradient(135deg,#664b13, #dab067);
   color: white;
-  padding: 12px 24px;
+  padding: 7px 24px;
   border-radius: 25px;
   font-weight: 500;
   font-size: 14px;
@@ -215,11 +210,6 @@ export default {
   transition: all 0.3s ease;
   width: 140px;
   justify-content: center;
-}
-
-.login-btn:hover {
-  background: linear-gradient(135deg, #b45309, #78350f);
-  transform: translateY(-1px);
 }
 
 .btn-icon {

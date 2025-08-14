@@ -71,6 +71,7 @@
       </nav>
     </div>
   </div>
+   <div class="bottom-menu-spacer" aria-hidden="true"></div>
 </template>
 
 <script>
@@ -92,6 +93,14 @@ export default {
 </script>
 
 <style scoped>
+/* make the var global so everyone can read it */
+:global(:root){ --bottom-menu-height: 80px; }
+
+/* spacer: keep it in normal flow to prevent overlap */
+.bottom-menu-spacer{
+  height: calc(var(--bottom-menu-height, 80px) + env(safe-area-inset-bottom, 0px));
+}
+
 /* Main container */
 .bottom-menu-container {
   position: fixed;
@@ -104,7 +113,7 @@ export default {
   padding: 0 20px;
 }
 
-/* Content wrapper with custom styling */
+/* Content wrapper */
 .bottom-menu-content {
   background: linear-gradient(to bottom, #6f010a, #360000);
   border-radius: 18px 18px 0 0;
@@ -119,12 +128,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: 80px;
+  height: var(--bottom-menu-height, 80px); /* use the var */
   padding: 0 24px;
   position: relative;
 }
 
-/* Footer menu items using your exact CSS */
+/* Items */
 .footer-menu-item {
   flex-grow: 1;
   text-align: center;
@@ -142,129 +151,40 @@ export default {
   text-decoration: none;
   color: white;
   transition: transform 0.2s ease;
-  height: 80px;
+  height: var(--bottom-menu-height, 80px); /* keep consistent */
   box-sizing: border-box;
 }
+.footer-menu-item:hover { transform: scale(1.1); }
 
-.footer-menu-item:hover {
-  transform: scale(1.1);
-}
+/* Icons/Text */
+.nav-image { width: 40px; height: 40px; object-fit: contain; margin-bottom: auto; }
+.nav-text { font-size: 12px; font-weight: 500; color: white; margin-top: auto; }
 
-/* Navigation images */
-.nav-image {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  margin-bottom: auto;
-}
-
-/* Navigation text */
-.nav-text {
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  margin-top: auto;
-}
-
-/* Play button container - positioned to be half outside but with 25% width */
-.play-button-container {
-  position: relative;
-  justify-content: flex-end;
-}
-
+/* Play button */
+.play-button-container { position: relative; justify-content: flex-end; }
 .play-button-container .play-button {
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
+  position: absolute; top: -50px; left: 50%; transform: translateX(-50%); z-index: 10;
 }
-
-/* Play button styling - just the image, no background */
 .play-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
+  display: flex; align-items: center; justify-content: center;
+  width: 100px; height: 100px; background: none; border: none; cursor: pointer;
   transition: transform 0.2s ease;
 }
+.play-button:hover { transform: translateX(-50%) scale(1.1); }
+.play-image { width: 100px; height: 100px; object-fit: contain; }
+.play-text { font-size: 12px; font-weight: 500; color: white; margin-top: 4px; text-shadow: 0 1px 2px rgba(0,0,0,.5); position: relative; z-index: 1; }
 
-.play-button:hover {
-  transform: translateX(-50%) scale(1.1);
-}
-
-.play-image {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-}
-
-.play-text {
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  margin-top: auto;
-  position: relative;
-  z-index: 1;
-}
-
-.play-text {
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  margin-top: 4px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 480px) {
-  .bottom-menu-container {
-    padding: 0 10px;
-  }
-  
-  .bottom-nav {
-    padding: 0 8px;
-  }
-  
-  .nav-item {
-    min-width: 50px;
-    padding: 6px 8px;
-  }
-  
-  .nav-icon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .nav-text {
-    font-size: 11px;
-  }
-  
-  .play-button {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .play-icon {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .play-text {
-    font-size: 11px;
-  }
+  .bottom-menu-container { padding: 0 10px; }
+  .bottom-nav { padding: 0 8px; }
+  .nav-text { font-size: 11px; }
+  .play-button { width: 50px; height: 50px; }
+  .play-image  { width: 50px; height: 50px; }
 }
 
-/* Ensure proper spacing for the page content above */
-@media (max-width: 768px) {
-  body {
-    padding-bottom: 80px;
-  }
+/* If you PREFER page padding over spacer, use this (not both) */
+:global(@media (max-width: 768px)){
+  body { padding-bottom: calc(var(--bottom-menu-height, 80px) + env(safe-area-inset-bottom, 0px)); }
 }
 </style>
