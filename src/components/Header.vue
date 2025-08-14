@@ -80,7 +80,7 @@ export default {
   components: {
     MobileMenu
   },
-  emits: ['login', 'register'],
+  emits: ['login', 'register', 'mobile-menu-toggle'],
   data() {
     return {
       showMobileMenu: false,
@@ -94,6 +94,11 @@ export default {
     '$route'() {
       this.currentLocale = getCurrentLocale(this.$route)
       this.showMobileMenu = false
+      this.$emit('mobile-menu-toggle', false)
+    },
+    showMobileMenu(newVal) {
+      // Emit the mobile menu state to parent component
+      this.$emit('mobile-menu-toggle', newVal)
     }
   },
   methods: {
