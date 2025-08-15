@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-menu-container">
+  <div class="bottom-menu-container" :class="{ 'hidden': isMenuOpen }">
     <div class="bottom-menu-content">
       <nav class="bottom-nav">
         <!-- Home -->
@@ -71,12 +71,18 @@
       </nav>
     </div>
   </div>
-   <div class="bottom-menu-spacer" aria-hidden="true"></div>
+   <div class="bottom-menu-spacer" :class="{ 'hidden': isMenuOpen }" aria-hidden="true"></div>
 </template>
 
 <script>
 export default {
   name: 'BottomMenu',
+  props: {
+    isMenuOpen: {
+      type: Boolean,
+      default: false
+    }
+  },
   mounted() {
     console.log('✅ BottomMenu mounted!')
     console.log('Current route:', this.$route)
@@ -99,6 +105,13 @@ export default {
 /* spacer: keep it in normal flow to prevent overlap */
 .bottom-menu-spacer{
   height: calc(var(--bottom-menu-height, 80px) + env(safe-area-inset-bottom, 0px));
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.bottom-menu-spacer.hidden {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
 }
 
 /* Main container */
@@ -111,6 +124,13 @@ export default {
   max-width: 980px;
   z-index: 9999;
   padding: 0 20px;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+.bottom-menu-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(100%);
 }
 
 /* Content wrapper */

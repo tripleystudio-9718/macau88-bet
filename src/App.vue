@@ -1,10 +1,15 @@
 <template>
   <div id="app" class="min-h-screen flex flex-col bg-gray-900 text-white">
-    <Header @login="handleLogin" @register="handleRegister" />
+    <Header 
+      @login="handleLogin" 
+      @register="handleRegister"
+      @mobile-menu-toggle="handleMobileMenuToggle"
+    />
     <main class="flex-1 pb-16 md:pb-0">
       <router-view />
     </main>
     <BottomMenu 
+      :isMenuOpen="isMobileMenuOpen"
       @deposit="handleDeposit"
       @play="handlePlay"
       @withdraw="handleWithdraw"
@@ -23,7 +28,16 @@ export default {
     Header,
     BottomMenu
   },
+  data() {
+    return {
+      isMobileMenuOpen: false
+    }
+  },
   methods: {
+    handleMobileMenuToggle(isOpen) {
+      this.isMobileMenuOpen = isOpen
+      console.log('Mobile menu toggle:', isOpen)
+    },
     handleLogin() {
       console.log('Login clicked')
     },
