@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "register": "สมัครสมาชิก",
+    "login": "เข้าสู่ระบบ",
+    "home": "หน้าหลัก",
+    "play": "เล่น",
+    "deposit": "ฝากเงิน",
+    "withdraw": "ถอนเงิน",
+    "contact": "ติดต่อ",
+    "affiliate": "พันธมิตร",
+    "promotions": "โปรโมชั่น",
+    "cashback": "คืนเงิน",
+    "history": "ประวัติ",
+    "account": "ข้อมูลบัญชี",
+    "luckyWheel": "วงล้อนำโชค",
+    "collectPoints": "สะสมแต้ม"
+  },
+  "languages": {
+    "thai": "ภาษาไทย",
+    "english": "English",
+    "lao": "ລາວ"
+  },
+  "affiliate": {
+    "title": "แชร์รับรายได้จาก",
+    "game": "เกม",
+    "rate": "รับ",
+    "games": {
+      "casino": "คาสิโน",
+      "slots": "สล็อต", 
+      "sports": "กีฬา",
+      "lottery": "หวย",
+      "lotteryDraw": "ลอตเตอรี่"
+    }
+  },
+  "promotions": {
+    "title": "โปรโมชั่น",
+    "subtitle": "สุดร้อนแรง",
+    "items": {
+      "welcome50": {
+        "title": "รับโบนัส 50% สำหรับสมาชิกใหม่",
+        "description": "เราให้นิ้วที่กล้าให้ 50% ทุกยอดฝาก",
+        "modalTitle": "รับโบนัส 50% สำหรับสมาชิกใหม่",
+        "modalDescription": "สูงสุดโบนัส 1,000 บาท<br>ยอดหมุนเวียน 15 เท่า (สล็อต)<br>ยอดหมุนเวียน 20 เท่า (คาสิโน)"
+      },
+      "lossRebate": {
+        "title": "โปรยอดเสีย",
+        "description": "คืนยอดเสียทุกวัน 3%",
+        "modalTitle": "โปรยอดเสีย",
+        "modalDescription": "คืนยอดเสียกว่าน 3% เงื่อนไขเปลี่ยนแปลงตามที่เว็บกำหนด"
+      },
+      "instant500": {
+        "title": "วินเท็จรับทันที 500 บาท",
+        "description": "เพียงคุณนำบัตรประชาชนมาใช้รับเลย",
+        "modalTitle": "วินเท็จรับทันที 500 บาท",
+        "modalDescription": ""
+      },
+      "minDeposit": {
+        "title": "ขั้นต่ำสำรับทอง 1 บาท",
+        "description": "ขั้นได้กำงวน วิธอะครั่ง ก็รอยได้",
+        "modalTitle": "ปันกงสล็อตรับทอง 1 บาท",
+        "modalDescription": ""
+      },
+      "referFriend": {
+        "title": "แนะนำเพื่อนรับค่าคอมกิน",
+        "description": "เพียงชวนเพื่อนรับเลย 0.6% จากยอดแทงของ...",
+        "modalTitle": "แนะนำเพื่อนรับค่าคอมกิน",
+        "modalDescription": ""
+      },
+      "baccaratRich": {
+        "title": "บาคาร่าพารวย",
+        "description": "เพียงคุณแทงอุ้กหรือผีด 10 ตารวด",
+        "modalTitle": "บาคาร่าพารวย",
+        "modalDescription": ""
+      }
+    }
+  },
+  "common": {
+    "close": "ปิด",
+    "moreShow": "แสดงเพิ่มเติม"
+  }
+}

@@ -2,29 +2,41 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { setLocale } from '@/i18n'
 import Home from '../views/Home.vue'
+import Affiliate from '../components/Affiliate.vue'
+import Promotion from '../components/Promotion.vue'
 // import Games from '../views/Games.vue'
 // import Promotions from '../views/Promotions.vue'
 
-// Supported languages
-const supportedLocales = ['en', 'zh', 'ms']
-const defaultLocale = 'en'
+// Supported languages - Thai as default, English, and Lao
+const supportedLocales = ['th', 'en', 'lo']
+const defaultLocale = 'th'
 
 // Meta titles and descriptions for all locales
 const metaContent = {
   Home: {
+    th: { title: 'หน้าหลัก - Macau888', description: 'ยินดีต้อนรับสู่ Macau888 – ประตูสู่เกมสล็อตที่น่าตื่นเต้น เกมคาสิโน และโบนัสพิเศษ' },
     en: { title: 'Home - Macau888', description: 'Welcome to Macau888 – your gateway to exciting slots, casino games, and exclusive bonuses.' },
-    zh: { title: '首页 - Macau888', description: '欢迎来到 Macau888，尽享精彩老虎机、真人娱乐场和独家优惠。' },
-    ms: { title: 'Laman Utama - Macau888', description: 'Selamat datang ke Macau888 – tempat terbaik untuk slot menarik, permainan kasino, dan bonus eksklusif.' }
+    lo: { title: 'ໜ້າຫຼັກ - Macau888', description: 'ຍິນດີຕ້ອນຮັບສູ່ Macau888 – ປະຕູສູ່ເກມສະລັອດທີ່ໜ້າຕື່ນເຕັ້ນ ເກມຄາສິໂນ ແລະໂບນັດພິເສດ' }
   },
   Games: {
+    th: { title: 'เกมส์ - Macau888', description: 'สำรวจเกมที่น่าตื่นเต้นมากมาย รวมถึงสล็อต คาสิโนสด และการเดิมพันกีฬาที่ Macau888' },
     en: { title: 'Games - Macau888', description: 'Explore a variety of thrilling games including slots, live casino, and sports betting on Macau888.' },
-    zh: { title: '游戏 - Macau888', description: '探索各种刺激游戏，包括老虎机、真人赌场和体育博彩。' },
-    ms: { title: 'Permainan - Macau888', description: 'Terokai pelbagai permainan menarik termasuk slot, kasino langsung, dan pertaruhan sukan di Macau888.' }
+    lo: { title: 'ເກມ - Macau888', description: 'ສຳຫຼວດເກມທີ່ໜ້າຕື່ນເຕັ້ນຫຼາຍຊະນິດ ລວມທັງສະລັອດ ຄາສິໂນສົດ ແລະການເດີມພັນກິລາທີ່ Macau888' }
   },
   Promotions: {
+    th: { title: 'โปรโมชั่น - Macau888', description: 'รับโปรโมชั่นล่าสุดและโบนัสพิเศษที่ Macau888 เล่นมากขึ้น ชนะมากขึ้น!' },
     en: { title: 'Promotions - Macau888', description: 'Grab our latest promotions and exclusive bonuses at Macau888. Play more, win more!' },
-    zh: { title: '优惠活动 - Macau888', description: '获取 Macau888 最新优惠和独家奖金。玩得越多，赢得越多！' },
-    ms: { title: 'Promosi - Macau888', description: 'Dapatkan promosi terkini dan bonus eksklusif di Macau888. Main lebih, menang lebih!' }
+    lo: { title: 'ໂປໂມຊັ່ນ - Macau888', description: 'ຮັບໂປໂມຊັ່ນຫຼ້າສຸດແລະໂບນັດພິເສດທີ່ Macau888 ຫຼິ້ນຫຼາຍຂຶ້ນ ຊະນະຫຼາຍຂຶ້ນ!' }
+  },
+  Affiliate: {
+    th: { title: 'โปรแกรมพันธมิตร - Macau888', description: 'เข้าร่วมโปรแกรมพันธมิตร Macau888 และได้รับค่าคอมมิชชันจากเกมคาสิโนและการเดิมพันกีฬาที่น่าตื่นเต้น' },
+    en: { title: 'Affiliate Program - Macau888', description: 'Join Macau888 affiliate program and earn commission from our exciting casino games and sports betting.' },
+    lo: { title: 'ໂປຣແກຣມພັນທະມິດ - Macau888', description: 'ເຂົ້າຮ່ວມໂປຣແກຣມພັນທະມິດ Macau888 ແລະໄດ້ຮັບຄ່າຄອມມິດຊັ່ນຈາກເກມຄາສິໂນແລະການເດີມພັນກິລາທີ່ໜ້າຕື່ນເຕັ້ນ' }
+  },
+  Promotion: {
+    th: { title: 'โปรโมชั่น - Macau888', description: 'รับโปรโมชั่นล่าสุดและโบนัสพิเศษที่ Macau888 เล่นมากขึ้น ชนะมากขึ้น!' },
+    en: { title: 'Promotions - Macau888', description: 'Grab our latest promotions and exclusive bonuses at Macau888. Play more, win more!' },
+    lo: { title: 'ໂປໂມຊັ່ນ - Macau888', description: 'ຮັບໂປໂມຊັ່ນຫຼ້າສຸດແລະໂບນັດພິເສດທີ່ Macau888 ຫຼິ້ນຫຼາຍຂຶ້ນ ຊະນະຫຼາຍຂຶ້ນ!' }
   }
 };
 
@@ -37,21 +49,23 @@ const createLocalizedRoute = (path, name, component) => {
     meta: {
       locale,
       title: metaContent[name]?.[locale]?.title || 'Macau888',
-      description: metaContent[name]?.[locale]?.description || 'Play top online casino games at Macau888 with 100% security and thrilling bonuses.'
+      description: metaContent[name]?.[locale]?.description || 'ເລ່ນເກມຄາສິໂນອອນລາຍຊັ້ນນຳທີ່ Macau888 ດ້ວຍຄວາມປອດໄພ 100% ແລະໂບນັດທີ່ໜ້າຕື່ນເຕັ້ນ'
     }
   }));
 };
 
 const routes = [
-  // Only Home route for now - others commented out until components are created
+  // Only Home and Affiliate routes for now - others commented out until components are created
   ...createLocalizedRoute('/', 'Home', Home),
+  ...createLocalizedRoute('/affiliate', 'Affiliate', Affiliate),
+  ...createLocalizedRoute('/promotions', 'Promotion', Promotion),
   
   // Uncomment these when you create the Games.vue and Promotions.vue files:
   // ...createLocalizedRoute('/games', 'Games', Games),
   // ...createLocalizedRoute('/promotions', 'Promotions', Promotions),
   
-  { path: '/en', redirect: '/' },
-  { path: '/en/:pathMatch(.*)*', redirect: to => `/${to.params.pathMatch}` },
+  { path: '/th', redirect: '/' },
+  { path: '/th/:pathMatch(.*)*', redirect: to => `/${to.params.pathMatch}` },
   // Catch all route for 404 - redirect to home
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ];

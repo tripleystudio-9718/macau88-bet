@@ -15,10 +15,7 @@
         <div
           class="slider-track"
           :class="{ dragging: heroDragging }"
-          :style="{
-            transform: heroTransform,
-            transition: useHeroTransition ? 'transform 0.5s ease-in-out' : 'none'
-          }"
+          :style="heroStyle"
           ref="heroTrack"
           @transitionend="onHeroTransitionEnd"
           @pointerdown="onHeroPointerDown"
@@ -90,10 +87,7 @@
         <div
           class="two-up-track"
           :class="{ dragging: pairDragging }"
-          :style="{
-            transform: translateXLoop,
-            transition: useTransition ? '' : 'none'
-          }"
+          :style="pairStyle"
           ref="pairTrack"
           @transitionend="onPairTransitionEnd"
           @pointerdown="onPairPointerDown"
@@ -144,7 +138,7 @@
           :tabindex="t.key === activeHub ? 0 : -1"
           @click="selectHub(t.key)"
         >
-          <!-- ⬇️ NEW: fixed-height wrapper prevents layout shift -->
+          <!-- ⬇️ MODIFIED: Icon positioned to extend half outside container -->
           <span class="hub-icon-wrap">
             <img class="hub-icon" :src="t.icon" :alt="t.label" draggable="false" />
           </span>
@@ -160,19 +154,42 @@
         role="tabpanel"
         :aria-labelledby="`tab-${activeHub}`"
       >
-        <!-- Replace with real components/content per tab -->
-        <h3 class="hub-panel-title">{{ activeLabel }}</h3>
-        <p class="hub-panel-text">
-          {{ hubContentText }}
-        </p>
+        <!-- Show component tabs only (no default text) -->
+        <div v-if="activeHub === 'slot'">
+          <SlotTab @provider-selected="handleProviderSelected" />
+        </div>
+        <div v-else-if="activeHub === 'casino'">
+          <CasinoTab @provider-selected="handleProviderSelected" />
+        </div>
+        <div v-else-if="activeHub === 'allgames'">
+          <AllTab @provider-selected="handleProviderSelected" />
+        </div>
+        <div v-else-if="activeHub === 'sports'">
+          <SportsTab @provider-selected="handleProviderSelected" />
+        </div>
+        <div v-else-if="activeHub === 'lotto'">
+          <LottoTab @provider-selected="handleProviderSelected" />
+        </div>
+        <!-- No default content for other tabs -->
       </div>
     </section>
+
+    <PromotionSection />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import macauGif from '@/assets/macau-gif1.gif'
+import SlotTab from '@/components/SlotTab.vue'
+import CasinoTab from '@/components/CasinoTab.vue'
+import AllTab from '@/components/AllTab.vue'
+import SportsTab from '@/components/SportsTab.vue'
+import LottoTab from '@/components/LottoTab.vue'
+import PromotionSection from '@/components/PromotionSection.vue'
+
+const router = useRouter()
 
 /* ========= Helper: double RAF to guarantee style commit ========= */
 const nextFrame = () =>
@@ -208,32 +225,30 @@ const hubTabs = [
   { key: 'slot',       label: 'Slot',         icon: icSlot },
   { key: 'casino',     label: 'Casino',       icon: icCasino },
   { key: 'allgames',   label: 'All games',    icon: icAllGames },
-  { key: 'sport',      label: 'Sport',        icon: icSport },
+  { key: 'sports',     label: 'Sport',        icon: icSport },
   { key: 'lotto',      label: 'Lotto',        icon: icLotto },
 ]
 
-const activeHub = ref('account')
+const activeHub = ref('slot')
 
-const selectHub = (key) => { activeHub.value = key }
+const selectHub = (key) => { 
+  // Handle navigation for specific tabs
+  if (key === 'affiliate') {
+    router.push('/affiliate')
+    return
+  }
+  if (key === 'promo') {
+    router.push('/promotions')
+    return
+  }
+  
+  // For other tabs, just set active
+  activeHub.value = key 
+}
 
 const activeLabel = computed(() => {
   return hubTabs.find(t => t.key === activeHub.value)?.label ?? ''
 })
-
-/* Simple placeholder text per tab — replace with real content/components */
-const hubTexts = {
-  history:   'Your recent bets and transactions.',
-  affiliate: 'Invite friends and track commissions.',
-  account:   'Profile, balance, and settings.',
-  lucky:     'Spin the wheel for rewards.',
-  promo:     'Claim current promotions and bonuses.',
-  slot:      'Top slot providers and games.',
-  casino:    'Live casino tables and providers.',
-  allgames:  'Browse all available games.',
-  sport:     'Sportsbook, odds, and live matches.',
-  lotto:     'Lottery tickets and results.',
-}
-const hubContentText = computed(() => hubTexts[activeHub.value] ?? '')
 
 /* Keyboard navigation (← →) */
 const onHubKeydown = (e) => {
@@ -254,13 +269,16 @@ const extendedImages = computed(() => {
   return [images[n - 1], ...images, images[0]]
 })
 
-/** 从第 1 个“真实位”开始（索引 1，因为 0 是头部克隆） */
+/** 从第 1 个"真实位"开始（索引 1，因为 0 是头部克隆） */
 const displayedHeroIndex = ref(images.length > 1 ? 1 : 0)
-const useHeroTransition = ref(true)
-const isHeroAnimating = ref(false) // 防止连点/连滑期间越界
 
-/** 供模板绑定（用 translate3d 更流畅） */
-const heroTransform = computed(() => `translate3d(-${displayedHeroIndex.value * 100}%, 0, 0)`)
+const heroStyle = computed(() => {
+  const translateX = -displayedHeroIndex.value * 100
+  return {
+    transform: 'translate3d(' + translateX + '%, 0, 0)',
+    transition: 'transform 0.5s ease-in-out'
+  }
+})
 
 /** 将带克隆的索引转回真实索引 0..n-1（用于 dots） */
 const realHeroIndex = computed(() => {
@@ -269,7 +287,6 @@ const realHeroIndex = computed(() => {
   return (displayedHeroIndex.value - 1 + n) % n
 })
 
-/** Autoplay */
 let heroTimer = null
 const HERO_INTERVAL = 4000
 
@@ -282,44 +299,29 @@ const clampToExtRange = (v) => {
 
 const nextHero = () => {
   if (extendedImages.value.length <= 1) return
-  if (isHeroAnimating.value) return
-  useHeroTransition.value = true
-  isHeroAnimating.value = true
   displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value + 1)
 }
 
 const prevHero = () => {
   if (extendedImages.value.length <= 1) return
-  if (isHeroAnimating.value) return
-  useHeroTransition.value = true
-  isHeroAnimating.value = true
   displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value - 1)
 }
 
 const goToHero = (i) => {
   if (!images.length) return
-  if (isHeroAnimating.value) return
-  useHeroTransition.value = true
-  isHeroAnimating.value = true
   displayedHeroIndex.value = clampToExtRange((i % images.length) + 1) // 偏移 +1，避开头部克隆
   play()
 }
 
 const play = () => { stop(); if (images.length > 1) heroTimer = setInterval(nextHero, HERO_INTERVAL) }
-const pause = () => stop()
+const pause = () => { stop() }
 const stop  = () => { if (heroTimer) { clearInterval(heroTimer); heroTimer = null } }
 
 /** 初始定位到第一张真实图 */
-onMounted(() => { displayedHeroIndex.value = images.length > 1 ? 1 : 0; play() })
-onBeforeUnmount(stop)
-
-/** 落在克隆位时静默跳位（nextTick + double RAF，确保 transition:none 已生效） */
 const heroTrack = ref(null)
 const onHeroTransitionEnd = async (e) => {
   // 只处理 transform 的过渡结束
   if (e && e.propertyName && e.propertyName !== 'transform') return
-
-  isHeroAnimating.value = false
 
   const n = images.length
   if (n <= 1) return
@@ -328,24 +330,12 @@ const onHeroTransitionEnd = async (e) => {
   if (displayedHeroIndex.value === lastExt) {
     // 尾部克隆 -> 跳第一张真实图
     stop()
-    useHeroTransition.value = false          // 1) 关闭过渡
-    await nextTick()
-    await nextFrame()                        // 2) 确保 'none' 已提交
-    displayedHeroIndex.value = 1             // 3) 瞬移到真实位
-    await nextTick()
-    await nextFrame()                        // 4) 确保 transform 已无动画应用
-    useHeroTransition.value = true           // 5) 恢复过渡
+    displayedHeroIndex.value = 1
     play()
   } else if (displayedHeroIndex.value === 0) {
     // 头部克隆 -> 跳最后一张真实图
     stop()
-    useHeroTransition.value = false
-    await nextTick()
-    await nextFrame()
     displayedHeroIndex.value = n
-    await nextTick()
-    await nextFrame()
-    useHeroTransition.value = true
     play()
   }
 }
@@ -363,8 +353,6 @@ const onHeroPointerDown = (e) => {
   heroDX = 0
   pause()
   // 取消当前动画，避免 transitionend 晚到导致越界
-  isHeroAnimating.value = false
-  useHeroTransition.value = false
   const el = heroTrack.value
   if (el && e.pointerId != null && el.setPointerCapture) el.setPointerCapture(e.pointerId)
   if (el) el.style.transition = 'none'
@@ -376,14 +364,14 @@ const onHeroPointerMove = (e) => {
   const el = heroTrack.value
   if (el) {
     el.style.transition = 'none'
-    el.style.transform = `translate3d(calc(-${displayedHeroIndex.value * 100}% + ${heroDX}px), 0, 0)`
+    const translateX = -displayedHeroIndex.value * 100
+    el.style.transform = 'translate3d(calc(' + translateX + '% + ' + heroDX + 'px), 0, 0)'
   }
 }
 
 const onHeroPointerUp = () => {
   if (!heroDragging.value) return
   heroDragging.value = false
-  useHeroTransition.value = true
   const el = heroTrack.value
   if (el) el.style.transition = ''
 
@@ -393,8 +381,6 @@ const onHeroPointerUp = () => {
     nextHero()
   } else {
     // 不够阈值，回弹
-    isHeroAnimating.value = true
-    // 触发一次过渡，等待 transitionend 把 isHeroAnimating 置回 false
     displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value)
   }
   heroDX = 0
@@ -411,7 +397,7 @@ const { text, speed, width } = defineProps({
   text: {
     type: String,
     default:
-      '🐉MACAU888🐉 เว็บคาสิโนอันดับ 1 ในไทย🥇 ฝากถอนไม่เกิน 3 วินาที พนันบอล⚽️ บาคาร่า🎲 สล็อตยิงปลา🎰 เดิมพันครบวงจรตลอด 24 小时 🚀CASINO ONLINE ...'
+      'ยินดีต้อนรับเข้าสู่ 🐉MACAU888🐉 เว็บคาสิโนอันดับ 1 ในไทย🥇  ฝากถอนไม่เกิน 3 วินาที   พนันบอล⚽️ บาคาร่า🎲  สล็อตยิงปลา🎰 เดิมพันครบวงจรตลอด 24 ชั่วโมง 🚀CASINO ONLINE เว็บตรง ไม่ผ่านเอเย่นต์ รวบรวมเกมคาสิโนยอดนิยมที่มีให้เล่นกันในบ่อนคาสิโนต่างประเทศ สามารถเข้าเล่นได้ง่ายๆผ่านเว็บไซต์ของเรา MACAU888'
   },
   speed: { type: Number, default: 60 },
   width:  { type: Number, default: 940 }
@@ -443,8 +429,15 @@ const extendedPairs = computed(() => {
 })
 
 const displayedIndex = ref(1)
-const useTransition = ref(true)
-const translateXLoop = computed(() => `translateX(-${displayedIndex.value * 100}%)`)
+
+const pairStyle = computed(() => {
+  const translateX = -displayedIndex.value * 100
+  return {
+    transform: 'translateX(' + translateX + '%)',
+    transition: 'transform 0.5s ease-in-out'
+  }
+})
+
 const realIndex = computed(() => {
   const n = pairs.value.length || 1
   return (displayedIndex.value - 1 + n) % n
@@ -452,14 +445,11 @@ const realIndex = computed(() => {
 
 let pairTimer = null
 const pairIntervalMs = 4000
-const nextPair = () => { if (extendedPairs.value.length) { useTransition.value = true; displayedIndex.value += 1 } }
-const prevPair = () => { if (extendedPairs.value.length) { useTransition.value = true; displayedIndex.value -= 1 } }
+const nextPair = () => { if (extendedPairs.value.length) displayedIndex.value += 1 }
+const prevPair = () => { if (extendedPairs.value.length) displayedIndex.value -= 1 }
 const playPair = () => { stopPair(); pairTimer = setInterval(nextPair, pairIntervalMs) }
 const pausePair = () => stopPair()
 const stopPair  = () => { if (pairTimer) { clearInterval(pairTimer); pairTimer = null } }
-
-onMounted(() => { displayedIndex.value = 1; playPair() })
-onBeforeUnmount(stopPair)
 
 const pairTrack = ref(null)
 const onPairTransitionEnd = () => {
@@ -467,15 +457,11 @@ const onPairTransitionEnd = () => {
   if (!n) return
   const lastExt = extendedPairs.value.length - 1
   if (displayedIndex.value === lastExt) {
-    useTransition.value = false
     displayedIndex.value = 1
     void pairTrack.value?.offsetHeight
-    useTransition.value = true
   } else if (displayedIndex.value === 0) {
-    useTransition.value = false
     displayedIndex.value = n
     void pairTrack.value?.offsetHeight
-    useTransition.value = true
   }
 }
 
@@ -488,7 +474,6 @@ const onPairPointerDown = (e) => {
   pairStartX = e.clientX
   pairDX = 0
   pausePair()
-  useTransition.value = false
   const el = pairTrack.value
   if (el && e.pointerId != null && el.setPointerCapture) el.setPointerCapture(e.pointerId)
   if (el) el.style.transition = 'none'
@@ -500,14 +485,14 @@ const onPairPointerMove  = (e) => {
   const el = pairTrack.value
   if (el) {
     el.style.transition = 'none'
-    el.style.transform  = `translateX(calc(-${displayedIndex.value * 100}% + ${pairDX}px))`
+    const translateX = -displayedIndex.value * 100
+    el.style.transform = 'translateX(calc(' + translateX + '% + ' + pairDX + 'px))'
   }
 }
 
 const onPairPointerUp = () => {
   if (!pairDragging.value) return
   pairDragging.value = false
-  useTransition.value = true
   const el = pairTrack.value
   if (el) el.style.transition = ''
 
@@ -520,15 +505,48 @@ const onPairPointerUp = () => {
 
 const goToPair = (i) => {
   if (!pairs.value.length) return
-  useTransition.value = true
   displayedIndex.value = (i % pairs.value.length) + 1
   playPair()
 }
+
+// Handle provider selection from tab components
+const handleProviderSelected = (provider) => {
+  console.log('Provider selected in main component:', provider)
+  // Handle the provider selection logic here
+  // For example, you could navigate to a specific provider page
+  // or update some state to show games from that provider
+}
+
+onMounted(() => {
+  displayedHeroIndex.value = images.length > 1 ? 1 : 0
+  play()
+  displayedIndex.value = 1
+  playPair()
+})
+
+onBeforeUnmount(() => {
+  stop()
+  stopPair()
+})
 </script>
 
 <style scoped>
 * { box-sizing: border-box; }
-.app-container { min-height: 100vh; background:#100201; }
+.app-container { 
+  background:#100201; 
+  width: 980px; 
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 980px) {
+  .app-container { 
+    width: 100%; 
+    padding: 0 12px; /* Standardized to 12px horizontal padding */
+  }
+}
+
 .hero-section { position: relative; overflow: hidden; padding: 12px; }
 .hero-bg-gradient { position:absolute; inset:0; background:#100201; }
 
@@ -536,16 +554,31 @@ const goToPair = (i) => {
 .slider-container {
   position: relative;
   width: 940px;
+  max-width: 100%;
   overflow: hidden;
   border-radius: 6px;
   margin: 0 auto;
 }
+
+@media (max-width: 980px) {
+  .slider-container {
+    width: 100%;
+  }
+}
+
 .slide-box {
   width: 100%;
   height:auto;
   aspect-ratio: 16 / 5;
-  background: #0b0b0b;
+  background: #100201;
 }
+
+@media (max-width: 480px) {
+  .slide-box {
+    aspect-ratio: 16 / 6; /* Slightly taller on mobile */
+  }
+}
+
 .slide-box img { width: 100%; height: 100%; display: block; object-fit: cover; user-select:none; -webkit-user-drag:none; }
 .slider-track {
   display: flex;
@@ -566,6 +599,50 @@ const goToPair = (i) => {
 .nav-btn.left { left: 10px; }
 .nav-btn.right { right: 10px; }
 
+@media (max-width: 480px) {
+  .nav-btn {
+    font-size: 18px;
+    padding: 6px 8px;
+  }
+  .nav-btn.left { left: 5px; }
+  .nav-btn.right { right: 5px; }
+}
+
+/* Dots */
+.dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dots span.active {
+  background: #FFD84A;
+}
+
+@media (max-width: 480px) {
+  .dots span {
+    width: 10px;
+    height: 10px;
+  }
+  .dots {
+    gap: 6px;
+    bottom: 8px;
+  }
+}
+
 /* Section 2: Video */
 .video-section { padding: 12px; display: flex; justify-content: center; }
 .video-frame {
@@ -577,7 +654,22 @@ const goToPair = (i) => {
 .video-frame iframe { position:absolute; inset:0; width:100%; height:100%; display:block; }
 
 /* Ticker */
-.ticker-wrap{ display:flex; justify-content:center; background:#100201; width:940px; margin:0 auto; }
+.ticker-wrap{ 
+  display:flex; 
+  justify-content:center; 
+  background:#100201; 
+  width:940px; 
+  max-width: 100%;
+  margin:0 auto; 
+}
+
+@media (max-width: 980px) {
+  .ticker-wrap {
+    width: 100%;
+    padding: 0 12px; /* Changed from 8px to 12px for consistency */
+  }
+}
+
 .ticker{
   width:100%; max-width: v-bind(width + 'px');
   position:relative; border-radius:6px; border:1px solid #fee307;
@@ -591,6 +683,12 @@ const goToPair = (i) => {
 }
 .ticker-track.paused{ animation-play-state: paused; }
 .ticker-item{ display:inline-block; color:#fff; font-weight:400; letter-spacing:.2px; font-size:15px; }
+
+@media (max-width: 480px) {
+  .ticker-item { font-size: 13px; }
+  .ticker-track { padding: 6px 12px; min-height: 36px; }
+}
+
 @keyframes ticker-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-33.3333%); } }
 
 /* GIF + 2-up slider */
@@ -599,10 +697,32 @@ const goToPair = (i) => {
   width:100%; max-width:940px; display:block; margin:0 auto 12px auto; border-radius:6px; padding:10px 0;
 }
 
+@media (max-width: 980px) {
+  .image-slider { padding: 12px; } /* Changed from 8px to 12px for consistency */
+  .macau-gif { padding: 8px 0; }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 0 12px; /* Changed from 0 to 12px horizontal padding for consistency */
+  }
+  
+  .video-section {
+    padding: 0 12px 12px 12px; /* Kept 12px horizontal padding consistent */
+  }
+}
+
 /* 2-up */
 .two-up-container{
   position:relative; width:940px; max-width:100%; margin:0 auto; overflow:hidden; border-radius:6px;
 }
+
+@media (max-width: 980px) {
+  .two-up-container {
+    width: 100%;
+  }
+}
+
 .two-up-track{
   display:flex; transition: transform .5s ease-in-out; will-change: transform;
   touch-action: pan-y; cursor: grab; user-select:none;
@@ -614,8 +734,12 @@ const goToPair = (i) => {
 .poster{ background:#0b0b0b; border-radius:6px; overflow:hidden; }
 .poster img{ width:100%; height:100%; display:block; object-fit:cover; aspect-ratio: 1 / 1; user-select:none; -webkit-user-drag:none; }
 
-@media (max-width: 560px){
-  .pair{ grid-template-columns: 1fr; }
+/* Mobile: Keep 2 items in row but with smaller gap */
+@media (max-width: 480px) {
+  .pair { 
+    grid-template-columns: 1fr 1fr; /* Keep 2 columns on mobile */
+    gap: 8px; /* Smaller gap */
+  }
 }
 
 /* indicators container */
@@ -628,6 +752,13 @@ const goToPair = (i) => {
   gap: 20px;
   z-index: 3;
   pointer-events: auto;
+}
+
+@media (max-width: 480px) {
+  .two-up-indicators {
+    gap: 12px;
+    bottom: 6px;
+  }
 }
 
 /* each bar */
@@ -652,15 +783,23 @@ const goToPair = (i) => {
   opacity: 1;
 }
 
-/* optional: larger on touch screens */
-@media (max-width: 560px){
-  .bar-dot{ width: 32px; height: 7px; }
+/* Mobile: smaller bars */
+@media (max-width: 480px){
+  .bar-dot{ width: 32px; height: 6px; }
 }
 
-/* =========================================================
-   Feature Tabs (icons raised; float only when active)
-   ========================================================= */
-.hub-tabs{ padding: 12px; }
+/* ========================================================= */
+/* Feature Tabs (MOBILE OPTIMIZED: 6 tabs in a row on mobile) */
+/* ========================================================= */
+.hub-tabs{ 
+  padding: 60px 0 0; /* Extra top padding for protruding icons */
+}
+
+@media (max-width: 480px) {
+  .hub-tabs { 
+    padding: 40px 12px 0; /* Changed from 8px to 12px horizontal padding */
+  }
+}
 
 .hub-grid{
   width: 940px;
@@ -668,20 +807,46 @@ const goToPair = (i) => {
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  padding-bottom: 30px;
+  gap: 80px 14px; /* row-gap column-gap - larger row gap for icon spacing */
+}
+
+/* Mobile: 5 tabs in one row with smaller size */
+@media (max-width: 480px) {
+  .hub-grid{ 
+    grid-template-columns: repeat(5, 1fr); /* 5 columns for mobile */
+    gap: 35px 6px; /* Small gaps but slightly larger for 5 columns */
+    padding-bottom: 20px;
+  }
+}
+
+/* Tablet: 4 columns */
+@media (min-width: 481px) and (max-width: 768px) {
+  .hub-grid{ 
+    grid-template-columns: repeat(4, 1fr);
+    gap: 60px 10px;
+  }
+}
+
+/* Small desktop: 5 columns */
+@media (min-width: 769px) and (max-width: 980px) {
+  .hub-grid{ 
+    grid-template-columns: repeat(5, 1fr);
+    gap: 70px 12px;
+  }
 }
 
 .hub-tile{
   --tile-icon-size: 120px;   /* icon size (tweak to taste) */
-  --icon-offset: -16px;     /* raise icon relative to its box */
+  --icon-protrude: -60px;   /* Half the icon extends outside */
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;  /* Push content to bottom */
   gap: 10px;
   min-height: 140px;        /* taller to visually match reference */
-  padding-top: 14px;
+  padding: 20px 12px 16px;  /* More top padding */
   border-radius: 16px;
   background: linear-gradient(to bottom, #a20313, #72000e);
   border: 1px solid rgba(255, 220, 120, 0.35);
@@ -693,9 +858,35 @@ const goToPair = (i) => {
   user-select: none;
   outline: none;
   transition: transform .12s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-  overflow: visible; /* allow icon to float above without clipping */
+  overflow: visible; /* Critical - allow icon to extend outside */
 }
-.hub-tile:hover{ transform: translateY(-1px); }
+
+/* Mobile: Much smaller tiles to fit 5 in a row */
+@media (max-width: 480px) {
+  .app-container {
+    padding: 0;
+  }
+  
+  .video-section {
+    padding: 0 12px 12px 12px;
+  }
+
+  .hub-tile{ 
+    --tile-icon-size: 50px; /* Slightly larger icons for 5 columns */
+    --icon-protrude: -20px; /* Adjusted protrusion */
+    min-height: 75px; /* Slightly taller */
+    padding: 10px 6px 10px; /* Bit more padding */
+    border-radius: 8px; /* Smaller border radius */
+    gap: 5px; /* Slightly larger gap */
+  }
+}
+
+.hub-tile:hover{ 
+  transform: translateY(-1px);
+  background: linear-gradient(to bottom, #61460f, #e2b76d); /* Same gold color as active */
+  color: #3b2200; /* Dark text like active state */
+  border-color: #e3b400; /* Gold border like active */
+}
 .hub-tile:active{ transform: translateY(0); }
 .hub-tile:focus-visible{
   box-shadow:
@@ -703,31 +894,66 @@ const goToPair = (i) => {
     0 2px 8px rgba(0,0,0,0.3);
 }
 
-/* Reserve vertical space so icon motion never moves layout */
+/* Icon positioned to extend outside top of container */
 .hub-icon-wrap{
-  height: calc(var(--tile-icon-size) + 12px);
+  position: absolute;           /* Use absolute positioning */
+  top: var(--icon-protrude);   /* Position half outside */
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--tile-icon-size);
+  height: var(--tile-icon-size);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   overflow: visible;
   pointer-events: none;
+  z-index: 2;                   /* Ensure proper layering */
 }
 
 .hub-icon{
-  width: var(--tile-icon-size);
-  height: var(--tile-icon-size);
+  width: 100%;                  /* Fill the wrapper */
+  height: 100%;                 /* Fill the wrapper */
   object-fit: contain;
-  transform: translateY(var(--icon-offset));
-  will-change: transform;
   filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
+  will-change: transform;
 }
 
-/* Label */
+/* Label positioned in the lower part of the tile */
 .hub-label{
   font-size: 20px;           /* closer to the screenshot */
   font-weight: 700;
   letter-spacing: .2px;
   text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  margin-top: auto;          /* Push to bottom */
+  z-index: 1;               /* Layer below icon */
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* Mobile: Smaller text for 5 columns */
+@media (max-width: 480px) {
+  .hub-label{ 
+    font-size: 10px; /* Slightly larger to fit 5 columns */
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.1;
+  }
+  
+  .hub-tile {
+    min-height: 65px;
+  }
+
+  .hub-panel {
+    margin: 0 !important;
+  }
+}
+
+/* Tablet: Medium text */
+@media (min-width: 481px) and (max-width: 768px) {
+  .hub-label{ 
+    font-size: 14px;
+    font-weight: 650;
+  }
 }
 
 /* subtle inner border highlight */
@@ -740,6 +966,13 @@ const goToPair = (i) => {
   pointer-events: none;
 }
 
+@media (max-width: 480px) {
+  .hub-tile-border {
+    inset: 2px;
+    border-radius: 6px;
+  }
+}
+
 /* Active (gold) */
 .hub-tile[aria-selected="true"]{
   background: linear-gradient(to bottom, #61460f, #e2b76d);
@@ -748,18 +981,32 @@ const goToPair = (i) => {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.35),
     0 6px 14px rgba(0,0,0,0.35);
-  /* raise just a touch more when active */
-  --icon-offset: -18px;
+  /* More protrusion when active */
+  --icon-protrude: -65px;
 }
 
-/* Float only when active (no layout shift thanks to hub-icon-wrap) */
+@media (max-width: 480px) {
+  .hub-tile[aria-selected="true"] {
+    --icon-protrude: -28px; /* Adjusted for mobile with 5 columns */
+  }
+}
+
+/* Float only when active (no layout shift thanks to absolute positioning) */
 .hub-tile[aria-selected="true"] .hub-icon{
   animation: hub-float 2.8s ease-in-out infinite;
 }
 
 @keyframes hub-float{
-  0%, 100% { transform: translateY(calc(var(--icon-offset))); }
-  50%      { transform: translateY(calc(var(--icon-offset) - 6px)); }
+  0%, 100% { transform: translateY(0); }     /* Simplified since position is already absolute */
+  50%      { transform: translateY(-8px); }  /* Float upward */
+}
+
+/* Mobile: Smaller float distance */
+@media (max-width: 480px) {
+  @keyframes hub-float{
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); } /* Smaller float on mobile */
+  }
 }
 
 /* Reduce motion preference */
@@ -769,33 +1016,25 @@ const goToPair = (i) => {
 
 /* Panel below grid */
 .hub-panel{
-  width: 940px;
-  max-width: 100%;
   margin: 14px auto 0;
   background: #0b0b0b;
-  border: 1px solid rgba(255, 220, 120, 0.25);
-  border-radius: 12px;
-  padding: 16px;
+  padding: 0;
   color: #e8e8e8;
+  max-width: 940px;
 }
-.hub-panel-title{
-  margin: 0 0 6px 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #FFD84A;
-}
-.hub-panel-text{ margin: 0; font-size: 14px; line-height: 1.55; }
 
-/* Responsive columns */
-@media (max-width: 900px){
-  .hub-grid{ grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 980px) {
+  .hub-panel {
+    margin: 14px 0 0; /* Remove horizontal margins that cause cutoff */
+    padding: 0 12px; /* Add internal padding instead of margins */
+    max-width: 100%; /* Ensure full width usage */
+  }
 }
-@media (max-width: 700px){
-  .hub-grid{ grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 480px){
-  .hub-grid{ grid-template-columns: repeat(2, 1fr); }
-  .hub-tile{ --tile-icon-size: 95px; min-height: 130px; }
-  .hub-label{ font-size: 18px; }
+
+@media (max-width: 480px) {
+  .hub-panel {
+    margin: 10px 0 0; /* Reduce top margin on small screens */
+    padding: 0 8px; /* Slightly less padding on very small screens */
+  }
 }
 </style>

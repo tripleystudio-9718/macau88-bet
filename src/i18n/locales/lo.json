@@ -1,19 +1,19 @@
 {
   "nav": {
-    "register": "Register",
-    "login": "Log in",
-    "home": "Home",
-    "play": "Play",
-    "deposit": "Deposit",
-    "withdraw": "Withdraw",
-    "contact": "Contact",
-    "affiliate": "Affiliate",
-    "promotions": "Promotions",
-    "cashback": "Cashback",
-    "history": "History",
-    "account": "Account info",
-    "luckyWheel": "Lucky wheel",
-    "collectPoints": "Collect points"
+    "register": "ລົງທະບຽນ",
+    "login": "ເຂົ້າສູ່ລະບົບ",
+    "home": "ໜ້າຫຼັກ",
+    "play": "ຫຼິ້ນ",
+    "deposit": "ຝາກເງິນ",
+    "withdraw": "ຖອນເງິນ",
+    "contact": "ຕິດຕໍ່",
+    "affiliate": "ພັນທະມິດ",
+    "promotions": "ໂປໂມຊັ່ນ",
+    "cashback": "ຄືນເງິນ",
+    "history": "ປະຫວັດ",
+    "account": "ຂໍ້ມູນບັນຊີ",
+    "luckyWheel": "ວົງລໍ້ໂຊກດີ",
+    "collectPoints": "ສະສົມແຕ້ມ"
   },
   "languages": {
     "thai": "ภาษาไทย",
@@ -22,19 +22,19 @@
   },
   "affiliate": {
     "title": "Affiliate with",
-    "game": "Game",
-    "rate": "Rate",
+    "game": "ເກມ",
+    "rate": "ອັດຕາ",
     "games": {
-      "casino": "Casino",
-      "slots": "Slots",
-      "sports": "Sports", 
-      "lottery": "Lottery",
-      "lotteryDraw": "Lottery Draw"
+      "casino": "ຄາສິໂນ",
+      "slots": "ສະລັອດ",
+      "sports": "ກິລາ",
+      "lottery": "ຫວຍ",
+      "lotteryDraw": "ການຈັບຫວຍ"
     }
   },
   "promotions": {
-    "title": "Promotions",
-    "subtitle": "Hot Deals",
+    "title": "ໂປຣໂມຊັນ",
+    "subtitle": "ດີລທີ່ຮ້ອນແຮງ",
     "items": {
       "welcome50": {
         "title": "",
@@ -75,8 +75,7 @@
     }
   },
   "common": {
-    "close": "Close",
-    "moreShow": "More show"
+    "close": "ປິດ",
+    "moreShow": "ສະແດງເພິ່ມເຕິມ"
   }
-
 }

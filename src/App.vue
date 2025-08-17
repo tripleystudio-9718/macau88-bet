@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen flex flex-col bg-gray-900 text-white">
+  <div id="app" class="min-h-screen flex flex-col app-background text-white">
     <Header 
       @login="handleLogin" 
       @register="handleRegister"
@@ -63,9 +63,29 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-/* Add Tailwind via CDN if not working - add this to your public/index.html */
-/* <script src="https://cdn.tailwindcss.com"></script> */
+/* Main App Background - Change this for your desired background */
+.app-background {
+  /* Option 1: Solid color */
+  background-color: #100201 !important;
+  
+  /* Option 2: Casino-style gradient (uncomment to use) */
+  /* background: linear-gradient(135deg, #1a0000 0%, #0b0b0b 50%, #001a00 100%) !important; */
+  
+  /* Option 3: Red/Gold casino theme (uncomment to use) */
+  /* background: linear-gradient(135deg, #1a0000 0%, #2d1b00 50%, #1a0000 100%) !important; */
+  
+  /* Option 4: Animated gradient (uncomment to use) */
+  /* background: linear-gradient(45deg, #1a0000, #0b0b0b, #001a1a, #1a0000) !important;
+     background-size: 400% 400%;
+     animation: gradient-shift 8s ease infinite; */
+}
 
+/* Force background on all router views */
+#app, main, .router-view {
+  background: inherit !important;
+}
+
+/* Rest of your existing styles... */
 * {
   margin: 0;
   padding: 0;
@@ -73,12 +93,13 @@ export default {
   font-family: 'Noto Sans Thai', sans-serif;
 }
 
-body {
+html, body {
   font-family: 'Noto Sans Thai', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #111827;
+  background: #100201 !important;
   color: white;
+  min-height: 100vh;
 }
 
 /* Essential Tailwind-like utility classes */

@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-menu-container" :class="{ 'hidden': isMenuOpen }">
+  <div class="bottom-menu-container">
     <div class="bottom-menu-content">
       <nav class="bottom-nav">
         <!-- Home -->
@@ -9,10 +9,10 @@
         >
           <img 
             src="@/assets/icons/home.png" 
-            alt="Home" 
+            :alt="$t('nav.home')" 
             class="nav-image"
           />
-          <span class="nav-text">Home</span>
+          <span class="nav-text">{{ $t('nav.home') }}</span>
         </router-link>
 
         <!-- Deposit -->
@@ -22,10 +22,10 @@
         >
           <img 
             src="@/assets/icons/deposit.png" 
-            alt="Deposit" 
+            :alt="$t('nav.deposit')" 
             class="nav-image"
           />
-          <span class="nav-text">Deposit</span>
+          <span class="nav-text">{{ $t('nav.deposit') }}</span>
         </button>
 
         <!-- Play (Center Button - Half Outside) -->
@@ -36,11 +36,11 @@
           >
             <img 
               src="@/assets/icons/play.png" 
-              alt="Play" 
+              :alt="$t('nav.play')" 
               class="play-image"
             />
           </button>
-          <span class="play-text">Play</span>
+          <span class="play-text">{{ $t('nav.play') }}</span>
         </div>
 
         <!-- Withdraw -->
@@ -50,10 +50,10 @@
         >
           <img 
             src="@/assets/icons/withdraw.png" 
-            alt="Withdraw" 
+            :alt="$t('nav.withdraw')" 
             class="nav-image"
           />
-          <span class="nav-text">Withdraw</span>
+          <span class="nav-text">{{ $t('nav.withdraw') }}</span>
         </button>
 
         <!-- Contact -->
@@ -63,15 +63,15 @@
         >
           <img 
             src="@/assets/icons/contact.png" 
-            alt="Contact" 
+            :alt="$t('nav.contact')" 
             class="nav-image"
           />
-          <span class="nav-text">Contact</span>
+          <span class="nav-text">{{ $t('nav.contact') }}</span>
         </button>
       </nav>
     </div>
   </div>
-   <div class="bottom-menu-spacer" :class="{ 'hidden': isMenuOpen }" aria-hidden="true"></div>
+  <div class="bottom-menu-spacer" aria-hidden="true"></div>
 </template>
 
 <script>
@@ -99,22 +99,12 @@ export default {
 </script>
 
 <style scoped>
-/* make the var global so everyone can read it */
 :global(:root){ --bottom-menu-height: 80px; }
 
-/* spacer: keep it in normal flow to prevent overlap */
 .bottom-menu-spacer{
   height: calc(var(--bottom-menu-height, 80px) + env(safe-area-inset-bottom, 0px));
-  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.bottom-menu-spacer.hidden {
-  opacity: 0;
-  visibility: hidden;
-  height: 0;
-}
-
-/* Main container */
 .bottom-menu-container {
   position: fixed;
   bottom: 0;
@@ -122,18 +112,9 @@ export default {
   transform: translateX(-50%);
   width: 100%;
   max-width: 980px;
-  z-index: 9999;
-  padding: 0 20px;
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  z-index: 50;
 }
 
-.bottom-menu-container.hidden {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-50%) translateY(100%);
-}
-
-/* Content wrapper */
 .bottom-menu-content {
   background: linear-gradient(to bottom, #6f010a, #360000);
   border-radius: 18px 18px 0 0;
@@ -143,17 +124,15 @@ export default {
   overflow: visible;
 }
 
-/* Navigation layout */
 .bottom-nav {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: var(--bottom-menu-height, 80px); /* use the var */
+  height: var(--bottom-menu-height, 80px);
   padding: 0 24px;
   position: relative;
 }
 
-/* Items */
 .footer-menu-item {
   flex-grow: 1;
   text-align: center;
@@ -171,16 +150,14 @@ export default {
   text-decoration: none;
   color: white;
   transition: transform 0.2s ease;
-  height: var(--bottom-menu-height, 80px); /* keep consistent */
+  height: var(--bottom-menu-height, 80px);
   box-sizing: border-box;
 }
 .footer-menu-item:hover { transform: scale(1.1); }
 
-/* Icons/Text */
 .nav-image { width: 40px; height: 40px; object-fit: contain; margin-bottom: auto; }
 .nav-text { font-size: 12px; font-weight: 500; color: white; margin-top: auto; }
 
-/* Play button */
 .play-button-container { position: relative; justify-content: flex-end; }
 .play-button-container .play-button {
   position: absolute; top: -50px; left: 50%; transform: translateX(-50%); z-index: 10;
@@ -194,17 +171,88 @@ export default {
 .play-image { width: 100px; height: 100px; object-fit: contain; }
 .play-text { font-size: 12px; font-weight: 500; color: white; margin-top: 4px; text-shadow: 0 1px 2px rgba(0,0,0,.5); position: relative; z-index: 1; }
 
-/* Responsive */
 @media (max-width: 480px) {
-  .bottom-menu-container { padding: 0 10px; }
-  .bottom-nav { padding: 0 8px; }
-  .nav-text { font-size: 11px; }
-  .play-button { width: 50px; height: 50px; }
-  .play-image  { width: 50px; height: 50px; }
+  .bottom-menu-container { 
+    padding: 0; 
+    max-width: 100%;
+  }
+  
+  .bottom-nav { 
+    padding: 0 12px; 
+    height: 70px;
+  }
+  
+  .footer-menu-item {
+    padding: 8px 4px 6px 4px;
+    height: 70px;
+    gap: 4px;
+  }
+  
+  .nav-image { 
+    width: 37px; 
+    height: 37px; 
+  }
+  
+  .nav-text { 
+    font-size: 10px; 
+    line-height: 1.2;
+  }
+  
+  .play-button { 
+    width: 50px; 
+    height: 50px; 
+    top: -20px !important;
+  }
+  
+  .play-image { 
+    width: 70px; 
+    height: 70px; 
+  }
+  
+  .play-text {
+    font-size: 10px;
+    margin-top: 2px;
+  }
 }
 
-/* If you PREFER page padding over spacer, use this (not both) */
-:global(@media (max-width: 768px)){
-  body { padding-bottom: calc(var(--bottom-menu-height, 80px) + env(safe-area-inset-bottom, 0px)); }
+@media (max-width: 360px) {
+  .bottom-nav { 
+    padding: 0 8px; 
+    height: 65px;
+  }
+  
+  .footer-menu-item {
+    padding: 6px 2px 4px 2px;
+    height: 65px;
+    gap: 3px;
+  }
+  
+  .nav-image { 
+    width: 28px; 
+    height: 28px; 
+  }
+  
+  .nav-text { 
+    font-size: 9px; 
+  }
+  
+  .play-button { 
+    width: 70px; 
+    height: 70px; 
+    top: -35px;
+  }
+  
+  .play-image { 
+    width: 70px; 
+    height: 70px; 
+  }
+}
+
+:global(@media (max-width: 480px)){
+  :root { --bottom-menu-height: 70px; }
+}
+
+:global(@media (max-width: 360px)){
+  :root { --bottom-menu-height: 65px; }
 }
 </style>

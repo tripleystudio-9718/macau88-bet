@@ -31,70 +31,116 @@
       </div>
     </div>
 
+    <!-- Language Switcher Section - Mobile Only -->
+    <div 
+      class="language-section mobile-only" 
+      :class="{ 'fade-in': languageVisible }"
+      @click.stop="toggleLanguageDropdown"
+    >
+      <div class="language-content">
+        <svg class="globe-icon" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
+        </svg>
+        <span class="current-language">{{ getLanguageLabel(currentLocale) }}</span>
+        <svg class="dropdown-arrow" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      
+      <!-- Language Dropdown -->
+      <div class="language-dropdown" :class="{ 'show': showLanguageDropdown }" @click.stop>
+        <div 
+          v-for="language in supportedLanguages" 
+          :key="language.code"
+          class="language-option" 
+          :class="{ 'active': language.code === currentLocale }"
+          @click.stop="selectLanguage(language.code)"
+        >
+          {{ language.label }}
+        </div>
+      </div>
+    </div>
+
     <!-- Menu Grid -->
     <div 
       class="menu-grid" 
       :class="{ 'fade-up': menuVisible }"
     >
-      <!-- Menu Items -->
-      <div class="menu-item" @click="handleMenuClick('home')">
-        <img src="@/assets/icons/home.png" alt="Home" class="menu-icon" />
-        <span class="menu-label">Home</span>
-      </div>
+      <!-- Menu Items with Router Links -->
+      <router-link 
+        to="/" 
+        class="menu-item" 
+        @click.native="closeMobileMenu"
+        active-class="router-link-active"
+        exact
+      >
+        <img src="@/assets/icons/home.png" :alt="$t('nav.home')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.home') }}</span>
+      </router-link>
 
       <div class="menu-item" @click="handleMenuClick('play')">
-        <img src="@/assets/icons/play.png" alt="Play" class="menu-icon" />
-        <span class="menu-label">Play</span>
+        <img src="@/assets/icons/play.png" :alt="$t('nav.play')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.play') }}</span>
       </div>
 
       <div class="menu-item" @click="handleMenuClick('withdraw')">
-        <img src="@/assets/icons/withdraw.png" alt="Withdraw" class="menu-icon" />
-        <span class="menu-label">Withdraw</span>
+        <img src="@/assets/icons/withdraw.png" :alt="$t('nav.withdraw')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.withdraw') }}</span>
       </div>
 
       <div class="menu-item" @click="handleMenuClick('deposit')">
-        <img src="@/assets/icons/deposit.png" alt="Deposit" class="menu-icon" />
-        <span class="menu-label">Deposit</span>
+        <img src="@/assets/icons/deposit.png" :alt="$t('nav.deposit')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.deposit') }}</span>
       </div>
 
-      <div class="menu-item" @click="handleMenuClick('affiliate')">
-        <img src="@/assets/icons/affiliate.png" alt="Affiliate" class="menu-icon" />
-        <span class="menu-label">Affiliate</span>
-      </div>
+      <router-link 
+        to="/affiliate" 
+        class="menu-item" 
+        @click.native="closeMobileMenu"
+        active-class="router-link-active"
+      >
+        <img src="@/assets/icons/affiliate.png" :alt="$t('nav.affiliate')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.affiliate') }}</span>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('promotions')">
-        <img src="@/assets/icons/promotion.png" alt="Promotions" class="menu-icon" />
-        <span class="menu-label">Promotions</span>
-      </div>
+      <router-link 
+        to="/promotions" 
+        class="menu-item" 
+        @click.native="closeMobileMenu"
+        active-class="router-link-active"
+      >
+        <img src="@/assets/icons/promotion.png" :alt="$t('nav.promotions')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.promotions') }}</span>
+      </router-link>
 
       <div class="menu-item" @click="handleMenuClick('cashback')">
-        <img src="@/assets/icons/cashback.png" alt="Cashback" class="menu-icon" />
-        <span class="menu-label">Cashback</span>
+        <img src="@/assets/icons/cashback.png" :alt="$t('nav.cashback')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.cashback') }}</span>
       </div>
 
       <div class="menu-item" @click="handleMenuClick('history')">
-        <img src="@/assets/icons/history.png" alt="History" class="menu-icon" />
-        <span class="menu-label">History</span>
+        <img src="@/assets/icons/history.png" :alt="$t('nav.history')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.history') }}</span>
       </div>
 
       <div class="menu-item" @click="handleMenuClick('account')">
-        <img src="@/assets/icons/account-info.png" alt="Account" class="menu-icon" />
-        <span class="menu-label">Account info</span>
+        <img src="@/assets/icons/account-info.png" :alt="$t('nav.account')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.account') }}</span>
       </div>
 
       <div class="menu-item" @click="handleMenuClick('lucky-wheel')">
-        <img src="@/assets/icons/lucky-wheel.png" alt="Lucky Wheel" class="menu-icon" />
-        <span class="menu-label">Lucky wheel</span>
+        <img src="@/assets/icons/lucky-wheel.png" :alt="$t('nav.luckyWheel')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.luckyWheel') }}</span>
       </div>
 
       <div class="menu-item" @click="handleMenuClick('collect-points')">
-        <img src="@/assets/icons/collect-point.png" alt="Collect Points" class="menu-icon" />
-        <span class="menu-label">Collect points</span>
+        <img src="@/assets/icons/collect-point.png" :alt="$t('nav.collectPoints')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.collectPoints') }}</span>
       </div>
 
       <div class="menu-item" @click="handleMenuClick('contact')">
-        <img src="@/assets/icons/contact.png" alt="Contact" class="menu-icon" />
-        <span class="menu-label">Contact</span>
+        <img src="@/assets/icons/contact.png" :alt="$t('nav.contact')" class="menu-icon" />
+        <span class="menu-label">{{ $t('nav.contact') }}</span>
       </div>
     </div>
 
@@ -109,6 +155,8 @@
 </template>
 
 <script>
+import { localePath, getCurrentLocale, switchLocale } from '@/router'
+
 export default {
   name: 'MobileMenu',
   props: {
@@ -125,7 +173,26 @@ export default {
       circleExpanded: false,
       backgroundVisible: false,
       headerVisible: false,
-      menuVisible: false
+      languageVisible: false,
+      menuVisible: false,
+      currentLocale: 'th',
+      showLanguageDropdown: false,
+      supportedLanguages: [
+        { code: 'th', label: 'ภาษาไทย' },
+        { code: 'en', label: 'English' },
+        { code: 'lo', label: 'ລາວ' }
+      ]
+    }
+  },
+  computed: {
+    homePath() {
+      return localePath('/', this.getCurrentLocale())
+    },
+    affiliatePath() {
+      return localePath('/affiliate', this.getCurrentLocale())
+    },
+    promotionsPath() {
+      return localePath('/promotions', this.getCurrentLocale())
     }
   },
   watch: {
@@ -140,51 +207,67 @@ export default {
       immediate: true
     }
   },
+  mounted() {
+    this.currentLocale = getCurrentLocale(this.$route)
+  },
   methods: {
+    getCurrentLocale() {
+      return this.$route.meta?.locale || 'th'
+    },
+    
+    getLanguageLabel(locale) {
+      const language = this.supportedLanguages.find(lang => lang.code === locale)
+      return language ? language.label : locale
+    },
+    
     openMobileMenu() {
-      // Disable body scroll
       document.body.style.overflow = 'hidden'
-      
       this.isVisible = true
       
-      // Step 1: Show bigger circle and move it to center faster
       setTimeout(() => {
         this.showCircle = true
       }, 30)
       
-      // Step 2: Once circle reaches center, THEN expand it to full page
       setTimeout(() => {
         this.circleExpanded = true
       }, 350)
       
-      // Step 3: Show background after circle fully expands
-      setTimeout(() => {
-        this.backgroundVisible = true
-      }, 750)
-      
-      // Step 4: Header slides down from top
       setTimeout(() => {
         this.headerVisible = true
       }, 850)
       
-      // Step 5: Menu fades in from bottom
+      setTimeout(() => {
+        this.languageVisible = true
+      }, 950)
+      
       setTimeout(() => {
         this.menuVisible = true
       }, 1100)
     },
     
     closeMobileMenu() {
-      // Instant close - no animation
       this.menuVisible = false
+      this.languageVisible = false
       this.headerVisible = false
       this.backgroundVisible = false
       this.circleExpanded = false
       this.showCircle = false
       this.isVisible = false
       
-      // Re-enable body scroll
       document.body.style.overflow = 'auto'
       this.$emit('close')
+    },
+    
+    toggleLanguageDropdown() {
+      this.showLanguageDropdown = !this.showLanguageDropdown
+    },
+    
+    selectLanguage(locale) {
+      this.currentLocale = locale
+      this.showLanguageDropdown = false
+      switchLocale(this.$router, locale)
+      // Optional: close menu after language change
+      // this.closeMobileMenu()
     },
     
     handleMenuClick(menuItem) {
@@ -196,6 +279,7 @@ export default {
 </script>
 
 <style scoped>
+/* Mobile Menu Overlay */
 .mobile-menu-overlay {
   position: fixed;
   top: 0;
@@ -206,7 +290,6 @@ export default {
   overflow: hidden;
 }
 
-/* Expanding Circle Animation */
 .expanding-circle {
   position: absolute;
   bottom: 80px;
@@ -214,7 +297,7 @@ export default {
   transform: translateX(-50%);
   width: 50px;
   height: 50px;
-  background: radial-gradient(circle, #1a1a1a, #000);
+  background: rgba(112, 20, 28, 0.9);
   border-radius: 50%;
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -234,17 +317,17 @@ export default {
   bottom: 50vh;
   left: 50%;
   transform: translateX(-50%) translateY(50%);
+  background: rgba(0, 0, 0, 0.95);
   transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-/* Full Page Background */
 .menu-background {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+  background: rgba(0, 0, 0, 0.8);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -259,7 +342,7 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  height: 80px;
+  height: 52px;
   background: linear-gradient(to bottom, #360000, #6f010a);
   border-bottom: 1px solid #d7ad69;
   transform: translateY(-100%);
@@ -273,9 +356,10 @@ export default {
 
 .header-content {
   display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  height: 52px;
   padding: 0 24px;
   max-width: 980px;
   margin: 0 auto;
@@ -288,10 +372,6 @@ export default {
 }
 
 .close-btn {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -310,6 +390,123 @@ export default {
   height: 24px;
 }
 
+/* Language Section - Mobile Only */
+.language-section {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+  z-index: 9;
+  display: none; /* Hidden by default */
+}
+
+/* Show only on mobile devices */
+@media (max-width: 768px) {
+  .language-section.mobile-only {
+    display: block;
+  }
+}
+
+.language-section.fade-in {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.language-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(215, 173, 105, 0.3);
+  border-radius: 25px;
+  color: white;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.language-content:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(215, 173, 105, 0.5);
+}
+
+.globe-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.current-language {
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.dropdown-arrow {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.language-section:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Language Dropdown */
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(215, 173, 105, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+}
+
+.language-dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.language-option {
+  padding: 12px 20px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.language-option:last-child {
+  border-bottom: none;
+}
+
+.language-option:hover {
+  background: rgba(215, 173, 105, 0.2);
+  color: #d7ad69;
+}
+
+.language-option.active {
+  background: rgba(215, 173, 105, 0.3);
+  color: #d7ad69;
+  font-weight: 600;
+}
+
 /* Menu Grid */
 .menu-grid {
   position: absolute;
@@ -320,9 +517,9 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
   gap: 15px;
-  padding: 40px 20px;
+  padding: 60px 20px 40px; /* Extra top padding for language section */
   width: 50%;
-  max-width: 490px; /* 50% of 980px */
+  max-width: 490px;
   opacity: 0;
   transform: translate(-50%, -50%) translateY(50px);
   transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -334,7 +531,6 @@ export default {
   transform: translate(-50%, -50%) translateY(0);
 }
 
-/* Menu Items */
 .menu-item {
   display: flex;
   flex-direction: column;
@@ -351,11 +547,23 @@ export default {
   font-size: 1rem;
   list-style: none;
   aspect-ratio: 1.2;
+  text-decoration: none;
+  color: inherit;
 }
 
 .menu-item:hover {
   background: linear-gradient(to bottom, #61460f, #e2b76d);
   border-color: #d7ad69;
+}
+
+.menu-item.router-link-active {
+  background: linear-gradient(to bottom, #61460f, #e2b76d);
+  border-color: #d7ad69;
+}
+
+.menu-item.router-link-active .menu-label {
+  color: black;
+  font-weight: 600;
 }
 
 .menu-icon {
@@ -366,7 +574,8 @@ export default {
   object-fit: contain;
 }
 
-.menu-item:hover .menu-icon {
+.menu-item:hover .menu-icon,
+.menu-item.router-link-active .menu-icon {
   transform: scale(1.1);
 }
 
@@ -403,7 +612,7 @@ export default {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Responsive adjustments */
+/* Responsive Design */
 @media (max-width: 980px) {
   .menu-grid {
     width: 50%;
@@ -417,7 +626,7 @@ export default {
     width: 70%;
     max-width: 70vw;
     gap: 12px;
-    padding: 30px 15px;
+    padding: 60px 15px 30px;
   }
   
   .menu-item {
@@ -433,14 +642,27 @@ export default {
   .menu-label {
     font-size: 0.9rem;
   }
+  
+  .language-content {
+    padding: 10px 16px;
+  }
+  
+  .current-language {
+    font-size: 15px;
+  }
+  
+  .globe-icon {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 @media (max-width: 480px) {
   .menu-grid {
-    width: 90%;
-    max-width: 90vw;
+    width: 100%;
+    max-width: 100vw;
     gap: 10px;
-    padding: 20px 10px;
+    padding: 10px;
   }
   
   .menu-item {
@@ -456,6 +678,23 @@ export default {
   .menu-label {
     font-size: 0.8rem;
   }
+  
+  .language-section {
+    top: 60px;
+  }
+  
+  .language-content {
+    padding: 8px 14px;
+  }
+  
+  .current-language {
+    font-size: 14px;
+  }
+  
+  .globe-icon {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 @media (max-width: 360px) {
@@ -463,6 +702,7 @@ export default {
     width: 95%;
     max-width: 95vw;
     gap: 8px;
+    padding: 45px 8px 15px;
   }
   
   .menu-item {
@@ -477,6 +717,23 @@ export default {
   
   .menu-label {
     font-size: 0.75rem;
+  }
+  
+  .language-section {
+    top: 55px;
+  }
+  
+  .language-content {
+    padding: 6px 12px;
+  }
+  
+  .current-language {
+    font-size: 13px;
+  }
+  
+  .globe-icon {
+    width: 14px;
+    height: 14px;
   }
 }
 </style>
