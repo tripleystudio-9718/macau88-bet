@@ -111,7 +111,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 900px;
+  max-width: 980px;
   z-index: 50;
 }
 

@@ -208,11 +208,11 @@ const emit = defineEmits(['provider-selected'])
   }
 
   .all-providers {
-    padding: 0 0 35px 0;
+    padding: 0 0 40px 0;
   }
 
   .all-providers {
-    gap: 80px 0;
+    gap: 90px 0;
   }
   
   .all-title {

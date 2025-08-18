@@ -15,18 +15,23 @@
       @withdraw="handleWithdraw"
       @contact="handleContact"
     />
+    
+    <!-- Popup Component -->
+    <PopupComponent ref="popup" />
   </div>
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import BottomMenu from './components/BottomMenu.vue'
+import PopupComponent from './components/Popup.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
-    BottomMenu
+    BottomMenu,
+    PopupComponent
   },
   data() {
     return {

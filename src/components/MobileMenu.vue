@@ -400,7 +400,7 @@ export default {
   transform: translateX(-50%) translateY(20px);
   transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
   z-index: 9;
-  display: none; /* Hidden by default */
+  display: none;
 }
 
 /* Show only on mobile devices */
@@ -431,9 +431,23 @@ export default {
   position: relative;
 }
 
-.language-content:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(215, 173, 105, 0.5);
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .language-content {
+    -webkit-tap-highlight-color: rgba(215, 173, 105, 0.3);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .language-content:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(215, 173, 105, 0.5);
+  }
+  
+  .language-section:hover .dropdown-arrow {
+    transform: rotate(180deg);
+  }
 }
 
 .globe-icon {
@@ -453,10 +467,6 @@ export default {
   height: 16px;
   flex-shrink: 0;
   transition: transform 0.3s ease;
-}
-
-.language-section:hover .dropdown-arrow {
-  transform: rotate(180deg);
 }
 
 /* Language Dropdown */
@@ -496,9 +506,19 @@ export default {
   border-bottom: none;
 }
 
-.language-option:hover {
-  background: rgba(215, 173, 105, 0.2);
-  color: #d7ad69;
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .language-option {
+    -webkit-tap-highlight-color: rgba(215, 173, 105, 0.2);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .language-option:hover {
+    background: rgba(215, 173, 105, 0.2);
+    color: #d7ad69;
+  }
 }
 
 .language-option.active {
@@ -516,18 +536,18 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  padding: 60px 20px 40px; /* Extra top padding for language section */
+  padding: 60px 20px 40px;
   width: 50%;
   max-width: 490px;
   opacity: 0;
   transform: translate(-50%, -50%) translateY(50px);
   transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
-  place-items: stretch;
+  place-items: center;
 }
 
 .menu-grid.fade-up {
   opacity: 1;
-  transform: translate(-50%, -70%) translateY(0);
+  transform: translate(-50%, -60%) translateY(0);
 }
 
 .menu-item {
@@ -550,9 +570,27 @@ export default {
   color: inherit;
 }
 
-.menu-item:hover {
-  background: linear-gradient(to bottom, #61460f, #e2b76d);
-  border-color: #d7ad69;
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .menu-item {
+    -webkit-tap-highlight-color: rgba(215, 173, 105, 0.3);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .menu-item:hover {
+    background: linear-gradient(to bottom, #61460f, #e2b76d);
+    border-color: #d7ad69;
+  }
+  
+  .menu-item:hover .menu-icon {
+    transform: scale(1.1);
+  }
+  
+  .menu-item:hover .menu-label {
+    color: black;
+  }
 }
 
 .menu-item.router-link-active {
@@ -571,9 +609,9 @@ export default {
   margin-bottom: 8px;
   transition: transform 0.3s ease;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
-.menu-item:hover .menu-icon,
 .menu-item.router-link-active .menu-icon {
   transform: scale(1.1);
 }
@@ -586,16 +624,13 @@ export default {
   line-height: 1.2;
   margin-top: 0;
   transition: color 0.3s ease;
-}
-
-.menu-item:hover .menu-label {
-  color: black;
+  flex-shrink: 0;
 }
 
 /* Version Info */
 .version-info {
   position: absolute;
-  bottom:270px;
+  bottom: 130px;
   left: 50%;
   transform: translateX(-50%);
   color: rgba(255, 255, 255, 0.5);
@@ -616,7 +651,6 @@ export default {
   .menu-grid {
     width: 50%;
     max-width: 50vw;
-    gap: 15px;
   }
 }
 
@@ -624,8 +658,15 @@ export default {
   .menu-grid {
     width: 70%;
     max-width: 70vw;
-    gap: 12px;
     padding: 60px 15px 30px;
+  }
+
+  .version-info {
+    bottom: 100px;
+  }
+
+  .menu-grid.fade-up {
+    transform: translate(-50%, -55%) translateY(0);
   }
   
   .menu-item {
@@ -660,7 +701,6 @@ export default {
   .menu-grid {
     width: 100%;
     max-width: 100vw;
-    gap: 10px;
     padding: 10px;
   }
   
@@ -694,13 +734,16 @@ export default {
     width: 16px;
     height: 16px;
   }
+
+  .version-info {
+    bottom: 80px;
+  }
 }
 
 @media (max-width: 360px) {
   .menu-grid {
     width: 95%;
     max-width: 95vw;
-    gap: 8px;
     padding: 45px 8px 15px;
   }
   
@@ -733,6 +776,10 @@ export default {
   .globe-icon {
     width: 14px;
     height: 14px;
+  }
+
+  .version-info {
+    bottom: 70px;
   }
 }
 </style>

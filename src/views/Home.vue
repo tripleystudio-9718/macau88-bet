@@ -181,6 +181,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
+import { getCurrentLocale, localePath } from '@/router'
 
 /* assets & components */
 import macauGif from '@/assets/macau-gif1.gif'
@@ -494,16 +495,31 @@ const hubTabs = [
 
 const activeHub = ref('slot')
 
+const currentLocale = computed(() => {
+  // Get current locale from route or default to 'th'
+  return getCurrentLocale(router.currentRoute.value) || 'th'
+})
+
 const selectHub = (key) => { 
+  // Handle navigation for tabs that require login
+  if (key === 'history' || key === 'account' || key === 'lucky') {
+    const loginPath = localePath('/login', currentLocale.value)
+    router.push(loginPath)
+    return
+  }
+  
   // Handle navigation for specific tabs
   if (key === 'affiliate') {
-    router.push('/affiliate')
+    const affiliatePath = localePath('/affiliate', currentLocale.value)
+    router.push(affiliatePath)
     return
   }
   if (key === 'promo') {
-    router.push('/promotions')
+    const promotionsPath = localePath('/promotions', currentLocale.value)
+    router.push(promotionsPath)
     return
   }
+  
   // For other tabs, just set active
   activeHub.value = key 
 }
@@ -545,72 +561,107 @@ onBeforeUnmount(() => {
 })
 </script>
 
-
 <style scoped>
 * { box-sizing: border-box; }
+
+/* MAIN CONTAINER: Fixed 980px width on desktop, full width on mobile */
 .app-container { 
-  background:#100201; 
+  background: #100201; 
   width: 980px; 
   margin: 0 auto;
   max-width: 100%;
 }
 
-/* Mobile-first responsive design */
+/* Mobile responsive: Full width with minimal padding */
 @media (max-width: 980px) {
   .app-container { 
     width: 100%; 
-    padding: 0 12px; /* Standardized to 12px horizontal padding */
+    padding: 0; /* Reduced padding for mobile */
   }
 }
 
-.hero-section { position: relative; overflow: hidden; padding: 12px; }
-.hero-bg-gradient { position:absolute; inset:0; background:#100201; }
+@media (max-width: 480px) {
+  .app-container { 
+    padding: 0; /* Even smaller padding on very small screens */
+  }
+}
 
-/* Slider */
+/* ALL CHILD ELEMENTS: Use 100% width within container */
+.hero-section { 
+  position: relative; 
+  overflow: hidden; 
+  padding: 12px; 
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .hero-section { 
+    padding: 8px 4px; /* Reduced padding on mobile */
+  }
+}
+
+.hero-bg-gradient { 
+  position: absolute; 
+  inset: 0; 
+  background: #100201; 
+}
+
+/* Slider: 100% width within container */
 .slider-container {
   position: relative;
-  width: 880px;
-  max-width: 100%;
+  width: 100%;
   overflow: hidden;
   border-radius: 6px;
   margin: 0 auto;
 }
 
-@media (max-width: 980px) {
-  .slider-container {
-    width: 100%;
-  }
-}
-
 .slide-box {
   width: 100%;
-  height:auto;
+  height: auto;
   aspect-ratio: 16 / 5;
   background: #100201;
 }
 
 @media (max-width: 480px) {
   .slide-box {
-    aspect-ratio: 16 / 6; /* Slightly taller on mobile */
+    aspect-ratio: 16 / 6;
   }
 }
 
-.slide-box img { width: 100%; height: 100%; display: block; object-fit: cover; user-select:none; -webkit-user-drag:none; }
+.slide-box img { 
+  width: 100%; 
+  height: 100%; 
+  display: block; 
+  object-fit: cover; 
+  user-select: none; 
+  -webkit-user-drag: none; 
+}
+
 .slider-track {
   display: flex;
   transition: transform 0.5s ease-in-out;
-  touch-action: pan-y;          /* allow vertical page scroll, we handle horizontal drag */
+  touch-action: pan-y;
   cursor: grab;
   user-select: none;
+  width: 100%;
 }
+
 .slider-track.dragging { cursor: grabbing; }
 .slide { min-width: 100%; }
 
 /* Arrows */
 .nav-btn {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  background: none; border: none; color: #fff;
-  font-size: 24px; padding: 8px 10px; line-height: 1; cursor: pointer; z-index: 2;
+  position: absolute; 
+  top: 50%; 
+  transform: translateY(-50%);
+  background: none; 
+  border: none; 
+  color: #fff;
+  font-size: 24px; 
+  padding: 8px 10px; 
+  line-height: 1; 
+  cursor: pointer; 
+  z-index: 2;
 }
 .nav-btn.left { left: 10px; }
 .nav-btn.right { right: 10px; }
@@ -659,107 +710,203 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Section 2: Video */
-.video-section { padding: 12px; display: flex; justify-content: center; }
-.video-frame {
-  width: 880px; max-width: 100%;
-  border-radius: 6px; overflow: hidden; background: #0b0b0b;
-  position: relative; aspect-ratio: 16 / 9;
+/* Video Section: 100% width */
+.video-section { 
+  padding: 12px; 
+  display: flex; 
+  justify-content: center; 
+  width: 100%;
 }
-.video-frame::before { content:""; display:block; padding-top:56.25%; }
-.video-frame iframe { position:absolute; inset:0; width:100%; height:100%; display:block; }
 
-/* Ticker */
-.ticker-wrap{ 
-  display:flex; 
-  justify-content:center; 
-  background:#100201; 
-  width:880px; 
-  max-width: 100%;
-  margin:0 auto; 
+@media (max-width: 480px) {
+  .video-section { 
+    padding: 8px 4px;
+  }
+}
+
+.video-frame {
+  width: 100%;
+  border-radius: 6px; 
+  overflow: hidden; 
+  background: #0b0b0b;
+  position: relative; 
+  aspect-ratio: 16 / 9;
+}
+
+.video-frame::before { 
+  content: ""; 
+  display: block; 
+  padding-top: 56.25%; 
+}
+
+.video-frame iframe { 
+  position: absolute; 
+  inset: 0; 
+  width: 100%; 
+  height: 100%; 
+  display: block; 
+}
+
+/* Ticker: 100% width */
+.ticker-wrap { 
+  display: flex; 
+  justify-content: center; 
+  background: #100201; 
+  width: 100%;
+  margin: 0 auto; 
+  padding: 0 12px;
 }
 
 @media (max-width: 980px) {
   .ticker-wrap {
     width: 100%;
-    padding: 0 12px; /* Changed from 8px to 12px for consistency */
+    padding: 0 8px; /* Reduced padding */
   }
 }
 
-.ticker{
-  width:100%; max-width: v-bind(width + 'px');
-  position:relative; border-radius:6px; border:1px solid #fee307;
-  overflow:hidden; background: linear-gradient(to bottom, #a20313, #72000e);
+@media (max-width: 480px) {
+  .ticker-wrap {
+    padding: 0 4px; /* Even smaller padding */
+  }
 }
-.ticker::before{ content:""; position:absolute; inset:3px; border-radius:6px; z-index:0; }
-.ticker-track{
-  position:relative; display:inline-flex; gap:2rem; align-items:center;
-  white-space:nowrap; padding:8px 16px; min-height:40px; border-radius:6px; z-index:1;
-  width:max-content; animation: ticker-scroll var(--speed, 20s) linear infinite; will-change: transform;
+
+.ticker {
+  width: 100%;
+  position: relative; 
+  border-radius: 6px; 
+  border: 1px solid #fee307;
+  overflow: hidden; 
+  background: linear-gradient(to bottom, #a20313, #72000e);
 }
-.ticker-track.paused{ animation-play-state: paused; }
-.ticker-item{ display:inline-block; color:#fff; font-weight:400; letter-spacing:.2px; font-size:15px; }
+
+.ticker::before { 
+  content: ""; 
+  position: absolute; 
+  inset: 3px; 
+  border-radius: 6px; 
+  z-index: 0; 
+}
+
+.ticker-track {
+  position: relative; 
+  display: inline-flex; 
+  gap: 2rem; 
+  align-items: center;
+  white-space: nowrap; 
+  padding: 8px 16px; 
+  min-height: 40px; 
+  border-radius: 6px; 
+  z-index: 1;
+  width: max-content; 
+  animation: ticker-scroll var(--speed, 20s) linear infinite; 
+  will-change: transform;
+}
+
+.ticker-track.paused { animation-play-state: paused; }
+
+.ticker-item { 
+  display: inline-block; 
+  color: #fff; 
+  font-weight: 400; 
+  letter-spacing: .2px; 
+  font-size: 15px; 
+}
 
 @media (max-width: 480px) {
   .ticker-item { font-size: 13px; }
   .ticker-track { padding: 6px 12px; min-height: 36px; }
 }
 
-@keyframes ticker-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-33.3333%); } }
+@keyframes ticker-scroll { 
+  from { transform: translateX(0); } 
+  to { transform: translateX(-33.3333%); } 
+}
 
-/* GIF + 2-up slider */
-.image-slider{ padding: 12px; }
-.macau-gif{
-  width:100%; max-width:880px; display:block; margin:0 auto 12px auto; border-radius:6px; padding:10px 0;
+/* Image Slider Section: 100% width */
+.image-slider { 
+  padding: 12px; 
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .image-slider { 
+    padding: 8px 4px;
+  }
+}
+
+.macau-gif {
+  width: 100%;
+  display: block; 
+  margin: 0 auto 12px auto; 
+  border-radius: 6px; 
+  padding: 10px 0;
 }
 
 @media (max-width: 980px) {
-  .image-slider { padding: 12px; } /* Changed from 8px to 12px for consistency */
+  .image-slider { padding: 12px 4px; }
   .macau-gif { padding: 8px 0; }
 }
 
 @media (max-width: 480px) {
-  .app-container {
-    padding: 0 12px; /* Changed from 0 to 12px horizontal padding for consistency */
-  }
-  
-  .video-section {
-    padding: 0 12px 12px 12px; /* Kept 12px horizontal padding consistent */
-  }
+  .macau-gif { padding: 6px 0; }
 }
 
-/* 2-up */
-.two-up-container{
-  position:relative; width:880px; max-width:100%; margin:0 auto; overflow:hidden; border-radius:6px;
+/* 2-up Container: 100% width */
+.two-up-container {
+  position: relative; 
+  width: 100%;
+  margin: 0 auto; 
+  overflow: hidden; 
+  border-radius: 6px;
 }
 
-@media (max-width: 980px) {
-  .two-up-container {
-    width: 100%;
-  }
+.two-up-track {
+  display: flex; 
+  transition: transform .5s ease-in-out; 
+  will-change: transform;
+  touch-action: pan-y; 
+  cursor: grab; 
+  user-select: none;
+  width: 100%;
 }
 
-.two-up-track{
-  display:flex; transition: transform .5s ease-in-out; will-change: transform;
-  touch-action: pan-y; cursor: grab; user-select:none;
-}
 .two-up-track.dragging { cursor: grabbing; }
-.pair{
-  min-width:100%; display:grid; grid-template-columns: 1fr 1fr; gap:12px; background:transparent; padding:0;
-}
-.poster{ background:#0b0b0b; border-radius:6px; overflow:hidden; }
-.poster img{ width:100%; height:100%; display:block; object-fit:cover; aspect-ratio: 1 / 1; user-select:none; -webkit-user-drag:none; }
 
-/* Mobile: Keep 2 items in row but with smaller gap */
+.pair {
+  min-width: 100%; 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 12px; 
+  background: transparent; 
+  padding: 0;
+}
+
 @media (max-width: 480px) {
   .pair { 
-    grid-template-columns: 1fr 1fr; /* Keep 2 columns on mobile */
-    gap: 8px; /* Smaller gap */
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 }
 
-/* indicators container */
-.two-up-indicators{
+.poster { 
+  background: #0b0b0b; 
+  border-radius: 6px; 
+  overflow: hidden; 
+  width: 100%;
+}
+
+.poster img { 
+  width: 100%; 
+  height: 100%; 
+  display: block; 
+  object-fit: cover; 
+  aspect-ratio: 1 / 1; 
+  user-select: none; 
+  -webkit-user-drag: none; 
+}
+
+/* Indicators container */
+.two-up-indicators {
   position: absolute;
   left: 50%;
   bottom: 8px;
@@ -777,8 +924,8 @@ onBeforeUnmount(() => {
   }
 }
 
-/* each bar */
-.bar-dot{
+/* Each bar */
+.bar-dot {
   width: 50px;
   height: 8px;
   border-radius: 2px;
@@ -790,79 +937,92 @@ onBeforeUnmount(() => {
   transition: transform .15s ease, opacity .15s ease, background-color .2s ease;
   opacity: .85;
 }
-.bar-dot:hover{ transform: scale(1.04); opacity: 1; }
 
-/* active = gold/yellow */
-.bar-dot.active{
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .bar-dot {
+    -webkit-tap-highlight-color: rgba(255, 216, 74, 0.3);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .bar-dot:hover { 
+    transform: scale(1.04); 
+    opacity: 1; 
+  }
+}
+
+/* Active = gold/yellow */
+.bar-dot.active {
   background: linear-gradient(180deg, #FFD84A, #E2B300);
   box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset, 0 1px 4px rgba(0,0,0,.25);
   opacity: 1;
 }
 
-/* Mobile: smaller bars */
-@media (max-width: 480px){
-  .bar-dot{ width: 32px; height: 6px; }
+@media (max-width: 480px) {
+  .bar-dot { 
+    width: 32px; 
+    height: 6px; 
+  }
 }
 
-/* ========================================================= */
-/* Feature Tabs (MOBILE OPTIMIZED: 6 tabs in a row on mobile) */
-/* ========================================================= */
-.hub-tabs{ 
-  padding: 60px 0 0; /* Extra top padding for protruding icons */
+/* Feature Tabs Section: 100% width */
+.hub-tabs { 
+  padding: 60px 0 0;
+  width: 100%;
 }
 
 @media (max-width: 480px) {
   .hub-tabs { 
-    padding: 40px 12px 0; /* Changed from 8px to 12px horizontal padding */
+    padding: 40px 4px 0; /* Reduced padding */
   }
 }
 
-.hub-grid{
-  width: 880px;
-  max-width: 100%;
+.hub-grid {
+  width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   padding-bottom: 30px;
-  gap: 80px 14px; /* row-gap column-gap - larger row gap for icon spacing */
+  gap: 80px 14px;
 }
 
-/* Mobile: 5 tabs in one row with smaller size */
 @media (max-width: 480px) {
-  .hub-grid{ 
-    grid-template-columns: repeat(5, 1fr); /* 5 columns for mobile */
-    gap: 35px 6px; /* Small gaps but slightly larger for 5 columns */
+  .hub-grid { 
+    grid-template-columns: repeat(5, 1fr);
+    gap: 35px 6px;
     padding-bottom: 20px;
   }
 }
 
-/* Tablet: 4 columns */
 @media (min-width: 481px) and (max-width: 768px) {
-  .hub-grid{ 
+  .hub-grid { 
     grid-template-columns: repeat(4, 1fr);
     gap: 60px 10px;
+    padding: 0 8px 30px; /* Added horizontal padding */
   }
 }
 
-/* Small desktop: 5 columns */
 @media (min-width: 769px) and (max-width: 980px) {
-  .hub-grid{ 
+  .hub-grid { 
     grid-template-columns: repeat(5, 1fr);
     gap: 70px 12px;
+    padding: 0 8px 30px; /* Added horizontal padding */
   }
 }
 
-.hub-tile{
-  --tile-icon-size: 120px;   /* icon size (tweak to taste) */
-  --icon-protrude: -40px;   /* Half the icon extends outside */
+.hub-tile {
+  --tile-icon-size: 120px;
+  --icon-protrude: -40px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;  /* Push content to bottom */
+  justify-content: flex-end;
   gap: 10px;
-  min-height: 140px;        /* taller to visually match reference */
-  padding: 20px 12px 16px;  /* More top padding */
+  min-height: 140px;
+  padding: 20px 12px 16px;
   border-radius: 16px;
   background: linear-gradient(to bottom, #a20313, #72000e);
   border: 1px solid rgba(255, 220, 120, 0.35);
@@ -874,46 +1034,50 @@ onBeforeUnmount(() => {
   user-select: none;
   outline: none;
   transition: transform .12s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-  overflow: visible; /* Critical - allow icon to extend outside */
+  overflow: visible;
+  width: 100%;
 }
 
-/* Mobile: Much smaller tiles to fit 5 in a row */
 @media (max-width: 480px) {
-  .app-container {
-    padding: 0;
-  }
-  
-  .video-section {
-    padding: 0 12px 12px 12px;
-  }
-
-  .hub-tile{ 
-    --tile-icon-size: 50px; /* Slightly larger icons for 5 columns */
-    --icon-protrude: -20px; /* Adjusted protrusion */
-    min-height: 75px; /* Slightly taller */
-    padding: 10px 6px 10px; /* Bit more padding */
-    border-radius: 8px; /* Smaller border radius */
-    gap: 5px; /* Slightly larger gap */
+  .hub-tile { 
+    --tile-icon-size: 50px;
+    --icon-protrude: -20px;
+    min-height: 75px;
+    padding: 10px 6px 10px;
+    border-radius: 8px;
+    gap: 5px;
   }
 }
 
-.hub-tile:hover{ 
-  transform: translateY(-1px);
-  background: linear-gradient(to bottom, #61460f, #e2b76d); /* Same gold color as active */
-  color: #3b2200; /* Dark text like active state */
-  border-color: #e3b400; /* Gold border like active */
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .hub-tile {
+    -webkit-tap-highlight-color: rgba(215, 173, 105, 0.3);
+  }
 }
-.hub-tile:active{ transform: translateY(0); }
-.hub-tile:focus-visible{
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .hub-tile:hover { 
+    transform: translateY(-1px);
+    background: linear-gradient(to bottom, #61460f, #e2b76d);
+    color: #3b2200;
+    border-color: #e3b400;
+  }
+}
+
+.hub-tile:active { transform: translateY(0); }
+
+.hub-tile:focus-visible {
   box-shadow:
     0 0 0 2px rgba(255, 216, 74, .85),
     0 2px 8px rgba(0,0,0,0.3);
 }
 
 /* Icon positioned to extend outside top of container */
-.hub-icon-wrap{
-  position: absolute;           /* Use absolute positioning */
-  top: var(--icon-protrude);   /* Position half outside */
+.hub-icon-wrap {
+  position: absolute;
+  top: var(--icon-protrude);
   left: 50%;
   transform: translateX(-50%);
   width: var(--tile-icon-size);
@@ -923,33 +1087,32 @@ onBeforeUnmount(() => {
   justify-content: center;
   overflow: visible;
   pointer-events: none;
-  z-index: 2;                   /* Ensure proper layering */
+  z-index: 2;
 }
 
-.hub-icon{
-  width: 100%;                  /* Fill the wrapper */
-  height: 100%;                 /* Fill the wrapper */
+.hub-icon {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
   will-change: transform;
 }
 
 /* Label positioned in the lower part of the tile */
-.hub-label{
-  font-size: 20px;           /* closer to the screenshot */
+.hub-label {
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: .2px;
   text-shadow: 0 1px 0 rgba(0,0,0,0.25);
-  margin-top: auto;          /* Push to bottom */
-  z-index: 1;               /* Layer below icon */
+  margin-top: auto;
+  z-index: 1;
   text-align: center;
   line-height: 1.1;
 }
 
-/* Mobile: Smaller text for 5 columns */
 @media (max-width: 480px) {
-  .hub-label{ 
-    font-size: 10px; /* Slightly larger to fit 5 columns */
+  .hub-label { 
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0;
     line-height: 1.1;
@@ -958,22 +1121,17 @@ onBeforeUnmount(() => {
   .hub-tile {
     min-height: 65px;
   }
-
-  .hub-panel {
-    margin: 0 !important;
-  }
 }
 
-/* Tablet: Medium text */
 @media (min-width: 481px) and (max-width: 768px) {
-  .hub-label{ 
+  .hub-label { 
     font-size: 14px;
     font-weight: 650;
   }
 }
 
-/* subtle inner border highlight */
-.hub-tile-border{
+/* Subtle inner border highlight */
+.hub-tile-border {
   content: "";
   position: absolute;
   inset: 3px;
@@ -990,67 +1148,65 @@ onBeforeUnmount(() => {
 }
 
 /* Active (gold) */
-.hub-tile[aria-selected="true"]{
+.hub-tile[aria-selected="true"] {
   background: linear-gradient(to bottom, #61460f, #e2b76d);
-  color: #3b2200; /* dark text like the reference */
+  color: #3b2200;
   border-color: #e3b400;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.35),
     0 6px 14px rgba(0,0,0,0.35);
-  /* More protrusion when active */
   --icon-protrude: -45px;
 }
 
 @media (max-width: 480px) {
   .hub-tile[aria-selected="true"] {
-    --icon-protrude: -28px; /* Adjusted for mobile with 5 columns */
+    --icon-protrude: -28px;
   }
 }
 
-/* Float only when active (no layout shift thanks to absolute positioning) */
-.hub-tile[aria-selected="true"] .hub-icon{
+/* Float only when active */
+.hub-tile[aria-selected="true"] .hub-icon {
   animation: hub-float 2.8s ease-in-out infinite;
 }
 
-@keyframes hub-float{
-  0%, 100% { transform: translateY(0); }     /* Simplified since position is already absolute */
-  50%      { transform: translateY(-8px); }  /* Float upward */
+@keyframes hub-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
 }
 
-/* Mobile: Smaller float distance */
 @media (max-width: 480px) {
-  @keyframes hub-float{
+  @keyframes hub-float {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-4px); } /* Smaller float on mobile */
+    50%      { transform: translateY(-4px); }
   }
 }
 
 /* Reduce motion preference */
-@media (prefers-reduced-motion: reduce){
-  .hub-tile[aria-selected="true"] .hub-icon{ animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hub-tile[aria-selected="true"] .hub-icon { animation: none; }
 }
 
-/* Panel below grid */
-.hub-panel{
+/* Panel below grid: 100% width */
+.hub-panel {
   margin: 14px auto 0;
   background: #0b0b0b;
   padding: 0;
   color: #e8e8e8;
-  max-width: 880px;
+  width: 100%;
 }
 
 @media (max-width: 980px) {
   .hub-panel {
-    margin: 14px 0 0; /* Remove horizontal margins that cause cutoff */
-    padding: 0 12px; /* Add internal padding instead of margins */
-    max-width: 100%; /* Ensure full width usage */
+    margin: 14px 0 0;
+    padding: 0 8px; /* Reduced padding */
+    max-width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .hub-panel {
-    margin: 10px 0 0; /* Reduce top margin on small screens */
-    padding: 0 8px; /* Slightly less padding on very small screens */
+    margin: 10px 0 0;
+    padding: 0 4px; /* Even smaller padding */
   }
 }
 </style>

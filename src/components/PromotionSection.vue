@@ -2,7 +2,7 @@
   <div class="promotion-section">
     <!-- Title with background image -->
     <div class="promotion-title">
-      Promotions
+      {{ $t('promotions.title') }}
     </div>
     
     <!-- Promotion Cards Grid -->
@@ -16,11 +16,11 @@
           :style="{ animationDelay: `${index * 0.1}s` }"
         >
           <div class="card-image">
-            <img :src="promo.image" :alt="`Promotion ${index + 1}`" class="promo-image" />
+            <img :src="getPromoImage(promo)" :alt="getPromoTitle(promo)" class="promo-image" />
           </div>
-          <div class="card-content">
-            <h3 class="card-title">{{ promo.title }}</h3>
-            <p class="card-description">{{ promo.description }}</p>
+          <div class="card-content" v-if="hasPromoText(promo)">
+            <h3 class="card-title">{{ getPromoTitle(promo) }}</h3>
+            <p class="card-description">{{ getPromoDescription(promo) }}</p>
           </div>
         </div>
       </div>
@@ -34,9 +34,9 @@
           <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 8C2 7.44772 2.44772 7 3 7H21C21.5523 7 22 7.44772 22 8C22 8.55228 21.5523 9 21 9H3C2.44772 9 2 8.55228 2 8Z" fill="currentColor"></path>
             <path d="M2 12C2 11.4477 2.44772 11 3 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H3C2.44772 13 2 12.5523 2 12Z" fill="currentColor"></path>
-            <path d="M3 15C2.44772 15 2 15.4477 2 16C2 16.5523 2.44772 17 3 17H15C15.5523 17 16 16.5523 16 16C16 15.4477 15.5523 15 15 15H3Z" fill="currentColor"></path>
+            <path d="M3 15C2.44772 15 2 15.4477 2 16C2 16.5523 2.44772 17 3 17H15C15.5523 17 16 16.5523 16 15.4477 15.5523 15 15 15H3Z" fill="currentColor"></path>
           </svg>
-          More Show
+          {{ $t('common.moreShow') }}
         </router-link>
       </div>
     </div>
@@ -56,27 +56,25 @@
         <div class="modal-image">
           <!-- Close Button - positioned at top-right of image -->
           <button class="close-btn-outside" @click="closeModal" :class="{ 'pulse-animation': isAnimating }">×</button>
-          <img :src="currentPromo.image" :alt="'Promotion Modal'" />
+          <img :src="getPromoImage(currentPromo)" :alt="getPromoTitle(currentPromo)" />
         </div>
         
         <!-- Modal Details -->
-        <div class="modal-details">
-          <h2 class="modal-title">{{ currentPromo.modalTitle }}</h2>
-          <p class="modal-description" v-html="currentPromo.modalDescription" v-if="currentPromo.modalDescription"></p>
+        <div class="modal-details" v-if="hasModalText(currentPromo)">
+          <h2 class="modal-title">{{ getModalTitle(currentPromo) }}</h2>
+          <p class="modal-description" v-html="getModalDescription(currentPromo)" v-if="getModalDescription(currentPromo)"></p>
         </div>
         
         <!-- Close Button -->
         <div class="modal-close-container">
-          <button class="close-button" @click="closeModal">Close</button>
+          <button class="close-button" @click="closeModal">{{ $t('common.close') }}</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
-
+<script>
 // Import the title frame background (PNG)
 import titleFrame from '@/assets/title_frame.png'
 
@@ -89,90 +87,124 @@ import weeklyCashback from '@/assets/promotions/weekly-cashback.jpeg'
 import lotteryX10 from '@/assets/promotions/lottery-x10.jpeg'
 import promotionGeneric from '@/assets/promotions/promotion.webp'
 
-const showModal = ref(false)
-const isAnimating = ref(false)
-const currentPromoIndex = ref(0)
+export default {
+  name: 'PromotionSection',
+  data() {
+    return {
+      showModal: false,
+      isAnimating: false,
+      currentPromoIndex: 0,
+      promoDetails: [
+        {
+          key: 'welcome50',
+          image: welcomeBonus,
+          genericImage: promotionGeneric,
+          hasText: true,
+          hasTextForNonThai: false // Only show text for Thai
+        },
+        {
+          key: 'lossRebate', 
+          image: dailyRebate,
+          genericImage: promotionGeneric,
+          hasText: true,
+          hasTextForNonThai: true // Show text for all languages
+        },
+        {
+          key: 'instant500',
+          image: instantBonus,
+          genericImage: promotionGeneric,
+          hasText: true,
+          hasTextForNonThai: false // Only show text for Thai
+        },
+        {
+          key: 'minDeposit',
+          image: minDeposit,
+          genericImage: promotionGeneric,
+          hasText: true,
+          hasTextForNonThai: false // Only show text for Thai
+        },
+        {
+          key: 'referFriend',
+          image: weeklyCashback,
+          genericImage: promotionGeneric,
+          hasText: true,
+          hasTextForNonThai: false // Only show text for Thai
+        },
+        {
+          key: 'baccaratRich',
+          image: lotteryX10,
+          genericImage: promotionGeneric,
+          hasText: true,
+          hasTextForNonThai: false // Only show text for Thai
+        }
+      ]
+    }
+  },
+  computed: {
+    currentPromo() {
+      return this.promoDetails[this.currentPromoIndex] || {}
+    },
+    currentLocale() {
+      return this.$route.meta?.locale || this.$i18n.locale || 'th'
+    }
+  },
+  methods: {
+    openModal(index) {
+      this.currentPromoIndex = index
+      this.isAnimating = true
+      this.showModal = true
+      
+      setTimeout(() => {
+        this.isAnimating = false
+      }, 300)
+    },
+    
+    closeModal() {
+      this.showModal = false
+      this.isAnimating = false
+    },
 
-const promoDetails = ref([
-  {
-    key: 'welcome50',
-    image: welcomeBonus,
-    title: 'Welcome Bonus 50%',
-    description: 'Get 50% bonus on your first deposit',
-    modalTitle: 'Welcome Bonus 50%',
-    modalDescription: 'Join now and get 50% bonus on your first deposit. Terms and conditions apply.',
-    hasText: true,
-    hasTextForNonThai: false
-  },
-  {
-    key: 'lossRebate', 
-    image: dailyRebate,
-    title: 'Daily Loss Rebate',
-    description: 'Get daily rebate on your losses',
-    modalTitle: 'Daily Loss Rebate',
-    modalDescription: 'Receive daily rebate on your losses. Up to 1.2% cashback daily.',
-    hasText: true,
-    hasTextForNonThai: true
-  },
-  {
-    key: 'instant500',
-    image: instantBonus,
-    title: 'Instant Bonus 500',
-    description: 'Get instant bonus up to 500',
-    modalTitle: 'Instant Bonus 500',
-    modalDescription: 'Get instant bonus up to 500 on qualifying deposits.',
-    hasText: true,
-    hasTextForNonThai: false
-  },
-  {
-    key: 'minDeposit',
-    image: minDeposit,
-    title: 'Minimum Deposit Bonus',
-    description: 'Low minimum deposit required',
-    modalTitle: 'Minimum Deposit Bonus',
-    modalDescription: 'Start playing with just a small minimum deposit and get bonus rewards.',
-    hasText: true,
-    hasTextForNonThai: false
-  },
-  {
-    key: 'referFriend',
-    image: weeklyCashback,
-    title: 'Refer a Friend',
-    description: 'Get rewards for referrals',
-    modalTitle: 'Refer a Friend',
-    modalDescription: 'Invite friends and get rewards for each successful referral.',
-    hasText: true,
-    hasTextForNonThai: false
-  },
-  {
-    key: 'baccaratRich',
-    image: lotteryX10,
-    title: 'Baccarat Rich Bonus',
-    description: 'Special baccarat promotions',
-    modalTitle: 'Baccarat Rich Bonus',
-    modalDescription: 'Special promotions and bonuses for baccarat players.',
-    hasText: true,
-    hasTextForNonThai: false
+    getPromoImage(promo) {
+      // For Lao and English, use generic image; for Thai, use specific image
+      return (this.currentLocale === 'th') ? promo.image : promo.genericImage
+    },
+
+    hasPromoText(promo) {
+      // For Thai: show text if hasText is true
+      // For non-Thai: only show text if hasTextForNonThai is true
+      if (this.currentLocale === 'th') {
+        return promo.hasText
+      } else {
+        return promo.hasTextForNonThai
+      }
+    },
+
+    getPromoTitle(promo) {
+      return this.$t(`promotions.items.${promo.key}.title`)
+    },
+
+    getPromoDescription(promo) {
+      return this.$t(`promotions.items.${promo.key}.description`)
+    },
+
+    hasModalText(promo) {
+      // Same logic as hasPromoText for modal
+      if (this.currentLocale === 'th') {
+        return promo.hasText
+      } else {
+        return promo.hasTextForNonThai
+      }
+    },
+
+    getModalTitle(promo) {
+      return this.$t(`promotions.items.${promo.key}.modalTitle`)
+    },
+
+    getModalDescription(promo) {
+      const description = this.$t(`promotions.items.${promo.key}.modalDescription`)
+      return description !== `promotions.items.${promo.key}.modalDescription` ? description : ''
+    }
   }
-])
-
-const currentPromo = computed(() => {
-  return promoDetails.value[currentPromoIndex.value] || {}
-})
-
-const openModal = (index) => {
-  currentPromoIndex.value = index
-  isAnimating.value = true
-  showModal.value = true
-  
-  setTimeout(() => {
-    isAnimating.value = false
-  }, 300)
-}
-
-const closeModal = () => {
-  showModal.value = false
-  isAnimating.value = false
 }
 </script>
 
@@ -293,12 +325,23 @@ const closeModal = () => {
   align-items: center;
   gap: 8px;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
-.btn-more-show:hover {
-  background-color: #a11a45;
-  border-color: #9c1842;
-  transform: translateY(-1px);
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .btn-more-show {
+    -webkit-tap-highlight-color: rgba(161, 26, 69, 0.3);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .btn-more-show:hover {
+    background-color: #a11a45;
+    border-color: #9c1842;
+    transform: translateY(-1px);
+  }
 }
 
 .btn-more-show:active {
@@ -405,8 +448,18 @@ const closeModal = () => {
   min-width: 80px;
 }
 
-.close-button:hover {
-  background-color: rgba(187, 45, 59, 0.85);
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .close-button {
+    -webkit-tap-highlight-color: rgba(187, 45, 59, 0.3);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .close-button:hover {
+    background-color: rgba(187, 45, 59, 0.85);
+  }
 }
 
 /* Animations */

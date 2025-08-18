@@ -22,10 +22,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
-// Import the title frame background (PNG)
-import titleFrame from '@/assets/title_frame.png'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { getCurrentLocale, localePath } from '@/router'
 
 // Import provider logos (from the images shown)
 import psSlot from '@/assets/slot-images/ps_slot.webp'
@@ -48,6 +47,8 @@ import jokerSlot from '@/assets/slot-images/joker_slot.webp'
 import pragmaticPlaySlot from '@/assets/slot-images/pragmatic_play_slot.webp'
 import kingmidasSlot from '@/assets/slot-images/kingmidas_slot.webp'
 import pgSlot from '@/assets/slot-images/pg_slot.webp'
+
+const router = useRouter()
 
 const providers = ref([
   {
@@ -160,8 +161,18 @@ const providers = ref([
   }
 ])
 
+const currentLocale = computed(() => {
+  return getCurrentLocale(router.currentRoute.value) || 'th'
+})
+
 const selectProvider = (provider) => {
   console.log('Selected provider:', provider.name)
+  
+  // All providers require login - redirect to login page
+  const loginPath = localePath('/login', currentLocale.value)
+  router.push(loginPath)
+  
+  // Still emit for parent component if needed
   emit('provider-selected', provider)
 }
 
@@ -173,7 +184,6 @@ const emit = defineEmits(['provider-selected'])
 .slot-tab {
   width: 100%;
   background: #100201;
-  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -251,8 +261,8 @@ const emit = defineEmits(['provider-selected'])
   }
 
   .slot-providers {
-    padding: 0 0 35px 0;
-    gap: 80px 0;
+    padding: 0 0 40px 0;
+    gap: 90px 0;
   }
   
   /* Updated title mobile styling to match casino component */

@@ -151,8 +151,8 @@ const emit = defineEmits(['provider-selected'])
   }
 
   .sports-providers {
-    padding: 0 0 35px 0;
-    gap: 80px 0;
+    padding: 0 0 40px 0;
+    gap: 90px 0;
   }
   
   /* Updated title mobile styling to match other components */

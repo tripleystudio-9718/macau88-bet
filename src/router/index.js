@@ -4,6 +4,8 @@ import { setLocale } from '@/i18n'
 import Home from '../views/Home.vue'
 import Affiliate from '../components/Affiliate.vue'
 import Promotion from '../components/Promotion.vue'
+import Login from '../components/Login.vue'
+import Register from '../components/Register.vue'
 // import Games from '../views/Games.vue'
 // import Promotions from '../views/Promotions.vue'
 
@@ -37,6 +39,16 @@ const metaContent = {
     th: { title: 'โปรโมชั่น - Macau888', description: 'รับโปรโมชั่นล่าสุดและโบนัสพิเศษที่ Macau888 เล่นมากขึ้น ชนะมากขึ้น!' },
     en: { title: 'Promotions - Macau888', description: 'Grab our latest promotions and exclusive bonuses at Macau888. Play more, win more!' },
     lo: { title: 'ໂປໂມຊັ່ນ - Macau888', description: 'ຮັບໂປໂມຊັ່ນຫຼ້າສຸດແລະໂບນັດພິເສດທີ່ Macau888 ຫຼິ້ນຫຼາຍຂຶ້ນ ຊະນະຫຼາຍຂຶ້ນ!' }
+  },
+  Login: {
+    th: { title: 'เข้าสู่ระบบ - Macau888', description: 'เข้าสู่ระบบบัญชี Macau888 ของคุณเพื่อเริ่มเล่นเกมและรับโบนัส' },
+    en: { title: 'Login - Macau888', description: 'Login to your Macau888 account to start playing games and claim bonuses.' },
+    lo: { title: 'ເຂົ້າສູ່ລະບົບ - Macau888', description: 'ເຂົ້າສູ່ລະບົບບັນຊີ Macau888 ຂອງທ່ານເພື່ອເລີ່ມຫຼິ້ນເກມແລະຮັບໂບນັດ' }
+  },
+  Register: {
+    th: { title: 'สมัครสมาชิก - Macau888', description: 'สมัครสมาชิกใหม่ที่ Macau888 และรับโบนัสต้อนรับพิเศษ' },
+    en: { title: 'Register - Macau888', description: 'Create a new account at Macau888 and get exclusive welcome bonuses.' },
+    lo: { title: 'ສະໝັກສະມາຊິກ - Macau888', description: 'ສ້າງບັນຊີໃໝ່ທີ່ Macau888 ແລະຮັບໂບນັດຕ້ອນຮັບພິເສດ' }
   }
 };
 
@@ -55,17 +67,20 @@ const createLocalizedRoute = (path, name, component) => {
 };
 
 const routes = [
-  // Only Home and Affiliate routes for now - others commented out until components are created
+  // Main routes with localization
   ...createLocalizedRoute('/', 'Home', Home),
   ...createLocalizedRoute('/affiliate', 'Affiliate', Affiliate),
   ...createLocalizedRoute('/promotions', 'Promotion', Promotion),
+  ...createLocalizedRoute('/login', 'Login', Login),
+  ...createLocalizedRoute('/register', 'Register', Register),
   
   // Uncomment these when you create the Games.vue and Promotions.vue files:
   // ...createLocalizedRoute('/games', 'Games', Games),
-  // ...createLocalizedRoute('/promotions', 'Promotions', Promotions),
   
+  // Thai default redirects
   { path: '/th', redirect: '/' },
   { path: '/th/:pathMatch(.*)*', redirect: to => `/${to.params.pathMatch}` },
+  
   // Catch all route for 404 - redirect to home
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
@@ -82,6 +97,13 @@ router.beforeEach((to, from, next) => {
   const locale = to.meta.locale || defaultLocale;
   setLocale(locale);
   document.title = to.meta.title || 'Macau888';
+  
+  // Add meta description
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription) {
+    metaDescription.setAttribute('content', to.meta.description || 'ເລ່ນເກມຄາສິໂນອອນລາຍຊັ້ນນຳທີ່ Macau888 ດ້ວຍຄວາມປອດໄພ 100% ແລະໂບນັດທີ່ໜ້າຕື່ນເຕັ້ນ');
+  }
+  
   next();
 });
 

@@ -4,7 +4,7 @@
     <div class="nav-container">
       <!-- Logo Section -->
       <div class="logo-section">
-        <router-link to="/" class="logo-link">
+        <router-link :to="localePath('/')" class="logo-link">
           <img 
             src="@/assets/macau888-logo.png" 
             alt="MACAU888" 
@@ -16,11 +16,10 @@
       <!-- Right Section -->
       <div class="right-section">
         <!-- Desktop buttons - with icons, hidden on mobile -->
-       <button 
-  @click="goRegister"
-  class="register-btn desktop-only"
-  type="button"
->
+        <router-link 
+          :to="localePath('/register')"
+          class="register-btn desktop-only"
+        >
           <svg class="btn-icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
             <circle cx="8.5" cy="7" r="4"></circle>
@@ -28,10 +27,10 @@
             <line x1="23" y1="11" x2="17" y2="11"></line>
           </svg>
           {{ $t('nav.register') }}
-        </button>
+        </router-link>
         
-        <button 
-          @click="$emit('login')"
+        <router-link 
+          :to="localePath('/login')"
           class="login-btn desktop-only"
         >
           <svg class="btn-icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -40,37 +39,37 @@
             <line x1="15" y1="12" x2="3" y2="12"></line>
           </svg>
           {{ $t('nav.login') }}
-        </button>
+        </router-link>
 
         <!-- Tablet buttons - no icons, visible on tablet only -->
-        <button 
-          @click="$emit('register')"
+        <router-link 
+          :to="localePath('/register')"
           class="register-btn tablet-only"
         >
           {{ $t('nav.register') }}
-        </button>
+        </router-link>
         
-        <button 
-          @click="$emit('login')"
+        <router-link 
+          :to="localePath('/login')"
           class="login-btn tablet-only"
         >
           {{ $t('nav.login') }}
-        </button>
+        </router-link>
 
-        <!-- Mobile buttons - no icons, visible only on mobile -->
-        <button 
-          @click="$emit('register')"
+        <!-- Mobile buttons - compact design, visible only on mobile -->
+        <router-link 
+          :to="localePath('/register')"
           class="register-btn mobile-only"
         >
           {{ $t('nav.register') }}
-        </button>
+        </router-link>
         
-        <button 
-          @click="$emit('login')"
+        <router-link 
+          :to="localePath('/login')"
           class="login-btn mobile-only"
         >
           {{ $t('nav.login') }}
-        </button>
+        </router-link>
 
         <!-- Language selector - hidden on mobile, visible on tablet and desktop -->
         <div class="language-selector" :class="{ 'tablet-compact': isTablet }">
@@ -97,6 +96,7 @@
           @click="toggleMobileMenu"
           class="mobile-menu-btn"
           :class="{ 'active': showMobileMenu }"
+          aria-label="Toggle mobile menu"
         >
           <!-- Animated Burger to X Menu -->
           <div class="hamburger-menu">
@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { getCurrentLocale, switchLocale, supportedLocales } from '@/router'
+import { getCurrentLocale, switchLocale, localePath, supportedLocales } from '@/router'
 import MobileMenu from './MobileMenu.vue'
 
 export default {
@@ -166,26 +166,24 @@ export default {
       this.isTablet = width > 480 && width <= 768
     },
 
-    // ✅ Missing helper added
-    pathFor(slug = '') {
-      // Builds /{locale}/{slug} if a locale exists, otherwise /{slug}
-      const loc = this.currentLocale || getCurrentLocale(this.$route) || ''
-      const prefix = loc ? `/${loc}` : ''
-      const tail = slug ? `/${slug}` : '/'
-      return `${prefix}${tail}`.replace(/\/{2,}/g, '/')
+    // Use the imported localePath function
+    localePath(path) {
+      return localePath(path, this.currentLocale)
     },
 
     toggleMobileMenu() {
       this.showMobileMenu = !this.showMobileMenu
     },
+    
     handleMobileMenuClose() {
       this.showMobileMenu = false
     },
+    
     handleMobileMenuClick(menuItem) {
       console.log('Mobile menu clicked:', menuItem)
       switch(menuItem) {
         case 'home':
-          this.$router.push('/')
+          this.$router.push(this.localePath('/'))
           break
         case 'deposit':
           this.$emit('deposit')
@@ -197,30 +195,14 @@ export default {
           this.$emit('contact')
           break
         case 'register':
-          this.$emit('register')
+          this.$router.push(this.localePath('/register'))
           break
         case 'login':
-          this.$emit('login')
+          this.$router.push(this.localePath('/login'))
           break
         default:
           console.log('Menu item not handled:', menuItem)
       }
-    },
-
-    // Navigation helpers
-    goHome() {
-      this.$router.push(this.pathFor('')).catch(() => {})
-      this.showMobileMenu = false
-    },
-    goRegister() {
-      this.$router.push(this.pathFor('register')).catch(() => {})
-      this.$emit('register') // keep event for analytics/parent listeners if any
-      this.showMobileMenu = false
-    },
-    goLogin() {
-      this.$router.push(this.pathFor('login')).catch(() => {})
-      this.$emit('login')
-      this.showMobileMenu = false
     },
 
     // Language
@@ -248,26 +230,53 @@ export default {
 }
 </script>
 
-
 <style scoped>
-/* Enhanced mobile-first CSS */
+/* Enhanced mobile sticky positioning - Fixed for all mobile browsers */
 #top-header {
   background: linear-gradient(to bottom, #360000, #6f010a);
   border-bottom: 1px solid #d7ad69;
+  
+  /* Enhanced sticky positioning for all browsers */
+  position: -webkit-sticky; /* Safari support */
   position: sticky;
   top: 0;
   z-index: 1000;
+  width: 100%;
+  
+  /* Force hardware acceleration and prevent layout issues */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  /* Ensure proper display context */
+  display: block;
+  
+  /* Mobile-specific fixes */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  will-change: transform; /* Optimize for animations */
+  
+  /* Prevent margin collapse issues that can break sticky */
+  margin: 0;
+  padding: 0;
+  
+  /* Ensure it takes full width */
+  left: 0;
+  right: 0;
+  
+  /* Fix for some Android browsers */
+  contain: layout style paint;
 }
 
 #top-header .nav-container {
   display: flex;
-  flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  height: 53px;
-  padding: 0 16px;
-  max-width: 900px;
+  height: 50px;
+  padding: 0 12px;
+  max-width: 980px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .logo-section {
@@ -279,63 +288,87 @@ export default {
 .logo-link {
   display: flex;
   align-items: center;
+  text-decoration: none;
 }
 
 .logo-image {
-  height: 38px;
+  height: 34px;
   width: auto;
+  display: block;
 }
 
 .right-section {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
-/* Button base styles */
+/* Button base styles - optimized for mobile */
 .register-btn, .login-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  border-radius: 20px;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 1.5rem;
   font-weight: 500;
-  font-size: 15px;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  justify-content: center;
+  transition: all 0.2s ease;
   white-space: nowrap;
+  font-size: 11px;
+  padding: 4px 10px;
+  min-height: 28px;
+  text-decoration: none;
 }
 
 .register-btn {
-  background: linear-gradient(to right,#1745b2 ,#0091e8);
+  background: linear-gradient(to right, #1745b2, #0091e8);
   color: white;
-  width:130px;
-  height:33px;
+  min-width: 50px;
 }
 
 .login-btn {
   background: linear-gradient(to right, #61460f, #e2b76d);
   color: white;
-  width:130px;
-  height:32px;
+  min-width: 45px;
 }
 
-.register-btn:hover, .login-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .register-btn, .login-btn {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .register-btn:hover, .login-btn:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+.register-btn:active, .login-btn:active {
+  transform: scale(0.98);
 }
 
 .btn-icon {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
 }
 
-/* Visibility classes */
+/* Router link active states */
+.register-btn.router-link-active,
+.login-btn.router-link-active {
+  opacity: 0.8;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Visibility classes for responsive design */
 .desktop-only {
-  display: flex;
+  display: none;
 }
 
 .tablet-only {
@@ -343,11 +376,139 @@ export default {
 }
 
 .mobile-only {
+  display: flex;
+}
+
+/* Language selector - hidden on mobile by default */
+.language-selector {
   display: none;
+}
+
+/* Mobile hamburger menu button */
+.mobile-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  margin-left: 4px;
+}
+
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-menu-btn {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .mobile-menu-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.mobile-menu-btn:active {
+  transform: scale(0.95);
+}
+
+.hamburger-menu {
+  width: 18px;
+  height: 14px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger-line {
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  border-radius: 1px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: center;
+}
+
+/* Enhanced hamburger to X animation */
+.mobile-menu-btn.active .hamburger-line-1 {
+  transform: translateY(6px) rotate(45deg);
+  background-color: #d7ad69;
+}
+
+.mobile-menu-btn.active .hamburger-line-2 {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.mobile-menu-btn.active .hamburger-line-3 {
+  transform: translateY(-6px) rotate(-45deg);
+  background-color: #d7ad69;
+}
+
+/* Mobile-specific optimizations for sticky positioning */
+@media (max-width: 768px) {
+  #top-header {
+    /* Use viewport units for more reliable mobile behavior */
+    min-height: 50px;
+    height: auto;
+    
+    /* Additional mobile browser fixes */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    
+    /* Force GPU acceleration on mobile */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    
+    /* Ensure proper isolation */
+    isolation: isolate;
+  }
+  
+  #top-header .nav-container {
+    /* Ensure flex container doesn't cause issues */
+    min-height: 50px;
+    height: auto;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  #top-header {
+    /* Additional iOS Safari sticky fixes */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    isolation: isolate;
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  #top-header {
+    /* Ensure proper rendering on Android */
+    contain: layout;
+  }
 }
 
 /* Tablet styles (481px - 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
+  #top-header .nav-container {
+    height: 52px;
+    padding: 0 16px;
+  }
+  
+  .logo-image {
+    height: 36px;
+  }
+  
   .desktop-only {
     display: none;
   }
@@ -361,100 +522,120 @@ export default {
   }
   
   .register-btn, .login-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-    min-width: 70px;
+    padding: 6px 14px;
+    font-size: 13px;
+    min-width: 65px;
+    min-height: 30px;
   }
   
   .right-section {
+    gap: 8px;
+  }
+  
+  /* Show language selector on tablet */
+  .language-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: white;
+    position: relative;
+  }
+  
+  .globe-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  
+  .selected-language {
+    font-size: 11px;
+  }
+}
+
+/* Desktop styles (769px+) */
+@media (min-width: 769px) {
+  #top-header .nav-container {
+    height: 54px;
+    padding: 0 20px;
+  }
+  
+  .logo-image {
+    height: 38px;
+  }
+  
+  .desktop-only {
+    display: flex;
+  }
+  
+  .tablet-only {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: none;
+  }
+  
+  .register-btn, .login-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    min-width: 120px;
+    min-height: 32px;
     gap: 6px;
   }
-}
-
-/* Mobile styles (≤480px) */
-@media (max-width: 480px) {
-  .desktop-only {
-    display: none;
-  }
   
-  .tablet-only {
-    display: none;
-  }
-  
-  .mobile-only {
-    display: flex;
-  }
-  
-  .register-btn, .login-btn {
-    padding: 5px 10px;
-    font-size: 11px;
-    min-width: 55px;
+  .btn-icon {
+    width: 14px;
+    height: 14px;
   }
   
   .right-section {
-    gap: 4px;
+    gap: 10px;
   }
-}
-
-/* Language selector - HIDDEN on mobile */
-.language-selector {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: white;
-  position: relative;
-}
-
-.language-selector.tablet-compact {
-  padding: 6px 10px;
-  gap: 5px;
-}
-
-.globe-icon {
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-}
-
-/* HIDE language selector on mobile */
-@media (max-width: 480px) {
+  
+  /* Full language selector on desktop */
   .language-selector {
-    display: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    position: relative;
+  }
+  
+  .globe-icon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+  
+  .selected-language {
+    font-size: 13px;
+    user-select: none;
+    white-space: nowrap;
   }
 }
 
+/* Language dropdown styles */
 .custom-dropdown {
   position: relative;
   cursor: pointer;
-}
-
-.selected-language {
-  color: white;
-  font-size: 13px;
-  user-select: none;
-  white-space: nowrap;
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .selected-language {
-    font-size: 12px;
-  }
 }
 
 .dropdown-menu {
   background-clip: padding-box;
   background-color: #fff;
   border: 1px solid #00000026;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   color: #212529;
   display: none;
   font-size: 0.9rem;
   list-style: none;
   margin: 0;
   min-width: 8rem;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   position: absolute;
   text-align: left;
   z-index: 1000;
@@ -481,8 +662,18 @@ export default {
   font-size: 12px;
 }
 
-.dropdown-item:hover {
-  background-color: #f8f9fa;
+/* Mobile-specific touch behavior - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .dropdown-item {
+    -webkit-tap-highlight-color: rgba(248, 249, 250, 0.5);
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .dropdown-item:hover {
+    background-color: #f8f9fa;
+  }
 }
 
 .dropdown-item.active {
@@ -490,104 +681,50 @@ export default {
   font-weight: 600;
 }
 
-/* Enhanced Mobile Menu Button */
-.mobile-menu-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px;
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 6px;
-  width: 36px;
-  height: 36px;
-  margin-left: 6px;
-}
-
-.mobile-menu-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
-}
-
-.mobile-menu-btn:active {
-  transform: scale(0.95);
-}
-
-.hamburger-menu {
-  width: 20px;
-  height: 16px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.hamburger-line {
-  width: 100%;
-  height: 1px;
-  background-color: white;
-  border-radius: 2px;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform-origin: center;
-}
-
-/* Enhanced Burger to X Animation */
-.mobile-menu-btn.active .hamburger-line-1 {
-  transform: translateY(7px) rotate(45deg);
-  background-color: #d7ad69;
-}
-
-.mobile-menu-btn.active .hamburger-line-2 {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-.mobile-menu-btn.active .hamburger-line-3 {
-  transform: translateY(-7px) rotate(-45deg);
-  background-color: #d7ad69;
-}
-
-/* Mobile optimizations */
-@media (max-width: 480px) {
+/* Ultra-small screens optimization */
+@media (max-width: 360px) {
   #top-header .nav-container {
-    padding: 0 12px;
-    height: 48px;
+    padding: 0 8px;
+    height: 46px;
   }
   
   .logo-image {
-    height: 36px;
+    height: 30px;
   }
   
-  .mobile-menu-btn {
-    width: 32px;
-    height: 32px;
-    padding: 4px;
-    margin-left: 4px;
-  }
-  
-  .hamburger-menu {
-    width: 18px;
-    height: 14px;
-  }
-}
-
-/* Ultra small screens */
-@media (max-width: 360px) {
   .register-btn, .login-btn {
     padding: 3px 8px;
     font-size: 10px;
-    min-width: 45px;
-  }
-  
-  #top-header .nav-container {
-    padding: 0 8px;
+    min-width: 40px;
+    min-height: 24px;
   }
   
   .right-section {
     gap: 3px;
+  }
+  
+  .mobile-menu-btn {
+    width: 28px;
+    height: 28px;
+    margin-left: 2px;
+  }
+  
+  .hamburger-menu {
+    width: 16px;
+    height: 12px;
+  }
+}
+
+/* Large screens optimization */
+@media (min-width: 1200px) {
+  #top-header .nav-container {
+    padding: 0 24px;
+  }
+  
+  .register-btn, .login-btn {
+    min-width: 130px;
+    padding: 8px 20px;
+    font-size: 15px;
   }
 }
 </style>
