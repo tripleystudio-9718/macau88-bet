@@ -4,6 +4,7 @@ import { setLocale } from '@/i18n'
 import Home from '../views/Home.vue'
 import Affiliate from '../components/Affiliate.vue'
 import Promotion from '../components/Promotion.vue'
+import Register from '../components/Register.vue'
 // import Games from '../views/Games.vue'
 // import Promotions from '../views/Promotions.vue'
 

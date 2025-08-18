@@ -16,10 +16,11 @@
       <!-- Right Section -->
       <div class="right-section">
         <!-- Desktop buttons - with icons, hidden on mobile -->
-        <button 
-          @click="$emit('register')"
-          class="register-btn desktop-only"
-        >
+       <button 
+  @click="goRegister"
+  class="register-btn desktop-only"
+  type="button"
+>
           <svg class="btn-icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
             <circle cx="8.5" cy="7" r="4"></circle>
@@ -122,9 +123,7 @@ import MobileMenu from './MobileMenu.vue'
 
 export default {
   name: 'Header',
-  components: {
-    MobileMenu
-  },
+  components: { MobileMenu },
   emits: ['login', 'register', 'mobile-menu-toggle'],
   data() {
     return {
@@ -166,6 +165,16 @@ export default {
       this.isMobile = width <= 480
       this.isTablet = width > 480 && width <= 768
     },
+
+    // ✅ Missing helper added
+    pathFor(slug = '') {
+      // Builds /{locale}/{slug} if a locale exists, otherwise /{slug}
+      const loc = this.currentLocale || getCurrentLocale(this.$route) || ''
+      const prefix = loc ? `/${loc}` : ''
+      const tail = slug ? `/${slug}` : '/'
+      return `${prefix}${tail}`.replace(/\/{2,}/g, '/')
+    },
+
     toggleMobileMenu() {
       this.showMobileMenu = !this.showMobileMenu
     },
@@ -197,6 +206,24 @@ export default {
           console.log('Menu item not handled:', menuItem)
       }
     },
+
+    // Navigation helpers
+    goHome() {
+      this.$router.push(this.pathFor('')).catch(() => {})
+      this.showMobileMenu = false
+    },
+    goRegister() {
+      this.$router.push(this.pathFor('register')).catch(() => {})
+      this.$emit('register') // keep event for analytics/parent listeners if any
+      this.showMobileMenu = false
+    },
+    goLogin() {
+      this.$router.push(this.pathFor('login')).catch(() => {})
+      this.$emit('login')
+      this.showMobileMenu = false
+    },
+
+    // Language
     toggleLanguageDropdown() {
       this.showLanguageDropdown = !this.showLanguageDropdown
     },
@@ -209,6 +236,8 @@ export default {
       const language = this.supportedLanguages.find(lang => lang.code === locale)
       return language ? language.label : locale
     },
+
+    // Outside click
     handleClickOutside(event) {
       const dropdown = this.$refs.languageDropdown
       if (dropdown && !dropdown.contains(event.target)) {
@@ -218,6 +247,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 /* Enhanced mobile-first CSS */
@@ -234,9 +264,9 @@ export default {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  height: 52px;
+  height: 53px;
   padding: 0 16px;
-  max-width: 980px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -252,7 +282,7 @@ export default {
 }
 
 .logo-image {
-  height: 40px;
+  height: 38px;
   width: auto;
 }
 
@@ -268,26 +298,28 @@ export default {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
   border-radius: 20px;
   font-weight: 500;
-  font-size: 13px;
+  font-size: 15px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
   justify-content: center;
   white-space: nowrap;
-  min-width: 80px;
 }
 
 .register-btn {
-  background: linear-gradient(135deg, #164bb7, #3b82f6);
+  background: linear-gradient(to right,#1745b2 ,#0091e8);
   color: white;
+  width:130px;
+  height:33px;
 }
 
 .login-btn {
-  background: linear-gradient(135deg, #664b13, #dab067);
+  background: linear-gradient(to right, #61460f, #e2b76d);
   color: white;
+  width:130px;
+  height:32px;
 }
 
 .register-btn:hover, .login-btn:hover {
@@ -370,7 +402,7 @@ export default {
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  font-size: 13px;
+  font-size: 14px;
   color: white;
   position: relative;
 }
@@ -381,8 +413,8 @@ export default {
 }
 
 .globe-icon {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
 }
 
@@ -495,7 +527,7 @@ export default {
 
 .hamburger-line {
   width: 100%;
-  height: 2px;
+  height: 1px;
   background-color: white;
   border-radius: 2px;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);

@@ -516,7 +516,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  gap: 15px;
   padding: 60px 20px 40px; /* Extra top padding for language section */
   width: 50%;
   max-width: 490px;
@@ -528,7 +527,7 @@ export default {
 
 .menu-grid.fade-up {
   opacity: 1;
-  transform: translate(-50%, -50%) translateY(0);
+  transform: translate(-50%, -70%) translateY(0);
 }
 
 .menu-item {
@@ -542,8 +541,8 @@ export default {
   border-radius: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  height: 100%;
-  width: 100%;
+  height: 92%;
+  width: 90%;
   font-size: 1rem;
   list-style: none;
   aspect-ratio: 1.2;
@@ -567,8 +566,8 @@ export default {
 }
 
 .menu-icon {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   margin-bottom: 8px;
   transition: transform 0.3s ease;
   object-fit: contain;
@@ -596,11 +595,11 @@ export default {
 /* Version Info */
 .version-info {
   position: absolute;
-  bottom: 30px;
+  bottom:270px;
   left: 50%;
   transform: translateX(-50%);
   color: rgba(255, 255, 255, 0.5);
-  font-size: 12px;
+  font-size: 14px;
   opacity: 0;
   transform: translateX(-50%) translateY(20px);
   transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);

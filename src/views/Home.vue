@@ -179,8 +179,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
+
+/* assets & components */
 import macauGif from '@/assets/macau-gif1.gif'
 import SlotTab from '@/components/SlotTab.vue'
 import CasinoTab from '@/components/CasinoTab.vue'
@@ -189,11 +191,12 @@ import SportsTab from '@/components/SportsTab.vue'
 import LottoTab from '@/components/LottoTab.vue'
 import PromotionSection from '@/components/PromotionSection.vue'
 
-const router = useRouter()
-
 /* ========= Helper: double RAF to guarantee style commit ========= */
 const nextFrame = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+
+/* ===== Router ===== */
+const router = useRouter()
 
 /* ===== Top hero slider (INFINITE, no-rewind) ===== */
 import img1 from '@/assets/macau-slider-1.jpeg'
@@ -203,64 +206,6 @@ import img4 from '@/assets/macau-slider-4.jpeg'
 import img5 from '@/assets/macau-slider-5.jpeg'
 
 const images = [img1, img2, img3, img4, img5]
-
-/* ===== Feature Tabs (below image-slider) ===== */
-import icHistory from '@/assets/ic-history.png'
-import icFriend from '@/assets/ic-friend.png'          // Affiliate
-import icAccount from '@/assets/ic-accountinfo.png'
-import icSpin from '@/assets/ic-spin.png'              // Lucky wheel
-import icPromo from '@/assets/ic-promotion.png'
-import icSlot from '@/assets/ic-slot.png'
-import icCasino from '@/assets/ic-casino.png'
-import icAllGames from '@/assets/ic-all-games.png'
-import icSport from '@/assets/ic-sport.png'
-import icLotto from '@/assets/ic-lotto.png'
-
-const hubTabs = [
-  { key: 'history',    label: 'History',      icon: icHistory },
-  { key: 'affiliate',  label: 'Affiliate',    icon: icFriend },
-  { key: 'account',    label: 'Account info', icon: icAccount }, // default active (gold in screenshot)
-  { key: 'lucky',      label: 'Lucky wheel',  icon: icSpin },
-  { key: 'promo',      label: 'Promotions',   icon: icPromo },
-  { key: 'slot',       label: 'Slot',         icon: icSlot },
-  { key: 'casino',     label: 'Casino',       icon: icCasino },
-  { key: 'allgames',   label: 'All games',    icon: icAllGames },
-  { key: 'sports',     label: 'Sport',        icon: icSport },
-  { key: 'lotto',      label: 'Lotto',        icon: icLotto },
-]
-
-const activeHub = ref('slot')
-
-const selectHub = (key) => { 
-  // Handle navigation for specific tabs
-  if (key === 'affiliate') {
-    router.push('/affiliate')
-    return
-  }
-  if (key === 'promo') {
-    router.push('/promotions')
-    return
-  }
-  
-  // For other tabs, just set active
-  activeHub.value = key 
-}
-
-const activeLabel = computed(() => {
-  return hubTabs.find(t => t.key === activeHub.value)?.label ?? ''
-})
-
-/* Keyboard navigation (← →) */
-const onHubKeydown = (e) => {
-  const i = hubTabs.findIndex(t => t.key === activeHub.value)
-  if (e.key === 'ArrowRight') {
-    selectHub(hubTabs[(i + 1) % hubTabs.length].key)
-    e.preventDefault()
-  } else if (e.key === 'ArrowLeft') {
-    selectHub(hubTabs[(i - 1 + hubTabs.length) % hubTabs.length].key)
-    e.preventDefault()
-  }
-}
 
 /** 扩展数组：前后各克隆一张，用于无缝循环 */
 const extendedImages = computed(() => {
@@ -301,39 +246,31 @@ const nextHero = () => {
   if (extendedImages.value.length <= 1) return
   displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value + 1)
 }
-
 const prevHero = () => {
   if (extendedImages.value.length <= 1) return
   displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value - 1)
 }
-
 const goToHero = (i) => {
   if (!images.length) return
-  displayedHeroIndex.value = clampToExtRange((i % images.length) + 1) // 偏移 +1，避开头部克隆
+  displayedHeroIndex.value = clampToExtRange((i % images.length) + 1)
   play()
 }
-
 const play = () => { stop(); if (images.length > 1) heroTimer = setInterval(nextHero, HERO_INTERVAL) }
 const pause = () => { stop() }
 const stop  = () => { if (heroTimer) { clearInterval(heroTimer); heroTimer = null } }
 
-/** 初始定位到第一张真实图 */
 const heroTrack = ref(null)
 const onHeroTransitionEnd = async (e) => {
-  // 只处理 transform 的过渡结束
   if (e && e.propertyName && e.propertyName !== 'transform') return
-
   const n = images.length
   if (n <= 1) return
   const lastExt = extendedImages.value.length - 1
 
   if (displayedHeroIndex.value === lastExt) {
-    // 尾部克隆 -> 跳第一张真实图
     stop()
     displayedHeroIndex.value = 1
     play()
   } else if (displayedHeroIndex.value === 0) {
-    // 头部克隆 -> 跳最后一张真实图
     stop()
     displayedHeroIndex.value = n
     play()
@@ -352,12 +289,10 @@ const onHeroPointerDown = (e) => {
   heroStartX = e.clientX
   heroDX = 0
   pause()
-  // 取消当前动画，避免 transitionend 晚到导致越界
   const el = heroTrack.value
   if (el && e.pointerId != null && el.setPointerCapture) el.setPointerCapture(e.pointerId)
   if (el) el.style.transition = 'none'
 }
-
 const onHeroPointerMove = (e) => {
   if (!heroDragging.value) return
   heroDX = e.clientX - heroStartX
@@ -368,21 +303,16 @@ const onHeroPointerMove = (e) => {
     el.style.transform = 'translate3d(calc(' + translateX + '% + ' + heroDX + 'px), 0, 0)'
   }
 }
-
 const onHeroPointerUp = () => {
   if (!heroDragging.value) return
   heroDragging.value = false
   const el = heroTrack.value
   if (el) el.style.transition = ''
 
-  if (heroDX > HERO_THRESHOLD) {
-    prevHero()
-  } else if (heroDX < -HERO_THRESHOLD) {
-    nextHero()
-  } else {
-    // 不够阈值，回弹
-    displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value)
-  }
+  if (heroDX > HERO_THRESHOLD)      prevHero()
+  else if (heroDX < -HERO_THRESHOLD) nextHero()
+  else                                displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value)
+
   heroDX = 0
   play()
 }
@@ -404,7 +334,7 @@ const { text, speed, width } = defineProps({
 })
 const paused = ref(false)
 
-/* ===== 2-up poster slider — unchanged ===== */
+/* ===== 2-up poster slider (INFINITE, no-rewind) ===== */
 import p1 from '@/assets/slider-img1.jpeg'
 import p2 from '@/assets/slider-img2.jpeg'
 import p3 from '@/assets/slider-img3.jpeg'
@@ -428,13 +358,16 @@ const extendedPairs = computed(() => {
   return [real[real.length - 1], ...real, real[0]]
 })
 
+/* ✅ transition toggle controlled by JS (for perfect snap) */
+const pairUseTransition = ref(true)
+/* start at first REAL slide (idx 1, because 0 is head clone) */
 const displayedIndex = ref(1)
 
 const pairStyle = computed(() => {
   const translateX = -displayedIndex.value * 100
   return {
-    transform: 'translateX(' + translateX + '%)',
-    transition: 'transform 0.5s ease-in-out'
+    transform: 'translate3d(' + translateX + '%, 0, 0)',
+    transition: pairUseTransition.value ? 'transform 0.5s ease-in-out' : 'none'
   }
 })
 
@@ -443,40 +376,65 @@ const realIndex = computed(() => {
   return (displayedIndex.value - 1 + n) % n
 })
 
+/* Guards to avoid overshoot */
+const clampPair = (v) => {
+  const lastExt = (extendedPairs.value.length || 1) - 1
+  if (v < 0) return 0
+  if (v > lastExt) return lastExt
+  return v
+}
+
+/* Auto-play */
 let pairTimer = null
 const pairIntervalMs = 4000
-const nextPair = () => { if (extendedPairs.value.length) displayedIndex.value += 1 }
-const prevPair = () => { if (extendedPairs.value.length) displayedIndex.value -= 1 }
-const playPair = () => { stopPair(); pairTimer = setInterval(nextPair, pairIntervalMs) }
+const nextPair = () => { if (extendedPairs.value.length) displayedIndex.value = clampPair(displayedIndex.value + 1) }
+const prevPair = () => { if (extendedPairs.value.length) displayedIndex.value = clampPair(displayedIndex.value - 1) }
+const playPair = () => { stopPair(); if (extendedPairs.value.length > 1) pairTimer = setInterval(nextPair, pairIntervalMs) }
 const pausePair = () => stopPair()
 const stopPair  = () => { if (pairTimer) { clearInterval(pairTimer); pairTimer = null } }
 
+/* Snap instantly to a REAL slide (no animation) */
+const snapPair = async (toIdx) => {
+  pairUseTransition.value = false
+  displayedIndex.value = toIdx
+  await nextFrame()
+  pairUseTransition.value = true
+}
+
 const pairTrack = ref(null)
-const onPairTransitionEnd = () => {
+const onPairTransitionEnd = async (e) => {
+  if (e && e.propertyName && e.propertyName !== 'transform') return
   const n = pairs.value.length
   if (!n) return
   const lastExt = extendedPairs.value.length - 1
+
   if (displayedIndex.value === lastExt) {
-    displayedIndex.value = 1
-    void pairTrack.value?.offsetHeight
+    // tail clone -> snap to first REAL
+    stopPair()
+    await snapPair(1)
+    playPair()
   } else if (displayedIndex.value === 0) {
-    displayedIndex.value = n
-    void pairTrack.value?.offsetHeight
+    // head clone -> snap to last REAL
+    stopPair()
+    await snapPair(n)
+    playPair()
   }
 }
 
+/* Drag */
 const pairDragging = ref(false)
 let pairStartX = 0, pairDX = 0
 const DRAG_THRESHOLD = 60
 
 const onPairPointerDown = (e) => {
+  if (!extendedPairs.value.length) return
   pairDragging.value = true
   pairStartX = e.clientX
   pairDX = 0
   pausePair()
+  pairUseTransition.value = false
   const el = pairTrack.value
   if (el && e.pointerId != null && el.setPointerCapture) el.setPointerCapture(e.pointerId)
-  if (el) el.style.transition = 'none'
 }
 
 const onPairPointerMove  = (e) => {
@@ -484,7 +442,6 @@ const onPairPointerMove  = (e) => {
   pairDX = e.clientX - pairStartX
   const el = pairTrack.value
   if (el) {
-    el.style.transition = 'none'
     const translateX = -displayedIndex.value * 100
     el.style.transform = 'translateX(calc(' + translateX + '% + ' + pairDX + 'px))'
   }
@@ -493,11 +450,11 @@ const onPairPointerMove  = (e) => {
 const onPairPointerUp = () => {
   if (!pairDragging.value) return
   pairDragging.value = false
-  const el = pairTrack.value
-  if (el) el.style.transition = ''
+  pairUseTransition.value = true
 
   if (pairDX > DRAG_THRESHOLD)      prevPair()
   else if (pairDX < -DRAG_THRESHOLD) nextPair()
+  else                               displayedIndex.value = clampPair(displayedIndex.value)
 
   pairDX = 0
   playPair()
@@ -505,21 +462,79 @@ const onPairPointerUp = () => {
 
 const goToPair = (i) => {
   if (!pairs.value.length) return
-  displayedIndex.value = (i % pairs.value.length) + 1
+  pairUseTransition.value = true
+  displayedIndex.value = clampPair((i % pairs.value.length) + 1)
   playPair()
 }
 
-// Handle provider selection from tab components
-const handleProviderSelected = (provider) => {
-  console.log('Provider selected in main component:', provider)
-  // Handle the provider selection logic here
-  // For example, you could navigate to a specific provider page
-  // or update some state to show games from that provider
+/* ===== Feature Tabs (below image-slider) ===== */
+import icHistory from '@/assets/ic-history.png'
+import icFriend from '@/assets/ic-friend.png'          // Affiliate
+import icAccount from '@/assets/ic-accountinfo.png'
+import icSpin from '@/assets/ic-spin.png'              // Lucky wheel
+import icPromo from '@/assets/ic-promotion.png'
+import icSlot from '@/assets/ic-slot.png'
+import icCasino from '@/assets/ic-casino.png'
+import icAllGames from '@/assets/ic-all-games.png'
+import icSport from '@/assets/ic-sport.png'
+import icLotto from '@/assets/ic-lotto.png'
+
+const hubTabs = [
+  { key: 'history',    label: 'History',      icon: icHistory },
+  { key: 'affiliate',  label: 'Affiliate',    icon: icFriend },
+  { key: 'account',    label: 'Account info', icon: icAccount }, // default active (gold in screenshot)
+  { key: 'lucky',      label: 'Lucky wheel',  icon: icSpin },
+  { key: 'promo',      label: 'Promotions',   icon: icPromo },
+  { key: 'slot',       label: 'Slot',         icon: icSlot },
+  { key: 'casino',     label: 'Casino',       icon: icCasino },
+  { key: 'allgames',   label: 'All games',    icon: icAllGames },
+  { key: 'sports',     label: 'Sport',        icon: icSport },
+  { key: 'lotto',      label: 'Lotto',        icon: icLotto },
+]
+
+const activeHub = ref('slot')
+
+const selectHub = (key) => { 
+  // Handle navigation for specific tabs
+  if (key === 'affiliate') {
+    router.push('/affiliate')
+    return
+  }
+  if (key === 'promo') {
+    router.push('/promotions')
+    return
+  }
+  // For other tabs, just set active
+  activeHub.value = key 
 }
 
+const activeLabel = computed(() => {
+  return hubTabs.find(t => t.key === activeHub.value)?.label ?? ''
+})
+
+/* Keyboard navigation (← →) */
+const onHubKeydown = (e) => {
+  const i = hubTabs.findIndex(t => t.key === activeHub.value)
+  if (e.key === 'ArrowRight') {
+    selectHub(hubTabs[(i + 1) % hubTabs.length].key)
+    e.preventDefault()
+  } else if (e.key === 'ArrowLeft') {
+    selectHub(hubTabs[(i - 1 + hubTabs.length) % hubTabs.length].key)
+    e.preventDefault()
+  }
+}
+
+/* Handle provider selection from tab components */
+const handleProviderSelected = (provider) => {
+  console.log('Provider selected in main component:', provider)
+  // place your provider navigation/update logic here
+}
+
+/* ===== Lifecycle ===== */
 onMounted(() => {
   displayedHeroIndex.value = images.length > 1 ? 1 : 0
   play()
+
   displayedIndex.value = 1
   playPair()
 })
@@ -529,6 +544,7 @@ onBeforeUnmount(() => {
   stopPair()
 })
 </script>
+
 
 <style scoped>
 * { box-sizing: border-box; }
@@ -553,7 +569,7 @@ onBeforeUnmount(() => {
 /* Slider */
 .slider-container {
   position: relative;
-  width: 940px;
+  width: 880px;
   max-width: 100%;
   overflow: hidden;
   border-radius: 6px;
@@ -646,7 +662,7 @@ onBeforeUnmount(() => {
 /* Section 2: Video */
 .video-section { padding: 12px; display: flex; justify-content: center; }
 .video-frame {
-  width: 940px; max-width: 100%;
+  width: 880px; max-width: 100%;
   border-radius: 6px; overflow: hidden; background: #0b0b0b;
   position: relative; aspect-ratio: 16 / 9;
 }
@@ -658,7 +674,7 @@ onBeforeUnmount(() => {
   display:flex; 
   justify-content:center; 
   background:#100201; 
-  width:940px; 
+  width:880px; 
   max-width: 100%;
   margin:0 auto; 
 }
@@ -694,7 +710,7 @@ onBeforeUnmount(() => {
 /* GIF + 2-up slider */
 .image-slider{ padding: 12px; }
 .macau-gif{
-  width:100%; max-width:940px; display:block; margin:0 auto 12px auto; border-radius:6px; padding:10px 0;
+  width:100%; max-width:880px; display:block; margin:0 auto 12px auto; border-radius:6px; padding:10px 0;
 }
 
 @media (max-width: 980px) {
@@ -714,7 +730,7 @@ onBeforeUnmount(() => {
 
 /* 2-up */
 .two-up-container{
-  position:relative; width:940px; max-width:100%; margin:0 auto; overflow:hidden; border-radius:6px;
+  position:relative; width:880px; max-width:100%; margin:0 auto; overflow:hidden; border-radius:6px;
 }
 
 @media (max-width: 980px) {
@@ -802,7 +818,7 @@ onBeforeUnmount(() => {
 }
 
 .hub-grid{
-  width: 940px;
+  width: 880px;
   max-width: 100%;
   margin: 0 auto;
   display: grid;
@@ -838,7 +854,7 @@ onBeforeUnmount(() => {
 
 .hub-tile{
   --tile-icon-size: 120px;   /* icon size (tweak to taste) */
-  --icon-protrude: -60px;   /* Half the icon extends outside */
+  --icon-protrude: -40px;   /* Half the icon extends outside */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -982,7 +998,7 @@ onBeforeUnmount(() => {
     inset 0 1px 0 rgba(255,255,255,0.35),
     0 6px 14px rgba(0,0,0,0.35);
   /* More protrusion when active */
-  --icon-protrude: -65px;
+  --icon-protrude: -45px;
 }
 
 @media (max-width: 480px) {
@@ -1020,7 +1036,7 @@ onBeforeUnmount(() => {
   background: #0b0b0b;
   padding: 0;
   color: #e8e8e8;
-  max-width: 940px;
+  max-width: 880px;
 }
 
 @media (max-width: 980px) {
