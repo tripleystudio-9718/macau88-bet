@@ -1,5 +1,5 @@
 <template>
-  <div class="mobile-menu-overlay" v-if="isVisible" @click="closeMobileMenu">
+  <div class="mobile-menu-overlay" v-if="isVisible" @click.self="closeMobileMenu">
     <!-- Expanding Circle Animation -->
     <div 
       class="expanding-circle" 
@@ -70,79 +70,128 @@
       <router-link 
         to="/" 
         class="menu-item" 
-        @click.native="closeMobileMenu"
-        active-class="router-link-active"
-        exact
+        @click="closeMobileMenu"
       >
         <img src="@/assets/icons/home.png" :alt="$t('nav.home')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.home') }}</span>
       </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('play')">
+      <router-link
+  :to="{ path: '/login', query: { src: 'play' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'play' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/play.png" :alt="$t('nav.play')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.play') }}</span>
-      </div>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('withdraw')">
+    <router-link
+  :to="{ path: '/login', query: { src: 'withdraw' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'withdraw' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/withdraw.png" :alt="$t('nav.withdraw')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.withdraw') }}</span>
-      </div>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('deposit')">
+      <router-link
+  :to="{ path: '/login', query: { src: 'deposit' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'deposit' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/deposit.png" :alt="$t('nav.deposit')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.deposit') }}</span>
-      </div>
+      </router-link>
 
-      <router-link 
-        to="/affiliate" 
-        class="menu-item" 
-        @click.native="closeMobileMenu"
-        active-class="router-link-active"
-      >
+      <router-link to="/affiliate" class="menu-item" @click="closeMobileMenu">
         <img src="@/assets/icons/affiliate.png" :alt="$t('nav.affiliate')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.affiliate') }}</span>
       </router-link>
 
-      <router-link 
-        to="/promotions" 
-        class="menu-item" 
-        @click.native="closeMobileMenu"
-        active-class="router-link-active"
-      >
+      <router-link to="/promotions" class="menu-item" @click="closeMobileMenu">
         <img src="@/assets/icons/promotion.png" :alt="$t('nav.promotions')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.promotions') }}</span>
       </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('cashback')">
+      <router-link
+  :to="{ path: '/login', query: { src: 'cashback' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'cashback' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/cashback.png" :alt="$t('nav.cashback')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.cashback') }}</span>
-      </div>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('history')">
+      <router-link
+  :to="{ path: '/login', query: { src: 'history' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'history' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/history.png" :alt="$t('nav.history')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.history') }}</span>
-      </div>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('account')">
+      <router-link
+  :to="{ path: '/login', query: { src: 'account' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'account' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/account-info.png" :alt="$t('nav.account')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.account') }}</span>
-      </div>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('lucky-wheel')">
+       <router-link
+  :to="{ path: '/login', query: { src: 'luckywheel' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'luckywheel' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/lucky-wheel.png" :alt="$t('nav.luckyWheel')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.luckyWheel') }}</span>
-      </div>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('collect-points')">
+        <router-link
+  :to="{ path: '/login', query: { src: 'collectpoints' } }"
+  class="menu-item"
+  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'collectpoints' }"
+  active-class=""           
+  exact-active-class=""      
+  @click="closeMobileMenu"
+>
         <img src="@/assets/icons/collect-point.png" :alt="$t('nav.collectPoints')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.collectPoints') }}</span>
-      </div>
+      </router-link>
 
-      <div class="menu-item" @click="handleMenuClick('contact')">
+      <a
+      class="menu-item"
+      :href="contactUrl"
+      target="_blank"
+      rel="noopener"
+     @click="closeMobileMenu"
+>
         <img src="@/assets/icons/contact.png" :alt="$t('nav.contact')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.contact') }}</span>
-      </div>
-    </div>
+</a>
 
     <!-- Version Info -->
     <div 
@@ -152,11 +201,12 @@
       v1.0.01
     </div>
   </div>
+    </div>
+
 </template>
 
 <script>
 import { localePath, getCurrentLocale, switchLocale } from '@/router'
-
 export default {
   name: 'MobileMenu',
   props: {
@@ -177,6 +227,7 @@ export default {
       menuVisible: false,
       currentLocale: 'th',
       showLanguageDropdown: false,
+      contactUrl: 'http://bit.ly/45oDZl4',
       supportedLanguages: [
         { code: 'th', label: 'ภาษาไทย' },
         { code: 'en', label: 'English' },
@@ -220,30 +271,15 @@ export default {
       return language ? language.label : locale
     },
     
-    openMobileMenu() {
-      document.body.style.overflow = 'hidden'
-      this.isVisible = true
-      
-      setTimeout(() => {
-        this.showCircle = true
-      }, 30)
-      
-      setTimeout(() => {
-        this.circleExpanded = true
-      }, 350)
-      
-      setTimeout(() => {
-        this.headerVisible = true
-      }, 850)
-      
-      setTimeout(() => {
-        this.languageVisible = true
-      }, 950)
-      
-      setTimeout(() => {
-        this.menuVisible = true
-      }, 1100)
-    },
+   openMobileMenu() {
+  document.body.style.overflow = 'hidden'
+  this.isVisible = true
+  setTimeout(() => { this.showCircle = true }, 30)
+  setTimeout(() => { this.circleExpanded = true }, 350)
+  setTimeout(() => { this.headerVisible = true }, 850)
+  setTimeout(() => { this.languageVisible = true }, 950)
+  setTimeout(() => { this.menuVisible = true; this.backgroundVisible = true }, 1100)
+},
     
     closeMobileMenu() {
       this.menuVisible = false
@@ -276,6 +312,8 @@ export default {
     }
   }
 }
+
+
 </script>
 
 <style scoped>
@@ -538,7 +576,7 @@ export default {
   grid-template-rows: repeat(4, 1fr);
   padding: 60px 20px 40px;
   width: 50%;
-  max-width: 490px;
+  max-width: 480px;
   opacity: 0;
   transform: translate(-50%, -50%) translateY(50px);
   transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -547,7 +585,7 @@ export default {
 
 .menu-grid.fade-up {
   opacity: 1;
-  transform: translate(-50%, -60%) translateY(0);
+  transform: translate(-50%, -72%) translateY(0);
 }
 
 .menu-item {
@@ -593,16 +631,6 @@ export default {
   }
 }
 
-.menu-item.router-link-active {
-  background: linear-gradient(to bottom, #61460f, #e2b76d);
-  border-color: #d7ad69;
-}
-
-.menu-item.router-link-active .menu-label {
-  color: black;
-  font-weight: 600;
-}
-
 .menu-icon {
   width: 46px;
   height: 46px;
@@ -612,9 +640,22 @@ export default {
   flex-shrink: 0;
 }
 
-.menu-item.router-link-active .menu-icon {
-  transform: scale(1.1);
+/* built-in exact class for non-login routes like "/", "/affiliate", "/promotions" */
+.menu-item.router-link-exact-active{
+  background: linear-gradient(to bottom, #61460f, #e2b76d);
+  border-color:#d7ad69;
 }
+.menu-item.router-link-exact-active .menu-label{ color:black; font-weight:600; }
+.menu-item.router-link-exact-active .menu-icon{ transform:scale(1.1); }
+
+/* your custom class for the /login?src=... tiles */
+.menu-item.is-active{
+  background: linear-gradient(to bottom, #61460f, #e2b76d);
+  border-color:#d7ad69;
+}
+.menu-item.is-active .menu-label{ color:black; font-weight:600; }
+.menu-item.is-active .menu-icon{ transform:scale(1.1); }
+
 
 .menu-label {
   color: white;
@@ -630,7 +671,7 @@ export default {
 /* Version Info */
 .version-info {
   position: absolute;
-  bottom: 130px;
+  bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
   color: rgba(255, 255, 255, 0.5);

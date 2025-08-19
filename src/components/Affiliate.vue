@@ -47,29 +47,28 @@ export default {
 
 <style scoped>
 .rebate-container {
-  width: 980px;
+  width: 890px;
   margin: 0 auto;
-  background: #000;
   padding: 1rem 0;
   font-family: 'Arial', sans-serif;
 }
 
 .title {
   color: #fff;
-  font-size: 40px;
+  font-size: 35px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
   letter-spacing: 1px;
 }
 
 .highlight {
-  color: #dc2626;
+  color: #cb2936;
 }
 
 .table-container {
   margin: 0 auto;
-  padding: 1rem .5rem;
+  padding: 10px;
   background: linear-gradient(to bottom, #a20313, #72000e);
   border-radius: .25rem;
   overflow: hidden;
@@ -119,7 +118,7 @@ export default {
   padding: .5rem;
   color: #fff;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .data-column.game-name {

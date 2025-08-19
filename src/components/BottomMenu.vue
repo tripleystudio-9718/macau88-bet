@@ -15,59 +15,41 @@
           <span class="nav-text">{{ $t('nav.home') }}</span>
         </router-link>
 
-        <!-- Deposit -->
-        <button 
-          @click="$emit('deposit')"
-          class="footer-menu-item"
-        >
-          <img 
-            src="@/assets/icons/deposit.png" 
-            :alt="$t('nav.deposit')" 
-            class="nav-image"
-          />
-          <span class="nav-text">{{ $t('nav.deposit') }}</span>
-        </button>
+ <!-- Deposit -->
+<router-link :to="{ path:'/login', query:{ src:'deposit' } }" custom v-slot="{ navigate }">
+  <button @click="navigate" class="footer-menu-item">
+    <img src="@/assets/icons/deposit.png" :alt="$t('nav.deposit')" class="nav-image" />
+    <span class="nav-text">{{ $t('nav.deposit') }}</span>
+  </button>
+</router-link>
 
-        <!-- Play (Center Button - Half Outside) -->
-        <div class="footer-menu-item play-button-container">
-          <button 
-            @click="$emit('play')"
-            class="play-button"
-          >
-            <img 
-              src="@/assets/icons/play.png" 
-              :alt="$t('nav.play')" 
-              class="play-image"
-            />
-          </button>
-          <span class="play-text">{{ $t('nav.play') }}</span>
-        </div>
+<!-- Play (center) -->
+<router-link :to="{ path:'/login', query:{ src:'play' } }" custom v-slot="{ navigate }">
+  <div class="footer-menu-item play-button-container">
+    <button @click="navigate" class="play-button">
+      <img src="@/assets/icons/play.png" :alt="$t('nav.play')" class="play-image" />
+    </button>
+    <span class="play-text">{{ $t('nav.play') }}</span>
+  </div>
+</router-link>
 
-        <!-- Withdraw -->
-        <button 
-          @click="$emit('withdraw')"
-          class="footer-menu-item"
-        >
-          <img 
-            src="@/assets/icons/withdraw.png" 
-            :alt="$t('nav.withdraw')" 
-            class="nav-image"
-          />
-          <span class="nav-text">{{ $t('nav.withdraw') }}</span>
-        </button>
+<!-- Withdraw -->
+<router-link :to="{ path:'/login', query:{ src:'withdraw' } }" custom v-slot="{ navigate }">
+  <button @click="navigate" class="footer-menu-item">
+    <img src="@/assets/icons/withdraw.png" :alt="$t('nav.withdraw')" class="nav-image" />
+    <span class="nav-text">{{ $t('nav.withdraw') }}</span>
+  </button>
+</router-link>
 
-        <!-- Contact -->
-        <button 
-          @click="$emit('contact')"
-          class="footer-menu-item"
-        >
-          <img 
-            src="@/assets/icons/contact.png" 
-            :alt="$t('nav.contact')" 
-            class="nav-image"
-          />
-          <span class="nav-text">{{ $t('nav.contact') }}</span>
-        </button>
+<!-- Contact (external) -->
+<a class="footer-menu-item"
+   href="http://bit.ly/45oDZl4"
+   target="_blank"
+   rel="noopener">
+  <img src="@/assets/icons/contact.png" :alt="$t('nav.contact')" class="nav-image" />
+  <span class="nav-text">{{ $t('nav.contact') }}</span>
+</a>
+
       </nav>
     </div>
   </div>
@@ -99,7 +81,7 @@ export default {
 </script>
 
 <style scoped>
-:global(:root){ --bottom-menu-height: 80px; }
+:global(:root){ --bottom-menu-height: 70px; }
 
 .bottom-menu-spacer{
   height: calc(var(--bottom-menu-height, 80px) + env(safe-area-inset-bottom, 0px));
@@ -111,7 +93,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 980px;
+  max-width: 890px;
   z-index: 50;
 }
 
@@ -129,7 +111,7 @@ export default {
   align-items: center;
   justify-content: space-around;
   height: var(--bottom-menu-height, 80px);
-  padding: 0 24px;
+  padding: 0 6px;
   position: relative;
 }
 
@@ -141,7 +123,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
   padding: 12px 8px 8px 8px;
   background: none;
   border: none;
@@ -150,17 +131,17 @@ export default {
   text-decoration: none;
   color: white;
   transition: transform 0.2s ease;
-  height: var(--bottom-menu-height, 80px);
+  height: var(--bottom-menu-height, 70px);
   box-sizing: border-box;
 }
 .footer-menu-item:hover { transform: scale(1.1); }
 
-.nav-image { width: 40px; height: 40px; object-fit: contain; margin-bottom: auto; }
-.nav-text { font-size: 12px; font-weight: 500; color: white; margin-top: auto; }
+.nav-image { width: 35px; height: 35px; object-fit: contain; margin-bottom: auto; }
+.nav-text { font-size: 13px; font-weight: 700; color: white; margin-top: auto; }
 
 .play-button-container { position: relative; justify-content: flex-end; }
 .play-button-container .play-button {
-  position: absolute; top: -50px; left: 50%; transform: translateX(-50%); z-index: 10;
+  position: absolute; top: -44px; left: 50%; transform: translateX(-50%); z-index: 10;
 }
 .play-button {
   display: flex; align-items: center; justify-content: center;
@@ -168,7 +149,7 @@ export default {
   transition: transform 0.2s ease;
 }
 .play-button:hover { transform: translateX(-50%) scale(1.1); }
-.play-image { width: 100px; height: 100px; object-fit: contain; }
+.play-image { width: 70px; height: 70px; object-fit: contain; }
 .play-text { font-size: 12px; font-weight: 500; color: white; margin-top: 4px; text-shadow: 0 1px 2px rgba(0,0,0,.5); position: relative; z-index: 1; }
 
 @media (max-width: 480px) {

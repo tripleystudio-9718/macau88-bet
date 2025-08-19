@@ -1,12 +1,12 @@
 <template>
-  <div class="login-page">
+  <div class="register-page">
     <div class="page-container">
       <div class="iframe-container">
         <iframe
-          src="https://www.winbox.cloud/winbox-mobile-register/"
+          src="https://h5.wbwin02.com/#/login"
           frameborder="0"
           allowfullscreen
-          :title="$t('login.iframeTitle')"
+          :title="$t('register.iframeTitle')"
         ></iframe>
       </div>
     </div>
@@ -15,22 +15,22 @@
 
 <script>
 export default {
-  name: 'Login',
+  name: 'Register',
   mounted() {
     // Update page title
-    document.title = this.$t('login.pageTitle') || 'Login - Macau888';
+    document.title = this.$t('register.pageTitle') || 'Register - Macau888';
     
     // Add meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', this.$t('login.pageDescription') || 'Login to your Macau888 account and start playing.');
+      metaDescription.setAttribute('content', this.$t('register.pageDescription') || 'Create your Macau888 account and start playing today.');
     }
   }
 }
 </script>
 
 <style scoped>
-.login-page {
+.register-page {
   width: 100%;
   min-height: 100vh;
   background: #100201;
@@ -40,7 +40,7 @@ export default {
 
 .page-container {
   width: 100%;
-  max-width: 980px;
+  height:100%;
   margin: 0 auto;
   flex: 1;
   display: flex;
@@ -54,7 +54,6 @@ export default {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  margin: 20px 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 

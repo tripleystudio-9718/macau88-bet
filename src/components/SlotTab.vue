@@ -2,7 +2,7 @@
   <div class="slot-tab">
     <!-- Title with background image -->
     <div class="slot-title">
-      Slot
+     {{ $t('slot.name') }}
     </div>
     
     <!-- Game providers grid -->
@@ -11,10 +11,24 @@
         v-for="provider in providers" 
         :key="provider.id" 
         class="provider-card"
-        @click="selectProvider(provider)"
+        :class="{ 'is-maintenance': isMaintenance(provider.id) }"
+        :aria-disabled="isMaintenance(provider.id)"
+        @click="handleClick(provider)"
       >
         <div class="provider-logo">
           <img :src="provider.logo" :alt="provider.name" />
+        </div>
+
+        <!-- Maintenance overlay -->
+        <div v-if="isMaintenance(provider.id)" class="maint-layer" aria-hidden="true">
+          <span class="maint-msg">
+            <svg class="maint-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" fill="none" stroke="#fff" stroke-width="2"/>
+              <rect x="11" y="6" width="2" height="9" rx="1" fill="#fff"/>
+              <circle cx="12" cy="17.5" r="1.4" fill="#fff"/>
+            </svg>
+            <span>{{ $t('maintenance.name') }}</span>
+          </span>
         </div>
       </div>
     </div>
@@ -51,115 +65,32 @@ import pgSlot from '@/assets/slot-images/pg_slot.webp'
 const router = useRouter()
 
 const providers = ref([
-  {
-    id: 'ps',
-    name: 'PS Slot',
-    logo: psSlot,
-    games: []
-  },
-  {
-    id: 'es',
-    name: 'ES Slot',
-    logo: esSlot,
-    games: []
-  },
-  {
-    id: 'nolimit',
-    name: 'Nolimit City',
-    logo: nolimitSlot,
-    games: []
-  },
-  {
-    id: 'rela',
-    name: 'Relax Gaming',
-    logo: relaSlot,
-    games: []
-  },
-  {
-    id: 'yggdrasil',
-    name: 'Yggdrasil',
-    logo: yggdrasilSlot,
-    games: []
-  },
-  {
-    id: 'jili',
-    name: 'Jili Slot',
-    logo: jiliSlot,
-    games: []
-  },
-  {
-    id: 'facai',
-    name: 'Facai Slot',
-    logo: facaiSlot,
-    games: []
-  },
-  {
-    id: 'jdb',
-    name: 'JDB Slot',
-    logo: jdbSlot,
-    games: []
-  },
-  {
-    id: 'kingmidas2',
-    name: 'King Midas',
-    logo: kingmidas2Slot,
-    games: []
-  },
-  {
-    id: 'habanero',
-    name: 'Habanero',
-    logo: habaneroSlot,
-    games: []
-  },
-  {
-    id: 'yl',
-    name: 'YL Slot',
-    logo: ylSlot,
-    games: []
-  },
-  {
-    id: 'cq9',
-    name: 'CQ9',
-    logo: cq9Slot,
-    games: []
-  },
-  {
-    id: 'simpleplay',
-    name: 'SimplePlay',
-    logo: simplePlaySlot,
-    games: []
-  },
-  {
-    id: 'spadegaming',
-    name: 'Spade Gaming',
-    logo: spadegamingSlot,
-    games: []
-  },
-  {
-    id: 'joker',
-    name: 'Joker Gaming',
-    logo: jokerSlot,
-    games: []
-  },
-  {
-    id: 'pragmatic',
-    name: 'Pragmatic Play',
-    logo: pragmaticPlaySlot,
-    games: []
-  },
-  {
-    id: 'kingmidas',
-    name: 'King Midas',
-    logo: kingmidasSlot,
-    games: []
-  },
-  {
-    id: 'pg',
-    name: 'PG Soft',
-    logo: pgSlot,
-    games: []
-  }
+  { id: 'ps',         name: 'PS Slot',          logo: psSlot,              games: [] },
+  { id: 'es',         name: 'ES Slot',          logo: esSlot,              games: [] },
+  { id: 'nolimit',    name: 'Nolimit City',     logo: nolimitSlot,         games: [] },
+  { id: 'rela',       name: 'Relax Gaming',     logo: relaSlot,            games: [] },
+  { id: 'yggdrasil',  name: 'Yggdrasil',        logo: yggdrasilSlot,       games: [] },
+  { id: 'jili',       name: 'Jili Slot',        logo: jiliSlot,            games: [] },
+  { id: 'facai',      name: 'Facai Slot',       logo: facaiSlot,           games: [] },
+  { id: 'jdb',        name: 'JDB Slot',         logo: jdbSlot,             games: [] },
+  { id: 'kingmidas2', name: 'King Midas',       logo: kingmidas2Slot,      games: [] },
+  { id: 'habanero',   name: 'Habanero',         logo: habaneroSlot,        games: [] },
+  { id: 'yl',         name: 'YL Slot',          logo: ylSlot,              games: [] },
+  { id: 'cq9',        name: 'CQ9',              logo: cq9Slot,             games: [] },
+  { id: 'simpleplay', name: 'SimplePlay',       logo: simplePlaySlot,      games: [] },
+  { id: 'spadegaming',name: 'Spade Gaming',     logo: spadegamingSlot,     games: [] },
+  { id: 'joker',      name: 'Joker Gaming',     logo: jokerSlot,           games: [] },
+  { id: 'pragmatic',  name: 'Pragmatic Play',   logo: pragmaticPlaySlot,   games: [] },
+  { id: 'kingmidas',  name: 'King Midas',       logo: kingmidasSlot,       games: [] },
+  { id: 'pg',         name: 'PG Soft',          logo: pgSlot,              games: [] },
 ])
+
+/** List the provider ids that should show the maintenance overlay */
+const maintenanceIds = new Set([
+'ps'
+])
+
+const isMaintenance = (id) => maintenanceIds.has(id)
 
 const currentLocale = computed(() => {
   return getCurrentLocale(router.currentRoute.value) || 'th'
@@ -167,13 +98,14 @@ const currentLocale = computed(() => {
 
 const selectProvider = (provider) => {
   console.log('Selected provider:', provider.name)
-  
-  // All providers require login - redirect to login page
   const loginPath = localePath('/login', currentLocale.value)
   router.push(loginPath)
-  
-  // Still emit for parent component if needed
   emit('provider-selected', provider)
+}
+
+const handleClick = (provider) => {
+  if (isMaintenance(provider.id)) return
+  selectProvider(provider)
 }
 
 // Emit events for parent component
@@ -221,6 +153,7 @@ const emit = defineEmits(['provider-selected'])
 }
 
 .provider-card {
+  position: relative; /* for overlay */
   cursor: pointer;
   transition: transform 0.3s ease;
   display: flex;
@@ -230,11 +163,11 @@ const emit = defineEmits(['provider-selected'])
   height: 320px;
   padding: 10px;
   box-sizing: border-box;
+  border-radius: 8px; 
+  overflow: hidden;   /* clip overlay corners */
 }
 
-.provider-card:hover {
-  transform: scale(1.05);
-}
+.provider-card:hover { transform: scale(1.05); }
 
 .provider-logo {
   width: 100%;
@@ -250,22 +183,38 @@ const emit = defineEmits(['provider-selected'])
   width: auto;
   height: auto;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, filter .2s ease;
   border-radius: 8px;
 }
 
+/* === Maintenance visual === */
+.provider-card.is-maintenance { 
+  pointer-events: none;  /* disable click */
+}
+
+.provider-card.is-maintenance .provider-logo img {
+  filter: brightness(.35) saturate(.95);
+}
+
+.maint-layer{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+}
+
+.maint-msg{
+  display:inline-flex; align-items:center; gap:8px;
+  color:#fff; font-weight:500; font-size:16px; line-height:1;
+  text-shadow:0 1px 2px rgba(0,0,0,.55);
+}
+
+.maint-ico{ width:18px; height:18px; flex:0 0 18px; }
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .slot-tab {
-    gap: 50px;
-  }
+  .slot-tab { gap: 50px; }
 
-  .slot-providers {
-    padding: 0 0 40px 0;
-    gap: 90px 0;
-  }
+  .slot-providers { padding: 0 0 40px 0; gap: 90px 0; }
   
-  /* Updated title mobile styling to match casino component */
   .slot-title {
     font-size: 1.2rem;
     min-width: 250px;
@@ -279,10 +228,12 @@ const emit = defineEmits(['provider-selected'])
     height: 160px;
     padding: 8px;
   }
+
+  .maint-msg { font-size: 13px; }
+  .maint-ico { width:16px; height:16px; }
 }
 
 @media (max-width: 480px) {
-  /* Updated title and card styling for smaller mobile screens to match casino */
   .slot-title {
     font-size: 1rem;
     min-width: 200px;
@@ -296,5 +247,8 @@ const emit = defineEmits(['provider-selected'])
     height: 100px;
     padding: 4px;
   }
+
+  .maint-msg { font-size: 12px; }
+  .maint-ico { width:14px; height:14px; }
 }
 </style>

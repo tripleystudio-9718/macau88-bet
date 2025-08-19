@@ -18,18 +18,19 @@
   "languages": {
     "thai": "ภาษาไทย",
     "english": "English",
+    "indonesian": "Bahasa Indonesia",
     "lao": "ລາວ"
   },
   "affiliate": {
-    "title": "แชร์รับรายได้จาก",
+    "title": "ร่วมเป็นพันธมิตรกับ",
     "game": "เกม",
-    "rate": "รับ",
+    "rate": "อัตรา",
     "games": {
       "casino": "คาสิโน",
-      "slots": "สล็อต", 
+      "slots": "สล็อต",
       "sports": "กีฬา",
       "lottery": "หวย",
-      "lotteryDraw": "ลอตเตอรี่"
+      "lotteryDraw": "การออกรางวัลลอตเตอรี่"
     }
   },
   "promotions": {
@@ -76,6 +77,55 @@
   },
   "common": {
     "close": "ปิด",
-    "moreShow": "แสดงเพิ่มเติม"
+    "moreShow": "แสดงเพิ่มเติม",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป"
+  },
+  "tabs": {
+    "history": "ประวัติ",
+    "affiliate": "พันธมิตร",
+    "account": "ข้อมูลบัญชี",
+    "lucky": "วงล้อนำโชค",
+    "promotions": "โปรโมชั่น",
+    "slot": "สล็อต",
+    "casino": "คาสิโน",
+    "allgames": "เกมทั้งหมด",
+    "sports": "กีฬา",
+    "lotto": "หวย"
+  },
+  "ticker": {
+    "welcome": "ยินดีต้อนรับสู่ 🐉MACAU888🐉 — คาสิโนออนไลน์อันดับ 1 ของไทย ฝาก–ถอนรวดเร็วไม่เกิน 3 วินาที ฟุตบอล ⚽️ | บาคาร่า 🎲 | สล็อตและยิงปลา 🎰 เล่นได้ตลอด 24 ชั่วโมง 🚀 เว็บตรง ปลอดภัย รวมเกมชั้นนำเหมือนอยู่คาสิโนต่างประเทศ — ที่ MACAU888"
+  },
+  "video": {
+    "promoTitle": "วิดีโอโปรโมชัน"
+  },
+  "alt": {
+    "slide": "สไลด์ {num}",
+    "poster": "โปสเตอร์ {num}",
+    "macauGif": "แบนเนอร์เคลื่อนไหว MACAU888"
+  },
+  "aria": {
+    "postersCarousel": "แครูเซลโปสเตอร์"
+  },
+  "status": {
+    "underMaintenance": "ปิดปรับปรุง"
+  },
+   "maintenance":{
+    "name":"อยู่ระหว่างการปรับปรุง"
+  },
+    "slot":{
+    "name":"สล็อต"
+  },
+        "casino":{
+    "name":"คาสิโน"
+  },
+        "allgames":{
+    "name":"เกมทั้งหมด"
+  },
+        "sport":{
+    "name":"กีฬา"
+  },
+        "lotto":{
+    "name":"หวย"
   }
 }

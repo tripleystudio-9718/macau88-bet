@@ -2,7 +2,7 @@
   <div class="promotion-section">
     <!-- Title with background image -->
     <div class="promotion-title">
-      {{ $t('promotions.title') }}
+      {{ $t('promotions.title') }} {{ $t('promotions.subtitle') }}
     </div>
     
     <!-- Promotion Cards Grid -->

@@ -4,48 +4,40 @@
     <section class="hero-section">
       <div class="hero-bg-gradient"></div>
 
-      <!-- SLIDER (infinite, no rewind) -->
+      <!-- SLIDER (fade) -->
       <div
         class="slider-container"
         @mouseenter="pause"
         @mouseleave="play"
         tabindex="0"
       >
-        <!-- Track -->
+        <!-- Track (stacked slides, no clones, no transform) -->
         <div
           class="slider-track"
           :class="{ dragging: heroDragging }"
           :style="heroStyle"
           ref="heroTrack"
-          @transitionend="onHeroTransitionEnd"
           @pointerdown="onHeroPointerDown"
           @pointermove="onHeroPointerMove"
           @pointerup="onHeroPointerUp"
           @pointercancel="onHeroPointerUp"
           @pointerleave="onHeroPointerUp"
         >
-          <!-- 使用扩展数组（首尾各有克隆） -->
-          <div v-for="(image, i) in extendedImages" :key="'h-' + i" class="slide">
+          <div
+            v-for="(image, i) in images"
+            :key="'h-' + i"
+            class="slide"
+            :class="{ 'is-active': i === displayedHeroIndex }"
+          >
             <div class="slide-box">
-              <img :src="image" :alt="`Slide ${i + 1}`" draggable="false" />
+              <img :src="image" :alt="t('alt.slide', { num: i + 1 })" draggable="false" />
             </div>
           </div>
         </div>
 
         <!-- Arrows -->
-        <button class="nav-btn left" @click="prevHero" aria-label="Previous">❮</button>
-        <button class="nav-btn right" @click="nextHero" aria-label="Next">❯</button>
-
-        <!-- Dots（对齐真实索引） -->
-        <div class="dots">
-          <span
-            v-for="(img, i) in images"
-            :key="'dot-' + i"
-            :class="{ active: i === realHeroIndex }"
-            @click="goToHero(i)"
-            aria-label="Go to slide"
-          />
-        </div>
+        <button class="nav-btn left" @click="prevHero" :aria-label="t('common.previous')">❮</button>
+        <button class="nav-btn right" @click="nextHero" :aria-label="t('common.next')">❯</button>
       </div>
     </section>
 
@@ -54,7 +46,7 @@
       <div class="video-frame">
         <iframe
           src="https://streamable.com/e/rb6rlj?autoplay=0&muted=0&loop=0&controls=1"
-          title="Promo video"
+          :title="t('video.promoTitle')"
           loading="lazy"
           frameborder="0"
           allow="fullscreen; picture-in-picture"
@@ -75,7 +67,7 @@
 
     <section class="image-slider">
       <!-- GIF -->
-      <img :src="macauGif" alt="Macau GIF" class="macau-gif" />
+      <img :src="macauGif" :alt="t('alt.macauGif')" class="macau-gif" />
 
       <!-- 2-up slider below the GIF (infinite loop, no rewind) -->
       <div
@@ -99,13 +91,13 @@
           <!-- Render with clones at both ends -->
           <div v-for="(pair, p) in extendedPairs" :key="'ext-' + p" class="pair">
             <div v-for="(src, i) in pair" :key="i" class="poster">
-              <img :src="src" :alt="`Poster ${p*2 + i + 1}`" draggable="false" />
+              <img :src="src" :alt="t('alt.poster', { num: p*2 + i + 1 })" draggable="false" />
             </div>
           </div>
         </div>
 
         <!-- indicators (bars) reflect real slides -->
-        <div class="two-up-indicators" role="tablist" aria-label="Posters carousel">
+        <div class="two-up-indicators" role="tablist" :aria-label="t('aria.postersCarousel')">
           <button
             v-for="(_, i) in pairs"
             :key="'ind-' + i"
@@ -129,21 +121,20 @@
         @keydown="onHubKeydown"
       >
         <button
-          v-for="(t, idx) in hubTabs"
-          :key="t.key"
+          v-for="(tItem, idx) in hubTabs"
+          :key="tItem.key"
           class="hub-tile"
           role="tab"
-          :id="`tab-${t.key}`"
-          :aria-selected="t.key === activeHub"
-          :tabindex="t.key === activeHub ? 0 : -1"
-          @click="selectHub(t.key)"
+          :id="`tab-${tItem.key}`"
+          :aria-selected="tItem.key === activeHub"
+          :tabindex="tItem.key === activeHub ? 0 : -1"
+          @click="selectHub(tItem.key)"
         >
-          <!-- ⬇️ MODIFIED: Icon positioned to extend half outside container -->
           <span class="hub-icon-wrap">
-            <img class="hub-icon" :src="t.icon" :alt="t.label" draggable="false" />
+            <img class="hub-icon" :src="tItem.icon" :alt="t(tItem.labelKey)" draggable="false" />
           </span>
 
-          <span class="hub-label">{{ t.label }}</span>
+          <span class="hub-label">{{ t(tItem.labelKey) }}</span>
           <span class="hub-tile-border" aria-hidden="true"></span>
         </button>
       </div>
@@ -154,7 +145,6 @@
         role="tabpanel"
         :aria-labelledby="`tab-${activeHub}`"
       >
-        <!-- Show component tabs only (no default text) -->
         <div v-if="activeHub === 'slot'">
           <SlotTab @provider-selected="handleProviderSelected" />
         </div>
@@ -170,7 +160,6 @@
         <div v-else-if="activeHub === 'lotto'">
           <LottoTab @provider-selected="handleProviderSelected" />
         </div>
-        <!-- No default content for other tabs -->
       </div>
     </section>
 
@@ -182,6 +171,10 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCurrentLocale, localePath } from '@/router'
+import { useI18n } from 'vue-i18n'
+
+/* i18n */
+const { t } = useI18n()
 
 /* assets & components */
 import macauGif from '@/assets/macau-gif1.gif'
@@ -192,14 +185,14 @@ import SportsTab from '@/components/SportsTab.vue'
 import LottoTab from '@/components/LottoTab.vue'
 import PromotionSection from '@/components/PromotionSection.vue'
 
-/* ========= Helper: double RAF to guarantee style commit ========= */
+/* ========= Helper: double RAF ========= */
 const nextFrame = () =>
   new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
 
 /* ===== Router ===== */
 const router = useRouter()
 
-/* ===== Top hero slider (INFINITE, no-rewind) ===== */
+/* ===== Top hero slider (FADE) ===== */
 import img1 from '@/assets/macau-slider-1.jpeg'
 import img2 from '@/assets/macau-slider-2.jpeg'
 import img3 from '@/assets/macau-slider-3.jpeg'
@@ -208,128 +201,45 @@ import img5 from '@/assets/macau-slider-5.jpeg'
 
 const images = [img1, img2, img3, img4, img5]
 
-/** 扩展数组：前后各克隆一张，用于无缝循环 */
-const extendedImages = computed(() => {
-  const n = images.length
-  if (n <= 1) return images
-  return [images[n - 1], ...images, images[0]]
-})
+/** start at first slide (no clones in fade mode) */
+const displayedHeroIndex = ref(0)
 
-/** 从第 1 个"真实位"开始（索引 1，因为 0 是头部克隆） */
-const displayedHeroIndex = ref(images.length > 1 ? 1 : 0)
+/** track style in fade mode (no transform/transition) */
+const heroStyle = computed(() => ({}))
 
-const heroStyle = computed(() => {
-  const translateX = -displayedHeroIndex.value * 100
-  return {
-    transform: 'translate3d(' + translateX + '%, 0, 0)',
-    transition: 'transform 0.5s ease-in-out'
-  }
-})
-
-/** 将带克隆的索引转回真实索引 0..n-1（用于 dots） */
-const realHeroIndex = computed(() => {
-  const n = images.length || 1
-  if (n === 1) return 0
-  return (displayedHeroIndex.value - 1 + n) % n
-})
-
-let heroTimer = null
-const HERO_INTERVAL = 4000
-
-const clampToExtRange = (v) => {
-  const lastExt = (extendedImages.value.length || 1) - 1
-  if (v < 0) return 0
-  if (v > lastExt) return lastExt
-  return v
-}
-
+/** next/prev/goTo with wrap */
 const nextHero = () => {
-  if (extendedImages.value.length <= 1) return
-  displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value + 1)
+  if (!images.length) return
+  displayedHeroIndex.value = (displayedHeroIndex.value + 1) % images.length
 }
 const prevHero = () => {
-  if (extendedImages.value.length <= 1) return
-  displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value - 1)
+  if (!images.length) return
+  displayedHeroIndex.value =
+    (displayedHeroIndex.value - 1 + images.length) % images.length
 }
 const goToHero = (i) => {
   if (!images.length) return
-  displayedHeroIndex.value = clampToExtRange((i % images.length) + 1)
-  play()
+  displayedHeroIndex.value = ((i % images.length) + images.length) % images.length
 }
-const play = () => { stop(); if (images.length > 1) heroTimer = setInterval(nextHero, HERO_INTERVAL) }
+
+/** autoplay */
+let heroTimer = null
+const HERO_INTERVAL = 4000
+const autoNextHero = () => nextHero()
+const play  = () => { stop(); if (images.length > 1) heroTimer = setInterval(autoNextHero, HERO_INTERVAL) }
 const pause = () => { stop() }
 const stop  = () => { if (heroTimer) { clearInterval(heroTimer); heroTimer = null } }
 
-const heroTrack = ref(null)
-const onHeroTransitionEnd = async (e) => {
-  if (e && e.propertyName && e.propertyName !== 'transform') return
-  const n = images.length
-  if (n <= 1) return
-  const lastExt = extendedImages.value.length - 1
-
-  if (displayedHeroIndex.value === lastExt) {
-    stop()
-    displayedHeroIndex.value = 1
-    play()
-  } else if (displayedHeroIndex.value === 0) {
-    stop()
-    displayedHeroIndex.value = n
-    play()
-  }
-}
-
-/** 手势拖动（桌面/触屏） */
+/** dragging disabled for fade (no-op handlers kept for compatibility) */
 const heroDragging = ref(false)
-let heroStartX = 0
-let heroDX = 0
-const HERO_THRESHOLD = 60
-
-const onHeroPointerDown = (e) => {
-  if (images.length <= 1) return
-  heroDragging.value = true
-  heroStartX = e.clientX
-  heroDX = 0
-  pause()
-  const el = heroTrack.value
-  if (el && e.pointerId != null && el.setPointerCapture) el.setPointerCapture(e.pointerId)
-  if (el) el.style.transition = 'none'
-}
-const onHeroPointerMove = (e) => {
-  if (!heroDragging.value) return
-  heroDX = e.clientX - heroStartX
-  const el = heroTrack.value
-  if (el) {
-    el.style.transition = 'none'
-    const translateX = -displayedHeroIndex.value * 100
-    el.style.transform = 'translate3d(calc(' + translateX + '% + ' + heroDX + 'px), 0, 0)'
-  }
-}
-const onHeroPointerUp = () => {
-  if (!heroDragging.value) return
-  heroDragging.value = false
-  const el = heroTrack.value
-  if (el) el.style.transition = ''
-
-  if (heroDX > HERO_THRESHOLD)      prevHero()
-  else if (heroDX < -HERO_THRESHOLD) nextHero()
-  else                                displayedHeroIndex.value = clampToExtRange(displayedHeroIndex.value)
-
-  heroDX = 0
-  play()
-}
-
-/* —— 别名，若模板仍用 @click="prev/next/goTo" —— */
-const next = nextHero
-const prev = prevHero
-const goTo = goToHero
+const heroTrack = ref(null)
+const onHeroPointerDown = () => {}
+const onHeroPointerMove = () => {}
+const onHeroPointerUp   = () => {}
 
 /* ===== Ticker props/state ===== */
-const { text, speed, width } = defineProps({
-  text: {
-    type: String,
-    default:
-      'ยินดีต้อนรับเข้าสู่ 🐉MACAU888🐉 เว็บคาสิโนอันดับ 1 ในไทย🥇  ฝากถอนไม่เกิน 3 วินาที   พนันบอล⚽️ บาคาร่า🎲  สล็อตยิงปลา🎰 เดิมพันครบวงจรตลอด 24 ชั่วโมง 🚀CASINO ONLINE เว็บตรง ไม่ผ่านเอเย่นต์ รวบรวมเกมคาสิโนยอดนิยมที่มีให้เล่นกันในบ่อนคาสิโนต่างประเทศ สามารถเข้าเล่นได้ง่ายๆผ่านเว็บไซต์ของเรา MACAU888'
-  },
+const props = defineProps({
+  text: { type: String, default: 'ยินดีต้อนรับเข้าสู่ 🐉MACAU888🐉 เว็บคาสิโนอันดับ 1 ในไทย🥇  ฝากถอนไม่เกิน 3 วินาที   พนันบอล⚽️ บาคาร่า🎲  สล็อตยิงปลา🎰 เดิมพันครบวงจรตลอด 24 ชั่วโมง 🚀CASINO ONLINE เว็บตรง ไม่ผ่านเอเย่นต์ รวบรวมเกมคาสิโนยอดนิยมที่มีให้เล่นกันในบ่อนคาสิโนต่างประเทศ สามารถเข้าเล่นได้ง่ายๆผ่านเว็บไซต์ของเรา MACAU888' },
   speed: { type: Number, default: 60 },
   width:  { type: Number, default: 940 }
 })
@@ -481,34 +391,30 @@ import icSport from '@/assets/ic-sport.png'
 import icLotto from '@/assets/ic-lotto.png'
 
 const hubTabs = [
-  { key: 'history',    label: 'History',      icon: icHistory },
-  { key: 'affiliate',  label: 'Affiliate',    icon: icFriend },
-  { key: 'account',    label: 'Account info', icon: icAccount }, // default active (gold in screenshot)
-  { key: 'lucky',      label: 'Lucky wheel',  icon: icSpin },
-  { key: 'promo',      label: 'Promotions',   icon: icPromo },
-  { key: 'slot',       label: 'Slot',         icon: icSlot },
-  { key: 'casino',     label: 'Casino',       icon: icCasino },
-  { key: 'allgames',   label: 'All games',    icon: icAllGames },
-  { key: 'sports',     label: 'Sport',        icon: icSport },
-  { key: 'lotto',      label: 'Lotto',        icon: icLotto },
+  { key: 'history',    labelKey: 'tabs.history',    icon: icHistory },
+  { key: 'affiliate',  labelKey: 'tabs.affiliate',  icon: icFriend  },
+  { key: 'account',    labelKey: 'tabs.account',    icon: icAccount },
+  { key: 'lucky',      labelKey: 'tabs.lucky',      icon: icSpin    },
+  { key: 'promo',      labelKey: 'tabs.promotions', icon: icPromo   },
+  { key: 'slot',       labelKey: 'tabs.slot',       icon: icSlot    },
+  { key: 'casino',     labelKey: 'tabs.casino',     icon: icCasino  },
+  { key: 'allgames',   labelKey: 'tabs.allgames',   icon: icAllGames},
+  { key: 'sports',     labelKey: 'tabs.sports',     icon: icSport   },
+  { key: 'lotto',      labelKey: 'tabs.lotto',      icon: icLotto   },
 ]
 
 const activeHub = ref('slot')
 
 const currentLocale = computed(() => {
-  // Get current locale from route or default to 'th'
   return getCurrentLocale(router.currentRoute.value) || 'th'
 })
 
 const selectHub = (key) => { 
-  // Handle navigation for tabs that require login
   if (key === 'history' || key === 'account' || key === 'lucky') {
     const loginPath = localePath('/login', currentLocale.value)
     router.push(loginPath)
     return
   }
-  
-  // Handle navigation for specific tabs
   if (key === 'affiliate') {
     const affiliatePath = localePath('/affiliate', currentLocale.value)
     router.push(affiliatePath)
@@ -519,18 +425,17 @@ const selectHub = (key) => {
     router.push(promotionsPath)
     return
   }
-  
-  // For other tabs, just set active
   activeHub.value = key 
 }
 
 const activeLabel = computed(() => {
-  return hubTabs.find(t => t.key === activeHub.value)?.label ?? ''
+  const found = hubTabs.find(ti => ti.key === activeHub.value)
+  return found ? t(found.labelKey) : ''
 })
 
 /* Keyboard navigation (← →) */
 const onHubKeydown = (e) => {
-  const i = hubTabs.findIndex(t => t.key === activeHub.value)
+  const i = hubTabs.findIndex(ti => ti.key === activeHub.value)
   if (e.key === 'ArrowRight') {
     selectHub(hubTabs[(i + 1) % hubTabs.length].key)
     e.preventDefault()
@@ -543,12 +448,11 @@ const onHubKeydown = (e) => {
 /* Handle provider selection from tab components */
 const handleProviderSelected = (provider) => {
   console.log('Provider selected in main component:', provider)
-  // place your provider navigation/update logic here
 }
 
 /* ===== Lifecycle ===== */
 onMounted(() => {
-  displayedHeroIndex.value = images.length > 1 ? 1 : 0
+  displayedHeroIndex.value = 0
   play()
 
   displayedIndex.value = 1
@@ -567,7 +471,7 @@ onBeforeUnmount(() => {
 /* MAIN CONTAINER: Fixed 980px width on desktop, full width on mobile */
 .app-container { 
   background: #100201; 
-  width: 980px; 
+  width: 890px; 
   margin: 0 auto;
   max-width: 100%;
 }
@@ -576,13 +480,13 @@ onBeforeUnmount(() => {
 @media (max-width: 980px) {
   .app-container { 
     width: 100%; 
-    padding: 0; /* Reduced padding for mobile */
+    padding: 0;
   }
 }
 
 @media (max-width: 480px) {
   .app-container { 
-    padding: 0; /* Even smaller padding on very small screens */
+    padding: 0;
   }
 }
 
@@ -596,7 +500,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 480px) {
   .hero-section { 
-    padding: 8px 4px; /* Reduced padding on mobile */
+    padding: 8px 4px;
   }
 }
 
@@ -675,44 +579,9 @@ onBeforeUnmount(() => {
   .nav-btn.right { right: 5px; }
 }
 
-/* Dots */
-.dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 2;
-}
-
-.dots span {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.5);
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.dots span.active {
-  background: #FFD84A;
-}
-
-@media (max-width: 480px) {
-  .dots span {
-    width: 10px;
-    height: 10px;
-  }
-  .dots {
-    gap: 6px;
-    bottom: 8px;
-  }
-}
-
 /* Video Section: 100% width */
 .video-section { 
-  padding: 12px; 
+  padding: 0 12px 12px 12px; 
   display: flex; 
   justify-content: center; 
   width: 100%;
@@ -760,13 +629,13 @@ onBeforeUnmount(() => {
 @media (max-width: 980px) {
   .ticker-wrap {
     width: 100%;
-    padding: 0 8px; /* Reduced padding */
+    padding: 0 8px;
   }
 }
 
 @media (max-width: 480px) {
   .ticker-wrap {
-    padding: 0 4px; /* Even smaller padding */
+    padding: 0 4px;
   }
 }
 
@@ -824,7 +693,7 @@ onBeforeUnmount(() => {
 
 /* Image Slider Section: 100% width */
 .image-slider { 
-  padding: 12px; 
+  padding: 0 12px; 
   width: 100%;
 }
 
@@ -837,7 +706,6 @@ onBeforeUnmount(() => {
 .macau-gif {
   width: 100%;
   display: block; 
-  margin: 0 auto 12px auto; 
   border-radius: 6px; 
   padding: 10px 0;
 }
@@ -969,13 +837,13 @@ onBeforeUnmount(() => {
 
 /* Feature Tabs Section: 100% width */
 .hub-tabs { 
-  padding: 60px 0 0;
+  padding: 70px 12px ;
   width: 100%;
 }
 
 @media (max-width: 480px) {
   .hub-tabs { 
-    padding: 40px 4px 0; /* Reduced padding */
+    padding: 40px 4px 0;
   }
 }
 
@@ -1000,7 +868,7 @@ onBeforeUnmount(() => {
   .hub-grid { 
     grid-template-columns: repeat(4, 1fr);
     gap: 60px 10px;
-    padding: 0 8px 30px; /* Added horizontal padding */
+    padding: 0 8px 30px;
   }
 }
 
@@ -1008,7 +876,7 @@ onBeforeUnmount(() => {
   .hub-grid { 
     grid-template-columns: repeat(5, 1fr);
     gap: 70px 12px;
-    padding: 0 8px 30px; /* Added horizontal padding */
+    padding: 0 8px 30px;
   }
 }
 
@@ -1098,7 +966,6 @@ onBeforeUnmount(() => {
   will-change: transform;
 }
 
-/* Label positioned in the lower part of the tile */
 .hub-label {
   font-size: 20px;
   font-weight: 700;
@@ -1198,7 +1065,7 @@ onBeforeUnmount(() => {
 @media (max-width: 980px) {
   .hub-panel {
     margin: 14px 0 0;
-    padding: 0 8px; /* Reduced padding */
+    padding: 0 8px;
     max-width: 100%;
   }
 }
@@ -1206,7 +1073,47 @@ onBeforeUnmount(() => {
 @media (max-width: 480px) {
   .hub-panel {
     margin: 10px 0 0;
-    padding: 0 4px; /* Even smaller padding */
+    padding: 0 4px;
   }
+}
+
+/* ====== HERO FADE MODE OVERRIDES ====== */
+/* Make the hero track a stacked, aspect-box container */
+.hero-section .slider-track {
+  position: relative;
+  display: block;
+  transform: none !important;
+  transition: none !important;
+  aspect-ratio: 16 / 5;
+}
+
+/* Mobile aspect ratio */
+@media (max-width: 480px) {
+  .hero-section .slider-track {
+    aspect-ratio: 16 / 6;
+  }
+}
+
+/* Stack slides absolutely and cross-fade */
+.hero-section .slide {
+  position: absolute;
+  inset: 0;
+  min-width: 0; /* override old min-width */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .6s cubic-bezier(.22,.61,.36,1);
+}
+
+.hero-section .slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Fill the track (track owns height now) */
+.hero-section .slide-box {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto; /* override old aspect-ratio on slide-box */
 }
 </style>

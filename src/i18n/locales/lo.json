@@ -8,20 +8,16 @@
     "withdraw": "ຖອນເງິນ",
     "contact": "ຕິດຕໍ່",
     "affiliate": "ພັນທະມິດ",
-    "promotions": "ໂປໂມຊັ່ນ",
+    "promotions": "ໂປຣໂມຊັນ",
     "cashback": "ຄືນເງິນ",
     "history": "ປະຫວັດ",
     "account": "ຂໍ້ມູນບັນຊີ",
     "luckyWheel": "ວົງລໍ້ໂຊກດີ",
     "collectPoints": "ສະສົມແຕ້ມ"
   },
-  "languages": {
-    "thai": "ภาษาไทย",
-    "english": "English",
-    "lao": "ລາວ"
-  },
+
   "affiliate": {
-    "title": "Affiliate with",
+    "title": "ຮ່ວມເປັນພັນທະມິດກັບ",
     "game": "ເກມ",
     "rate": "ອັດຕາ",
     "games": {
@@ -29,12 +25,12 @@
       "slots": "ສະລັອດ",
       "sports": "ກິລາ",
       "lottery": "ຫວຍ",
-      "lotteryDraw": "ການຈັບຫວຍ"
+      "lotteryDraw": "ການອອກຫວຍ"
     }
   },
   "promotions": {
     "title": "ໂປຣໂມຊັນ",
-    "subtitle": "ດີລທີ່ຮ້ອນແຮງ",
+    "subtitle": "ດີວຮ້ອນແຮງ",
     "items": {
       "welcome50": {
         "title": "",
@@ -43,10 +39,10 @@
         "modalDescription": ""
       },
       "lossRebate": {
-        "title": "Promotion to return lost balance",
-        "description": "On the 10th day of the 10th month, ret...",
-        "modalTitle": "Promotion to return lost balance", 
-        "modalDescription": "On the 10th day of the 10th month, return 10% of the lost amount.- Conditions change as specified by the website."
+        "title": "ໂປຣຄືນຍອດເສຍ",
+        "description": "ວັນທີ 10 ເດືອນ 10 ຮັບຄືນ 10% ຂອງຍອດທີ່ເສຍ...",
+        "modalTitle": "ໂປຣຄືນຍອດເສຍ",
+        "modalDescription": "ວັນທີ 10 ເດືອນ 10 ຄືນ 10% ຂອງຍອດເສຍ — ຂໍ້ເງື່ອນໄຂອາດປ່ຽນແປງຕາມທີ່ເວັບໄຊກຳນົດ"
       },
       "instant500": {
         "title": "",
@@ -76,6 +72,55 @@
   },
   "common": {
     "close": "ປິດ",
-    "moreShow": "ສະແດງເພິ່ມເຕິມ"
+    "moreShow": "ສະແດງເພີ່ມເຕີມ",
+    "previous": "ກ່ອນໜ້າ",
+    "next": "ຖັດໄປ"
+  },
+  "tabs": {
+    "history": "ປະຫວັດ",
+    "affiliate": "ພັນທະມິດ",
+    "account": "ຂໍ້ມູນບັນຊີ",
+    "lucky": "ວົງລໍ້ໂຊກດີ",
+    "promotions": "ໂປຣໂມຊັນ",
+    "slot": "ສະລັອດ",
+    "casino": "ຄາສິໂນ",
+    "allgames": "ເກມທັງໝົດ",
+    "sports": "ກິລາ",
+    "lotto": "ຫວຍ"
+  },
+  "ticker": {
+    "welcome": "ຍິນດີຕ້ອນຮັບສູ່ 🐉MACAU888🐉 ຄາສິໂນອອນລາຍອັນດັບ 1 ໃນໄທ ຝາກ–ຖອນ ໄວບໍ່ເກີນ 3 ວິນາທີ ⚽️ ບານ, 🎲 ບາຄາຣ່າ, 🎰 ສະລັອດ/ຍິງປາ ເປີດໃຫ້ບໍລິການ 24 ຊົ່ວໂມງ 🚀 ເວັບຕົງ ປອດໄພ ລວມເກມຍອດນິຍົມຫຼາຍຊະນິດ — MACAU888"
+  },
+  "video": {
+    "promoTitle": "ວິດີໂອໂປຣໂມຊັນ"
+  },
+  "alt": {
+    "slide": "ສະໄລດ {num}",
+    "poster": "ໂປສເຕີ {num}",
+    "macauGif": "ຮູບເຄື່ອນໄຫວ MACAU888"
+  },
+  "aria": {
+    "postersCarousel": "ແຄຣູເຊວໂປສເຕີ"
+  },
+  "status": {
+    "underMaintenance": "ປິດປັບປຸງ"
+    },
+      "maintenance":{
+    "name":"ກຳລັງປັບປຸງ"
+  },
+    "slot":{
+    "name":"ສະລັອດ"
+  },
+      "casino":{
+    "name":"ຄາສິໂນ"
+  },
+        "allgames":{
+    "name":"ເກມທັງໝົດ"
+  },
+        "sport":{
+    "name":"ກິລາ"
+  },
+        "lotto":{
+    "name":"ຫວຍ"
   }
 }

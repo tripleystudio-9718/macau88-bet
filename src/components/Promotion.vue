@@ -199,7 +199,7 @@ export default {
 
 .page-header {
   text-align: center;
-  max-width: 980px;
+  max-width: 890px;
   margin: auto auto 1.5rem;
 }
 
@@ -207,16 +207,15 @@ export default {
   font-size: 36px;
   font-weight: bold;
   color: white;
-  margin: 0;
-  letter-spacing: 2px;
+  margin-top:20px;
 }
 
 .highlight {
-  color: #dc2626;
+  color: #cb2936;
 }
 
 .promotions-container {
-  max-width: 980px;
+  max-width: 890px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -306,12 +305,12 @@ export default {
 
 .close-btn-outside {
   position: absolute;
-  top: -20px;
-  right: -25px;
+  top: -18px;
+  right: -30px;
   background-color: transparent;
   color: #dc3545;
   border: none;
-  font-size: 40px;
+  font-size: 36px;
   cursor: pointer;
   z-index: 10001;
   display: flex;
@@ -342,16 +341,14 @@ export default {
 
 .modal-title {
   color: white;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
-  margin: 0 0 10px 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .modal-description {
   color: rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  margin: 0 0 20px 0;
+  font-size: 16px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
@@ -361,11 +358,11 @@ export default {
 }
 
 .close-button {
-  background-color: #bb2d3b;
-  border-color: #dc3545;
+  background-color: #dc3545;
+  border-color: #e0245f;
   background-image: linear-gradient(180deg, #ffffff26, #fff0);
   color: white;
-  border: none;
+  border: 4px solid #722a31;
   padding: .375rem .75rem;
   border-radius: .25rem;
   font-size: 14px;
@@ -374,7 +371,7 @@ export default {
 }
 
 .close-button:hover {
-  background-color: rgba(187, 45, 59, 0.85);
+  background-color:#dc3545;
 }
 
 /* Animations */

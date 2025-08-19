@@ -18,23 +18,24 @@
   "languages": {
     "thai": "ภาษาไทย",
     "english": "English",
+    "indonesian": "Bahasa Indonesia",
     "lao": "ລາວ"
   },
   "affiliate": {
     "title": "Affiliate with",
-    "game": "Game",
-    "rate": "Rate",
+    "game": "GAME",
+    "rate": "GET",
     "games": {
-      "casino": "Casino",
-      "slots": "Slots",
-      "sports": "Sports", 
-      "lottery": "Lottery",
-      "lotteryDraw": "Lottery Draw"
+      "casino": "CASINO",
+      "slots": "SLOT",
+      "sports": "SPORT",
+      "lottery": "LOTTO",
+      "lotteryDraw": "LOTTERY"
     }
   },
   "promotions": {
-    "title": "Promotions",
-    "subtitle": "Hot Deals",
+    "title": "Hot ",
+    "subtitle": "Promotion",
     "items": {
       "welcome50": {
         "title": "",
@@ -45,8 +46,8 @@
       "lossRebate": {
         "title": "Promotion to return lost balance",
         "description": "On the 10th day of the 10th month, ret...",
-        "modalTitle": "Promotion to return lost balance", 
-        "modalDescription": "On the 10th day of the 10th month, return 10% of the lost amount.- Conditions change as specified by the website."
+        "modalTitle": "Promotion to return lost balance",
+        "modalDescription": "On the 10th day of the 10th month, return 10% of the lost amount. — Conditions change as specified by the website."
       },
       "instant500": {
         "title": "",
@@ -76,7 +77,55 @@
   },
   "common": {
     "close": "Close",
-    "moreShow": "More show"
+    "moreShow": "More show",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "tabs": {
+    "history": "History",
+    "affiliate": "Affiliate",
+    "account": "Account info",
+    "lucky": "Lucky wheel",
+    "promotions": "Promotions",
+    "slot": "Slot",
+    "casino": "Casino",
+    "allgames": "All games",
+    "sports": "Sports",
+    "lotto": "Lotto"
+  },
+  "ticker": {
+    "welcome": "Welcome to 🐉MACAU888🐉 — Thailand's #1 online casino. Fast deposits & withdrawals in under 3 seconds. Football ⚽️ | Baccarat 🎲 | Slots & Fishing 🎰 — play 24/7. 🚀 Direct, secure, and packed with top games just like a real international casino — only at MACAU888."
+  },
+  "video": {
+    "promoTitle": "Promo video"
+  },
+  "alt": {
+    "slide": "Slide {num}",
+    "poster": "Poster {num}",
+    "macauGif": "MACAU888 animated banner"
+  },
+  "aria": {
+    "postersCarousel": "Posters carousel"
+  },
+  "status": {
+    "underMaintenance": "Under maintenance"
+  },
+  "maintenance":{
+    "name":"Under maintenance"
+  },
+    "slot":{
+    "name":"Slot"
+  },
+        "casino":{
+    "name":"Casino"
+  },
+        "allgames":{
+    "name":"All Games"
+  },
+        "sport":{
+    "name":"Sport"
+  },
+        "lotto":{
+    "name":"Lotto"
   }
-
 }

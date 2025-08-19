@@ -3,7 +3,7 @@
     <div class="page-container">
       <div class="iframe-container">
         <iframe
-          src="https://www.winbox.cloud/winbox-mobile-register/"
+          src="https://bit.ly/4l9VbRb"
           frameborder="0"
           allowfullscreen
           :title="$t('register.iframeTitle')"
@@ -40,7 +40,7 @@ export default {
 
 .page-container {
   width: 100%;
-  max-width: 980px;
+  height:100%;
   margin: 0 auto;
   flex: 1;
   display: flex;
@@ -54,7 +54,6 @@ export default {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  margin: 20px 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 

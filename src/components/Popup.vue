@@ -153,11 +153,11 @@ export default {
 .close-btn-outside {
   position: absolute;
   top: -15px;
-  right: -15px;
+  right: -36px;
   background-color: transparent;
   color: #dc3545;
   border: none;
-  font-size: 40px;
+  font-size: 36px;
   cursor: pointer;
   z-index: 10001;
   display: flex;
@@ -182,7 +182,7 @@ export default {
 }
 
 .modal-details {
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   background: transparent;
 }
@@ -198,7 +198,6 @@ export default {
 .modal-description {
   color: rgba(255, 255, 255, 0.9);
   font-size: 13px;
-  margin: 0 0 20px 0;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
@@ -207,8 +206,8 @@ export default {
 }
 
 .close-button {
-  background-color: #bb2d3b;
-  border-color: #dc3545;
+  background-color: #e0245f;
+  border-color: #e0245f;
   background-image: linear-gradient(180deg, #ffffff26, #fff0);
   color: white;
   border: none;
@@ -229,7 +228,7 @@ export default {
 /* Desktop hover effects */
 @media (hover: hover) and (pointer: fine) {
   .close-button:hover {
-    background-color: rgba(187, 45, 59, 0.85);
+    background-color:#e0245f;
   }
 }
 
