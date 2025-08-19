@@ -5,10 +5,13 @@
       @register="handleRegister"
       @mobile-menu-toggle="handleMobileMenuToggle"
     />
-    <main class="flex-1 pb-16 md:pb-0">
+    <main class="flex-1 main-content" :class="{ 'pb-16 md:pb-0': showBottomMenu }">
       <router-view />
     </main>
+    
+    <!-- Conditionally render BottomMenu -->
     <BottomMenu 
+      v-if="showBottomMenu"
       :isMenuOpen="isMobileMenuOpen"
       @deposit="handleDeposit"
       @play="handlePlay"
@@ -36,6 +39,20 @@ export default {
   data() {
     return {
       isMobileMenuOpen: false
+    }
+  },
+  computed: {
+    showBottomMenu() {
+      // Hide bottom menu on login and register pages
+      const routeName = this.$route.name?.toLowerCase() || ''
+      const routePath = this.$route.path.toLowerCase()
+      
+      // Check if current route is login or register
+      const isLoginPage = routeName.includes('login') || routePath.includes('/login')
+      const isRegisterPage = routeName.includes('register') || routePath.includes('/register')
+      
+      // Return false (hide) if on login or register pages
+      return !isLoginPage && !isRegisterPage
     }
   },
   methods: {
@@ -90,6 +107,22 @@ export default {
   background: inherit !important;
 }
 
+/* FIXED HEADER PADDING - Add padding to main content to account for fixed header */
+.main-content {
+  padding-top: 53px; /* Desktop header height */
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 48px; /* Mobile header height */
+  }
+}
+
+/* Remove any conflicting body padding */
+body {
+  padding-top: 0 !important;
+}
+
 /* Rest of your existing styles... */
 * {
   margin: 0;
@@ -104,7 +137,6 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   background: #100201 !important;
   color: white;
-  min-height: 100vh;
 }
 
 /* Essential Tailwind-like utility classes */

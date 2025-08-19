@@ -66,9 +66,9 @@
       class="menu-grid" 
       :class="{ 'fade-up': menuVisible }"
     >
-      <!-- Menu Items with Router Links -->
+      <!-- Home Link - FIXED -->
       <router-link 
-        to="/" 
+        :to="homePath" 
         class="menu-item" 
         @click="closeMobileMenu"
       >
@@ -76,137 +76,148 @@
         <span class="menu-label">{{ $t('nav.home') }}</span>
       </router-link>
 
+      <!-- Play Link - FIXED -->
       <router-link
-  :to="{ path: '/login', query: { src: 'play' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'play' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+        :to="{ path: loginPath, query: { src: 'play' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'play' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/play.png" :alt="$t('nav.play')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.play') }}</span>
       </router-link>
 
-    <router-link
-  :to="{ path: '/login', query: { src: 'withdraw' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'withdraw' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+      <!-- Withdraw Link - FIXED -->
+      <router-link
+        :to="{ path: loginPath, query: { src: 'withdraw' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'withdraw' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/withdraw.png" :alt="$t('nav.withdraw')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.withdraw') }}</span>
       </router-link>
 
+      <!-- Deposit Link - FIXED -->
       <router-link
-  :to="{ path: '/login', query: { src: 'deposit' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'deposit' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+        :to="{ path: loginPath, query: { src: 'deposit' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'deposit' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/deposit.png" :alt="$t('nav.deposit')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.deposit') }}</span>
       </router-link>
 
-      <router-link to="/affiliate" class="menu-item" @click="closeMobileMenu">
+      <!-- Affiliate Link - FIXED -->
+      <router-link :to="affiliatePath" class="menu-item" @click="closeMobileMenu">
         <img src="@/assets/icons/affiliate.png" :alt="$t('nav.affiliate')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.affiliate') }}</span>
       </router-link>
 
-      <router-link to="/promotions" class="menu-item" @click="closeMobileMenu">
+      <!-- Promotions Link - FIXED -->
+      <router-link :to="promotionsPath" class="menu-item" @click="closeMobileMenu">
         <img src="@/assets/icons/promotion.png" :alt="$t('nav.promotions')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.promotions') }}</span>
       </router-link>
 
+      <!-- Cashback Link - FIXED -->
       <router-link
-  :to="{ path: '/login', query: { src: 'cashback' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'cashback' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+        :to="{ path: loginPath, query: { src: 'cashback' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'cashback' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/cashback.png" :alt="$t('nav.cashback')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.cashback') }}</span>
       </router-link>
 
+      <!-- History Link - FIXED -->
       <router-link
-  :to="{ path: '/login', query: { src: 'history' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'history' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+        :to="{ path: loginPath, query: { src: 'history' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'history' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/history.png" :alt="$t('nav.history')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.history') }}</span>
       </router-link>
 
+      <!-- Account Link - FIXED -->
       <router-link
-  :to="{ path: '/login', query: { src: 'account' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'account' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+        :to="{ path: loginPath, query: { src: 'account' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'account' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/account-info.png" :alt="$t('nav.account')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.account') }}</span>
       </router-link>
 
-       <router-link
-  :to="{ path: '/login', query: { src: 'luckywheel' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'luckywheel' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+      <!-- Lucky Wheel Link - FIXED -->
+      <router-link
+        :to="{ path: loginPath, query: { src: 'luckywheel' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'luckywheel' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/lucky-wheel.png" :alt="$t('nav.luckyWheel')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.luckyWheel') }}</span>
       </router-link>
 
-        <router-link
-  :to="{ path: '/login', query: { src: 'collectpoints' } }"
-  class="menu-item"
-  :class="{ 'is-active': $route.path === '/login' && $route.query.src === 'collectpoints' }"
-  active-class=""           
-  exact-active-class=""      
-  @click="closeMobileMenu"
->
+      <!-- Collect Points Link - FIXED -->
+      <router-link
+        :to="{ path: loginPath, query: { src: 'collectpoints' } }"
+        class="menu-item"
+        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'collectpoints' }"
+        active-class=""           
+        exact-active-class=""      
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/collect-point.png" :alt="$t('nav.collectPoints')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.collectPoints') }}</span>
       </router-link>
 
+      <!-- Contact Link - External, no locale needed -->
       <a
-      class="menu-item"
-      :href="contactUrl"
-      target="_blank"
-      rel="noopener"
-     @click="closeMobileMenu"
->
+        class="menu-item"
+        :href="contactUrl"
+        target="_blank"
+        rel="noopener"
+        @click="closeMobileMenu"
+      >
         <img src="@/assets/icons/contact.png" :alt="$t('nav.contact')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.contact') }}</span>
-</a>
+      </a>
 
-    <!-- Version Info -->
-    <div 
-      class="version-info" 
-      :class="{ 'fade-up': menuVisible }"
-    >
-      v1.0.01
+      <!-- Version Info -->
+      <div 
+        class="version-info" 
+        :class="{ 'fade-up': menuVisible }"
+      >
+        v1.0.01
+      </div>
     </div>
   </div>
-    </div>
-
 </template>
 
 <script>
-import { localePath, getCurrentLocale, switchLocale } from '@/router'
+import { localePath, getCurrentLocale, switchLocale, defaultLocale } from '@/router'
+
 export default {
   name: 'MobileMenu',
   props: {
@@ -236,14 +247,18 @@ export default {
     }
   },
   computed: {
+    // Dynamic paths based on current locale
     homePath() {
-      return localePath('/', this.getCurrentLocale())
+      return this.pathFor('')
     },
     affiliatePath() {
-      return localePath('/affiliate', this.getCurrentLocale())
+      return this.pathFor('affiliate')
     },
     promotionsPath() {
-      return localePath('/promotions', this.getCurrentLocale())
+      return this.pathFor('promotions')
+    },
+    loginPath() {
+      return this.pathFor('login')
     }
   },
   watch: {
@@ -256,14 +271,33 @@ export default {
         }
       },
       immediate: true
+    },
+    '$route'() {
+      // Update current locale when route changes
+      this.currentLocale = getCurrentLocale(this.$route)
+    },
+    '$i18n.locale'(newLocale) {
+      // Sync component locale with i18n locale
+      console.log('MobileMenu: i18n locale changed to:', newLocale)
+      this.currentLocale = newLocale
     }
   },
   mounted() {
     this.currentLocale = getCurrentLocale(this.$route)
   },
   methods: {
+    // Helper method to generate paths with current locale
+    pathFor(slug = '') {
+      const loc = this.currentLocale || defaultLocale
+      const prefix = loc === defaultLocale ? '' : `/${loc}`
+      const tail = slug ? `/${slug}` : '/'
+      const path = `${prefix}${tail}`.replace(/\/{2,}/g, '/')
+      console.log('MobileMenu pathFor:', { slug, loc, prefix, tail, path })
+      return path
+    },
+
     getCurrentLocale() {
-      return this.$route.meta?.locale || 'th'
+      return this.$route.meta?.locale || defaultLocale
     },
     
     getLanguageLabel(locale) {
@@ -271,15 +305,15 @@ export default {
       return language ? language.label : locale
     },
     
-   openMobileMenu() {
-  document.body.style.overflow = 'hidden'
-  this.isVisible = true
-  setTimeout(() => { this.showCircle = true }, 30)
-  setTimeout(() => { this.circleExpanded = true }, 350)
-  setTimeout(() => { this.headerVisible = true }, 850)
-  setTimeout(() => { this.languageVisible = true }, 950)
-  setTimeout(() => { this.menuVisible = true; this.backgroundVisible = true }, 1100)
-},
+    openMobileMenu() {
+      document.body.style.overflow = 'hidden'
+      this.isVisible = true
+      setTimeout(() => { this.showCircle = true }, 30)
+      setTimeout(() => { this.circleExpanded = true }, 350)
+      setTimeout(() => { this.headerVisible = true }, 850)
+      setTimeout(() => { this.languageVisible = true }, 950)
+      setTimeout(() => { this.menuVisible = true; this.backgroundVisible = true }, 1100)
+    },
     
     closeMobileMenu() {
       this.menuVisible = false
@@ -299,9 +333,24 @@ export default {
     },
     
     selectLanguage(locale) {
-      this.currentLocale = locale
+      console.log('MobileMenu: Selecting language:', locale, 'Current:', this.currentLocale)
       this.showLanguageDropdown = false
-      switchLocale(this.$router, locale)
+      
+      if (this.currentLocale !== locale) {
+        // Update component locale first
+        this.currentLocale = locale
+        console.log('MobileMenu: Updated currentLocale to:', this.currentLocale)
+        
+        // Then switch the route
+        switchLocale(this.$router, locale)
+        
+        // Force update to ensure UI reflects the change
+        this.$nextTick(() => {
+          console.log('MobileMenu: Force updating component')
+          this.$forceUpdate()
+        })
+      }
+      
       // Optional: close menu after language change
       // this.closeMobileMenu()
     },
@@ -312,8 +361,6 @@ export default {
     }
   }
 }
-
-
 </script>
 
 <style scoped>
@@ -703,7 +750,7 @@ export default {
   }
 
   .version-info {
-    bottom: 100px;
+    bottom: -30px;
   }
 
   .menu-grid.fade-up {
@@ -776,9 +823,6 @@ export default {
     height: 16px;
   }
 
-  .version-info {
-    bottom: 80px;
-  }
 }
 
 @media (max-width: 360px) {

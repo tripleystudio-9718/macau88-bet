@@ -2,9 +2,9 @@
   <!-- Header with dark red background matching the design -->
   <header id="top-header" class="text-white">
     <div class="nav-container">
-      <!-- Logo Section -->
+      <!-- Logo Section - FIXED to use dynamic path -->
       <div class="logo-section">
-        <router-link to="/" class="logo-link">
+        <router-link :to="pathFor('')" class="logo-link">
           <img 
             src="@/assets/macau888-logo.png" 
             alt="MACAU888" 
@@ -16,11 +16,11 @@
       <!-- Right Section -->
       <div class="right-section">
         <!-- Desktop buttons - with icons, hidden on mobile -->
-       <button 
-  @click="goRegister"
-  class="register-btn desktop-only"
-  type="button"
->
+        <button 
+          @click="goRegister"
+          class="register-btn desktop-only"
+          type="button"
+        >
           <svg class="btn-icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
             <circle cx="8.5" cy="7" r="4"></circle>
@@ -32,7 +32,7 @@
         
         <button 
           @click="goLogin"
-  class="login-btn desktop-only"
+          class="login-btn desktop-only"
         >
           <svg class="btn-icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
@@ -42,31 +42,31 @@
           {{ $t('nav.login') }}
         </button>
 
-        <!-- Tablet buttons - no icons, visible on tablet only -->
+        <!-- Tablet buttons - no icons, visible on tablet only - FIXED to use methods -->
         <button 
-          @click="$emit('register')"
+          @click="goRegister"
           class="register-btn tablet-only"
         >
           {{ $t('nav.register') }}
         </button>
         
         <button 
-          @click="$emit('login')"
+          @click="goLogin"
           class="login-btn tablet-only"
         >
           {{ $t('nav.login') }}
         </button>
 
-        <!-- Mobile buttons - no icons, visible only on mobile -->
+        <!-- Mobile buttons - no icons, visible only on mobile - FIXED to use methods -->
         <button 
-          @click="$emit('register')"
+          @click="goRegister"
           class="register-btn mobile-only"
         >
           {{ $t('nav.register') }}
         </button>
         
         <button 
-          @click="$emit('login')"
+          @click="goLogin"
           class="login-btn mobile-only"
         >
           {{ $t('nav.login') }}
@@ -97,6 +97,7 @@
           @click="toggleMobileMenu"
           class="mobile-menu-btn"
           :class="{ 'active': showMobileMenu }"
+          aria-label="Toggle mobile menu"
         >
           <!-- Animated Burger to X Menu -->
           <div class="hamburger-menu">
@@ -118,7 +119,7 @@
 </template>
 
 <script>
-import { getCurrentLocale, switchLocale, supportedLocales } from '@/router'
+import { getCurrentLocale, switchLocale, supportedLocales, defaultLocale } from '@/router'
 import MobileMenu from './MobileMenu.vue'
 
 export default {
@@ -132,7 +133,11 @@ export default {
       showLanguageDropdown: false,
       isMobile: false,
       isTablet: false,
-      supportedLanguages: [
+    }
+  },
+  computed: {
+    supportedLanguages() {
+      return [
         { code: 'th', label: this.$t('languages.thai') },
         { code: 'en', label: this.$t('languages.english') },
         { code: 'lo', label: this.$t('languages.lao') }
@@ -151,12 +156,18 @@ export default {
   },
   watch: {
     '$route'() {
+      // Update currentLocale when route changes
       this.currentLocale = getCurrentLocale(this.$route)
       this.showMobileMenu = false
       this.$emit('mobile-menu-toggle', false)
     },
     showMobileMenu(newVal) {
       this.$emit('mobile-menu-toggle', newVal)
+    },
+    '$i18n.locale'(newLocale) {
+      // Sync component locale with i18n locale
+      console.log('Header: i18n locale changed to:', newLocale)
+      this.currentLocale = newLocale
     }
   },
   methods: {
@@ -166,26 +177,29 @@ export default {
       this.isTablet = width > 480 && width <= 768
     },
 
-    // ✅ Missing helper added
+    // Helper method to generate paths with current locale
     pathFor(slug = '') {
-      // Builds /{locale}/{slug} if a locale exists, otherwise /{slug}
-      const loc = this.currentLocale || getCurrentLocale(this.$route) || ''
-      const prefix = loc ? `/${loc}` : ''
+      const loc = this.currentLocale || defaultLocale
+      const prefix = loc === defaultLocale ? '' : `/${loc}`
       const tail = slug ? `/${slug}` : '/'
-      return `${prefix}${tail}`.replace(/\/{2,}/g, '/')
+      const path = `${prefix}${tail}`.replace(/\/{2,}/g, '/')
+      console.log('Header pathFor:', { slug, loc, prefix, tail, path })
+      return path
     },
 
     toggleMobileMenu() {
       this.showMobileMenu = !this.showMobileMenu
     },
+
     handleMobileMenuClose() {
       this.showMobileMenu = false
     },
+
     handleMobileMenuClick(menuItem) {
       console.log('Mobile menu clicked:', menuItem)
       switch(menuItem) {
         case 'home':
-          this.$router.push('/')
+          this.goHome()
           break
         case 'deposit':
           this.$emit('deposit')
@@ -197,47 +211,71 @@ export default {
           this.$emit('contact')
           break
         case 'register':
-          this.$emit('register')
+          this.goRegister()
           break
         case 'login':
-          this.$emit('login')
+          this.goLogin()
           break
         default:
           console.log('Menu item not handled:', menuItem)
       }
     },
 
-    // Navigation helpers
+    // Navigation helpers - all use pathFor for locale awareness
     goHome() {
-      this.$router.push(this.pathFor('')).catch(() => {})
+      const path = this.pathFor('')
+      console.log('Navigating to home:', path, 'Current locale:', this.currentLocale)
+      this.$router.push(path).catch(() => {})
       this.showMobileMenu = false
     },
+
     goRegister() {
-      this.$router.push(this.pathFor('register')).catch(() => {})
-      this.$emit('register') // keep event for analytics/parent listeners if any
+      const path = this.pathFor('register')
+      console.log('Navigating to register:', path, 'Current locale:', this.currentLocale)
+      this.$router.push(path).catch(() => {})
+      this.$emit('register') // Keep event for analytics/parent listeners
       this.showMobileMenu = false
     },
+
     goLogin() {
-      this.$router.push(this.pathFor('login')).catch(() => {})
+      const path = this.pathFor('login')
+      console.log('Navigating to login:', path, 'Current locale:', this.currentLocale)
+      this.$router.push(path).catch(() => {})
       this.$emit('login')
       this.showMobileMenu = false
     },
 
-    // Language
+    // Language dropdown methods
     toggleLanguageDropdown() {
       this.showLanguageDropdown = !this.showLanguageDropdown
     },
+
     selectLanguage(locale) {
-      this.currentLocale = locale
+      console.log('Header: Selecting language:', locale, 'Current:', this.currentLocale)
       this.showLanguageDropdown = false
-      switchLocale(this.$router, locale)
+      
+      if (this.currentLocale !== locale) {
+        // Update component locale first
+        this.currentLocale = locale
+        console.log('Header: Updated currentLocale to:', this.currentLocale)
+        
+        // Then switch the route
+        switchLocale(this.$router, locale)
+        
+        // Force update to ensure UI reflects the change
+        this.$nextTick(() => {
+          console.log('Header: Force updating component')
+          this.$forceUpdate()
+        })
+      }
     },
+
     getLanguageLabel(locale) {
       const language = this.supportedLanguages.find(lang => lang.code === locale)
       return language ? language.label : locale
     },
 
-    // Outside click
+    // Outside click handler
     handleClickOutside(event) {
       const dropdown = this.$refs.languageDropdown
       if (dropdown && !dropdown.contains(event.target)) {
@@ -248,15 +286,29 @@ export default {
 }
 </script>
 
-
 <style scoped>
-/* Enhanced mobile-first CSS */
+/* Enhanced mobile-first CSS with improved sticky header */
 #top-header {
   background: linear-gradient(to bottom, #360000, #6f010a);
   border-bottom: 1px solid #d7ad69;
-  position: sticky;
+  position: fixed; /* Changed from sticky to fixed for better browser support */
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added shadow for better separation */
+}
+
+/* Add this class to your body or main content to prevent content from going under the header */
+body {
+  padding-top: 53px; /* Same as header height */
+}
+
+@media (max-width: 480px) {
+  body {
+    padding-top: 48px; /* Mobile header height */
+  }
 }
 
 #top-header .nav-container {
@@ -266,7 +318,7 @@ export default {
   align-items: center;
   height: 53px;
   padding: 0 16px;
-  max-width: 900px;
+  max-width: 980px;
   margin: 0 auto;
 }
 
@@ -388,11 +440,10 @@ export default {
   .register-btn, .login-btn {
     padding: 5px 10px;
     font-size: 11px;
-    min-width: 55px;
   }
   
   .right-section {
-    gap: 4px;
+    gap: 6px;
   }
 }
 
@@ -571,6 +622,10 @@ export default {
   .hamburger-menu {
     width: 18px;
     height: 14px;
+  }
+
+  .register-btn, .login-btn {
+    width: 80px;
   }
 }
 

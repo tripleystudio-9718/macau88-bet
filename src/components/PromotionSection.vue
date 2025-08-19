@@ -28,7 +28,7 @@
       <!-- More Show Button -->
       <div class="more-show-container">
         <router-link 
-          to="/promotions" 
+          :to="promotionsPath" 
           class="btn btn-more-show"
         >
           <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +38,7 @@
           </svg>
           {{ $t('common.moreShow') }}
         </router-link>
-      </div>
+</div>
     </div>
 
     <!-- Modal Overlay -->
@@ -77,6 +77,8 @@
 <script>
 // Import the title frame background (PNG)
 import titleFrame from '@/assets/title_frame.png'
+// ADD: Import router helpers for locale-aware paths
+import { getCurrentLocale, localePath, defaultLocale } from '@/router'
 
 // Import promotion images
 import welcomeBonus from '@/assets/promotions/welcome-bonus.jpeg'
@@ -146,9 +148,21 @@ export default {
     },
     currentLocale() {
       return this.$route.meta?.locale || this.$i18n.locale || 'th'
+    },
+    // ADD: Computed property for localized promotions path
+    promotionsPath() {
+      return this.pathFor('promotions')
     }
   },
   methods: {
+    // ADD: Helper method to generate locale-aware paths
+    pathFor(slug = '') {
+      const loc = this.currentLocale || defaultLocale
+      const prefix = loc === defaultLocale ? '' : `/${loc}`
+      const tail = slug ? `/${slug}` : '/'
+      return `${prefix}${tail}`.replace(/\/{2,}/g, '/')
+    },
+
     openModal(index) {
       this.currentPromoIndex = index
       this.isAnimating = true
@@ -507,6 +521,10 @@ export default {
     line-height: 50px;
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  .card-content {
+    padding: 0 5px;
   }
   
   .modal-content {

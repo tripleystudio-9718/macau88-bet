@@ -2,9 +2,9 @@
   <div class="bottom-menu-container">
     <div class="bottom-menu-content">
       <nav class="bottom-nav">
-        <!-- Home -->
+        <!-- Home - FIXED to use dynamic path -->
         <router-link 
-          to="/" 
+          :to="homePath" 
           class="footer-menu-item"
         >
           <img 
@@ -15,40 +15,40 @@
           <span class="nav-text">{{ $t('nav.home') }}</span>
         </router-link>
 
- <!-- Deposit -->
-<router-link :to="{ path:'/login', query:{ src:'deposit' } }" custom v-slot="{ navigate }">
-  <button @click="navigate" class="footer-menu-item">
-    <img src="@/assets/icons/deposit.png" :alt="$t('nav.deposit')" class="nav-image" />
-    <span class="nav-text">{{ $t('nav.deposit') }}</span>
-  </button>
-</router-link>
+        <!-- Deposit - FIXED to use login path without query parameters -->
+        <router-link :to="loginPath" custom v-slot="{ navigate }">
+          <button @click="navigate" class="footer-menu-item">
+            <img src="@/assets/icons/deposit.png" :alt="$t('nav.deposit')" class="nav-image" />
+            <span class="nav-text">{{ $t('nav.deposit') }}</span>
+          </button>
+        </router-link>
 
-<!-- Play (center) -->
-<router-link :to="{ path:'/login', query:{ src:'play' } }" custom v-slot="{ navigate }">
-  <div class="footer-menu-item play-button-container">
-    <button @click="navigate" class="play-button">
-      <img src="@/assets/icons/play.png" :alt="$t('nav.play')" class="play-image" />
-    </button>
-    <span class="play-text">{{ $t('nav.play') }}</span>
-  </div>
-</router-link>
+        <!-- Play (center) - FIXED to use login path without query parameters -->
+        <router-link :to="loginPath" custom v-slot="{ navigate }">
+          <div class="footer-menu-item play-button-container">
+            <button @click="navigate" class="play-button">
+              <img src="@/assets/icons/play.png" :alt="$t('nav.play')" class="play-image" />
+            </button>
+            <span class="play-text">{{ $t('nav.play') }}</span>
+          </div>
+        </router-link>
 
-<!-- Withdraw -->
-<router-link :to="{ path:'/login', query:{ src:'withdraw' } }" custom v-slot="{ navigate }">
-  <button @click="navigate" class="footer-menu-item">
-    <img src="@/assets/icons/withdraw.png" :alt="$t('nav.withdraw')" class="nav-image" />
-    <span class="nav-text">{{ $t('nav.withdraw') }}</span>
-  </button>
-</router-link>
+        <!-- Withdraw - FIXED to use login path without query parameters -->
+        <router-link :to="loginPath" custom v-slot="{ navigate }">
+          <button @click="navigate" class="footer-menu-item">
+            <img src="@/assets/icons/withdraw.png" :alt="$t('nav.withdraw')" class="nav-image" />
+            <span class="nav-text">{{ $t('nav.withdraw') }}</span>
+          </button>
+        </router-link>
 
-<!-- Contact (external) -->
-<a class="footer-menu-item"
-   href="http://bit.ly/45oDZl4"
-   target="_blank"
-   rel="noopener">
-  <img src="@/assets/icons/contact.png" :alt="$t('nav.contact')" class="nav-image" />
-  <span class="nav-text">{{ $t('nav.contact') }}</span>
-</a>
+        <!-- Contact (external) - No change needed -->
+        <a class="footer-menu-item"
+           href="http://bit.ly/45oDZl4"
+           target="_blank"
+           rel="noopener">
+          <img src="@/assets/icons/contact.png" :alt="$t('nav.contact')" class="nav-image" />
+          <span class="nav-text">{{ $t('nav.contact') }}</span>
+        </a>
 
       </nav>
     </div>
@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import { getCurrentLocale, localePath, defaultLocale } from '@/router'
+
 export default {
   name: 'BottomMenu',
   props: {
@@ -65,15 +67,57 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      currentLocale: 'th'
+    }
+  },
+  computed: {
+    // Dynamic paths based on current locale
+    homePath() {
+      return this.pathFor('')
+    },
+    loginPath() {
+      return this.pathFor('login')
+    }
+  },
+  watch: {
+    '$route'() {
+      // Update current locale when route changes
+      this.currentLocale = getCurrentLocale(this.$route)
+    },
+    '$i18n.locale'(newLocale) {
+      // Sync component locale with i18n locale
+      console.log('BottomMenu: i18n locale changed to:', newLocale)
+      this.currentLocale = newLocale
+    }
+  },
   mounted() {
-    console.log('✅ BottomMenu mounted!')
+    console.log('BottomMenu mounted!')
     console.log('Current route:', this.$route)
     console.log('Window width:', window.innerWidth)
+    
+    // Initialize current locale
+    this.currentLocale = getCurrentLocale(this.$route)
   },
   emits: ['deposit', 'play', 'withdraw', 'contact'],
   methods: {
+    // Helper method to generate paths with current locale
+    pathFor(slug = '') {
+      const loc = this.currentLocale || defaultLocale
+      const prefix = loc === defaultLocale ? '' : `/${loc}`
+      const tail = slug ? `/${slug}` : '/'
+      const path = `${prefix}${tail}`.replace(/\/{2,}/g, '/')
+      console.log('BottomMenu pathFor:', { slug, loc, prefix, tail, path })
+      return path
+    },
+
     isActive() {
-      return this.$route.path === '/' || 
+      // Check if current route is home (handles localized routes)
+      const currentPath = this.$route.path
+      const homePath = this.pathFor('')
+      
+      return currentPath === homePath || 
              (this.$route.name && this.$route.name.toLowerCase().includes('home'))
     }
   }
@@ -93,7 +137,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 890px;
+  max-width: 980px;
   z-index: 50;
 }
 

@@ -255,9 +255,16 @@ const handleClick = (provider) => {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .all-tab { gap: 50px; }
+  .all-tab { 
+    gap: 20px; 
+    padding: 0; 
+  }
 
-  .all-providers { padding: 0 0 40px 0; gap: 90px 0; }
+  .all-providers { 
+    padding: 0; 
+    gap: 20px 0;
+    width: 100%;
+  }
   
   .all-title {
     font-size: 1.2rem;
@@ -269,15 +276,28 @@ const handleClick = (provider) => {
   
   .provider-card {
     width: 33.333%;
-    height: 160px;
-    padding: 8px;
+    height: 180px;
+    padding: 6px;
+  }
+
+  .provider-logo {
+    padding: 2px;
   }
 
   .maint-msg { font-size: 13px; }
-  .maint-ico { width: 16px; height: 16px; }
+  .maint-ico { width:16px; height:16px; }
 }
 
 @media (max-width: 480px) {
+  .all-tab {
+    padding: 0;
+    gap: 15px;
+  }
+
+  .all-providers {
+    gap: 15px 0;
+  }
+  
   .all-title {
     font-size: 1rem;
     min-width: 200px;
@@ -287,12 +307,33 @@ const handleClick = (provider) => {
   }
   
   .provider-card {
-    width: 33.333%;
-    height: 100px;
     padding: 4px;
   }
 
+  .provider-logo {
+    padding: 2px;
+  }
+
+  .provider-logo img {
+    border-radius: 6px;
+  }
+
   .maint-msg { font-size: 12px; }
-  .maint-ico { width: 14px; height: 14px; }
+  .maint-ico { width:14px; height:14px; }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .all-tab {
+    padding: 0;
+  }
+  
+  .provider-card {
+    padding: 3px;
+  }
+
+  .provider-logo {
+    padding: 1px;
+  }
 }
 </style>

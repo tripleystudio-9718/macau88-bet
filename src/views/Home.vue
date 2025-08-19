@@ -471,7 +471,7 @@ onBeforeUnmount(() => {
 /* MAIN CONTAINER: Fixed 980px width on desktop, full width on mobile */
 .app-container { 
   background: #100201; 
-  width: 890px; 
+  width: 980px; 
   margin: 0 auto;
   max-width: 100%;
 }
@@ -843,7 +843,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 480px) {
   .hub-tabs { 
-    padding: 40px 4px 0;
+    padding: 15px 4px 0;
   }
 }
 
@@ -859,7 +859,7 @@ onBeforeUnmount(() => {
 @media (max-width: 480px) {
   .hub-grid { 
     grid-template-columns: repeat(5, 1fr);
-    gap: 35px 6px;
+    gap: 30px 6px;
     padding-bottom: 20px;
   }
 }
@@ -909,7 +909,7 @@ onBeforeUnmount(() => {
 @media (max-width: 480px) {
   .hub-tile { 
     --tile-icon-size: 50px;
-    --icon-protrude: -20px;
+    --icon-protrude: -15px;
     min-height: 75px;
     padding: 10px 6px 10px;
     border-radius: 8px;
@@ -1027,7 +1027,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 480px) {
   .hub-tile[aria-selected="true"] {
-    --icon-protrude: -28px;
+    --icon-protrude: -20px;
   }
 }
 

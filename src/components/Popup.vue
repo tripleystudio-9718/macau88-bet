@@ -9,7 +9,13 @@
       <div class="modal-image">
         <!-- Close Button - positioned at top-right of image -->
         <button class="close-btn-outside" @click="nextBannerOrClose" :class="{ 'pulse-animation': isAnimating }">×</button>
-        <img :src="banners[currentBannerIndex].src" :alt="banners[currentBannerIndex].alt" />
+        <!-- Make image clickable to open contact link -->
+        <img 
+          :src="banners[currentBannerIndex].src" 
+          :alt="banners[currentBannerIndex].alt" 
+          @click="openContactLink"
+          style="cursor: pointer;"
+        />
       </div>
       
       <!-- Modal Details -->
@@ -40,6 +46,7 @@ export default {
       isVisible: false,
       currentBannerIndex: 0,
       isAnimating: false,
+      contactUrl: 'http://bit.ly/45oDZl4', // Contact link
       banners: [
         { 
           src: popup1, 
@@ -114,6 +121,14 @@ export default {
       this.nextBannerOrClose()
     },
 
+    // NEW: Method to open contact link
+    openContactLink() {
+      // Close the popup first
+      this.closePopup()
+      // Open contact link in new tab
+      window.open(this.contactUrl, '_blank', 'noopener,noreferrer')
+    },
+
     navigateToRegister() {
       this.closePopup()
       const registerPath = localePath('/register', this.currentLocale)
@@ -178,7 +193,15 @@ export default {
   height: auto;
   object-fit: contain;
   display: block;
-  cursor: pointer;
+  cursor: pointer; /* Ensure pointer cursor */
+  transition: opacity 0.2s ease; /* Optional: subtle hover effect */
+}
+
+/* Optional: Add subtle hover effect on desktop */
+@media (hover: hover) and (pointer: fine) {
+  .modal-image img:hover {
+    opacity: 0.9;
+  }
 }
 
 .modal-details {

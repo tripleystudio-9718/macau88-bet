@@ -177,13 +177,16 @@ const handleClick = (provider) => {
 
 .maint-ico { width: 18px; height: 18px; flex: 0 0 18px; }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
-  .lotto-tab { gap: 50px; }
+  .lotto-tab { 
+    gap: 20px; 
+    padding: 0; 
+  }
 
-  .lotto-providers {
-    padding: 0 0 40px 0;
-    gap: 90px 0;
+  .lotto-providers { 
+    padding: 0; 
+    gap: 20px 0;
+    width: 100%;
   }
   
   .lotto-title {
@@ -196,15 +199,28 @@ const handleClick = (provider) => {
   
   .provider-card {
     width: 33.333%;
-    height: 160px;
-    padding: 8px;
+    height: 180px;
+    padding: 6px;
+  }
+
+  .provider-logo {
+    padding: 2px;
   }
 
   .maint-msg { font-size: 13px; }
-  .maint-ico { width: 16px; height: 16px; }
+  .maint-ico { width:16px; height:16px; }
 }
 
 @media (max-width: 480px) {
+  .lotto-tab {
+    padding: 0;
+    gap: 15px;
+  }
+
+  .lotto-providers {
+    gap: 15px 0;
+  }
+  
   .lotto-title {
     font-size: 1rem;
     min-width: 200px;
@@ -214,12 +230,33 @@ const handleClick = (provider) => {
   }
   
   .provider-card {
-    width: 33.333%;
-    height: 100px;
     padding: 4px;
   }
 
+  .provider-logo {
+    padding: 2px;
+  }
+
+  .provider-logo img {
+    border-radius: 6px;
+  }
+
   .maint-msg { font-size: 12px; }
-  .maint-ico { width: 14px; height: 14px; }
+  .maint-ico { width:14px; height:14px; }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .lotto-tab {
+    padding: 0;
+  }
+  
+  .provider-card {
+    padding: 3px;
+  }
+
+  .provider-logo {
+    padding: 1px;
+  }
 }
 </style>
