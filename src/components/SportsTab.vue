@@ -52,10 +52,11 @@ import sbobetCasino from '@/assets/sports-images/sbobet_casino.webp'
 import ufaBetCasino from '@/assets/sports-images/ufa_bet_casino.webp'
 
 const providers = ref([
-  { id: 'afb88',     name: 'AFB 88',             logo: afb88,          games: [] },
-  { id: 'saba_ports',name: 'Saba Sports Casino', logo: sabaPortsCasin, games: [] },
+  { id: 'ufa_bet',   name: 'UFA Bet Casino',     logo: ufaBetCasino,   games: [] },
   { id: 'sbobet',    name: 'SBOBET Casino',      logo: sbobetCasino,   games: [] },
-  { id: 'ufa_bet',   name: 'UFA Bet Casino',     logo: ufaBetCasino,   games: [] }
+  { id: 'saba_ports',name: 'Saba Sports Casino', logo: sabaPortsCasin, games: [] },
+  { id: 'afb88',     name: 'AFB 88',             logo: afb88,          games: [] }
+
 ])
 
 /* ========= Maintenance control =========

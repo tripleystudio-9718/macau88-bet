@@ -56,13 +56,13 @@ import aeSexyCasino from '@/assets/casino-images/ae_sexy_casino.webp'
 import saCasino from '@/assets/casino-images/sa_casino.webp'
 
 const providers = ref([
-  { id: 'evolution',    name: 'Evolution Casino',     logo: evolutionCasino,   games: [] },
-  { id: 'big_gaming',   name: 'Big Gaming Casino',    logo: bigGamingCasino,   games: [] },
-  { id: 'all_bet',      name: 'All Bet Casino',       logo: allBetCasino,      games: [] },
-  { id: 'dream_gaming', name: 'Dream Gaming Casino',  logo: dreamGamingCasino, games: [] },
-  { id: 'wm',           name: 'WM Casino',            logo: wmCasino,          games: [] },
-  { id: 'ae_sexy',      name: 'AE Sexy Casino',       logo: aeSexyCasino,      games: [] },
   { id: 'sa',           name: 'SA Casino',            logo: saCasino,          games: [] },
+  { id: 'ae_sexy',      name: 'AE Sexy Casino',       logo: aeSexyCasino,      games: [] },
+  { id: 'wm',           name: 'WM Casino',            logo: wmCasino,          games: [] },
+  { id: 'dream_gaming', name: 'Dream Gaming Casino',  logo: dreamGamingCasino, games: [] },
+  { id: 'all_bet',      name: 'All Bet Casino',       logo: allBetCasino,      games: [] },
+  { id: 'big_gaming',   name: 'Big Gaming Casino',    logo: bigGamingCasino,   games: [] },
+  { id: 'evolution',    name: 'Evolution Casino',     logo: evolutionCasino,   games: [] },
 ])
 
 /** Toggle maintenance per provider here */

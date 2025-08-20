@@ -194,7 +194,7 @@ export default {
   object-fit: contain;
   display: block;
   cursor: pointer; /* Ensure pointer cursor */
-  transition: opacity 0.2s ease; /* Optional: subtle hover effect */
+  transition: opacity 0.3s ease; /* Optional: subtle hover effect */
 }
 
 /* Optional: Add subtle hover effect on desktop */
@@ -230,15 +230,14 @@ export default {
 
 .close-button {
   background-color: #e0245f;
-  border-color: #e0245f;
   background-image: linear-gradient(180deg, #ffffff26, #fff0);
   color: white;
-  border: none;
+  border: 5px solid #83324bcc;
   padding: .375rem .75rem;
   border-radius: .25rem;
   font-size: 14px;
   cursor: pointer;
-  min-width: 80px;
+  min-width: 70px;
 }
 
 /* Mobile-specific touch behavior - no hover effects */
@@ -263,7 +262,7 @@ export default {
   }
   50% {
     transform: scale(1.1);
-    opacity: 1;
+    opacity: 0.6;
   }
   100% {
     transform: scale(1);

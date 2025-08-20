@@ -318,7 +318,7 @@ body {
   align-items: center;
   height: 53px;
   padding: 0 16px;
-  max-width: 980px;
+  max-width: 890px;
   margin: 0 auto;
 }
 
@@ -617,28 +617,26 @@ body {
 /* Mobile optimizations */
 @media (max-width: 480px) {
   #top-header .nav-container {
-    padding: 0 12px;
-    height: 48px;
+    padding: 0 18px;
+    height: 58px;
   }
   
   .logo-image {
-    height: 36px;
+    height: 42px;
   }
   
   .mobile-menu-btn {
-    width: 32px;
-    height: 32px;
-    padding: 4px;
-    margin-left: 4px;
+    width: 35px;
+    height: 35px;
   }
   
   .hamburger-menu {
-    width: 18px;
+    width: 22px;
     height: 14px;
   }
 
   .register-btn, .login-btn {
-    width: 80px;
+    width: 90px;
   }
 }
 

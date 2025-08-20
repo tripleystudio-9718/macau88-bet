@@ -48,8 +48,8 @@ import lotteryLotto from '@/assets/lotto-images/lottery_lotto.webp'
 import siamlotLotto from '@/assets/lotto-images/siamlot_lotto.webp'
 
 const providers = ref([
-  { id: 'lottery', name: 'Lottery Lotto', logo: lotteryLotto, games: [] },
-  { id: 'siamlot', name: 'Siamlot Lotto', logo: siamlotLotto, games: [] }
+  { id: 'siamlot', name: 'Siamlot Lotto', logo: siamlotLotto, games: [] },
+  { id: 'lottery', name: 'Lottery Lotto', logo: lotteryLotto, games: [] }
 ])
 
 const router = useRouter()

@@ -77,49 +77,51 @@ import ufaBetCasino from '@/assets/sports-images/ufa_bet_casino.webp'
 /* ===== Lotto provider logos ===== */
 import lotteryLotto from '@/assets/lotto-images/lottery_lotto.webp'
 import siamlotLotto from '@/assets/lotto-images/siamlot_lotto.webp'
+import lottovip from '@/assets/lotto-vip.webp'
 
 /* ===== Provider lists ===== */
 const slotProviders = [
-  { id: 'ps', name: 'PS Slot', logo: psSlot, category: 'slot' },
-  { id: 'es', name: 'ES Slot', logo: esSlot, category: 'slot' },
-  { id: 'nolimit', name: 'Nolimit City', logo: nolimitSlot, category: 'slot' },
-  { id: 'rela', name: 'Relax Gaming', logo: relaSlot, category: 'slot' },
-  { id: 'yggdrasil', name: 'Yggdrasil', logo: yggdrasilSlot, category: 'slot' },
-  { id: 'jili', name: 'Jili Slot', logo: jiliSlot, category: 'slot' },
-  { id: 'facai', name: 'Facai Slot', logo: facaiSlot, category: 'slot' },
-  { id: 'jdb', name: 'JDB Slot', logo: jdbSlot, category: 'slot' },
-  { id: 'kingmidas2', name: 'King Midas', logo: kingmidas2Slot, category: 'slot' },
-  { id: 'habanero', name: 'Habanero', logo: habaneroSlot, category: 'slot' },
-  { id: 'yl', name: 'YL Slot', logo: ylSlot, category: 'slot' },
-  { id: 'cq9', name: 'CQ9', logo: cq9Slot, category: 'slot' },
-  { id: 'simpleplay', name: 'SimplePlay', logo: simplePlaySlot, category: 'slot' },
-  { id: 'spadegaming', name: 'Spade Gaming', logo: spadegamingSlot, category: 'slot' },
-  { id: 'joker', name: 'Joker Gaming', logo: jokerSlot, category: 'slot' },
-  { id: 'pragmatic', name: 'Pragmatic Play', logo: pragmaticPlaySlot, category: 'slot' },
+  { id: 'pg', name: 'PG Soft', logo: pgSlot, category: 'slot' },
   { id: 'kingmidas', name: 'King Midas', logo: kingmidasSlot, category: 'slot' },
-  { id: 'pg', name: 'PG Soft', logo: pgSlot, category: 'slot' }
+  { id: 'pragmatic', name: 'Pragmatic Play', logo: pragmaticPlaySlot, category: 'slot' },
+  { id: 'joker', name: 'Joker Gaming', logo: jokerSlot, category: 'slot' },
+  { id: 'spadegaming', name: 'Spade Gaming', logo: spadegamingSlot, category: 'slot' },
+  { id: 'simpleplay', name: 'SimplePlay', logo: simplePlaySlot, category: 'slot' },
+  { id: 'cq9', name: 'CQ9', logo: cq9Slot, category: 'slot' },
+  { id: 'yl', name: 'YL Slot', logo: ylSlot, category: 'slot' },
+  { id: 'habanero', name: 'Habanero', logo: habaneroSlot, category: 'slot' },
+  { id: 'kingmidas2', name: 'King Midas', logo: kingmidas2Slot, category: 'slot' },
+  { id: 'jdb', name: 'JDB Slot', logo: jdbSlot, category: 'slot' },
+  { id: 'facai', name: 'Facai Slot', logo: facaiSlot, category: 'slot' },
+  { id: 'jili', name: 'Jili Slot', logo: jiliSlot, category: 'slot' },
+  { id: 'yggdrasil', name: 'Yggdrasil', logo: yggdrasilSlot, category: 'slot' },
+  { id: 'rela', name: 'Relax Gaming', logo: relaSlot, category: 'slot' },
+  { id: 'nolimit', name: 'Nolimit City', logo: nolimitSlot, category: 'slot' },
+  { id: 'ps', name: 'PS Slot', logo: psSlot, category: 'slot' },
+  { id: 'es', name: 'ES Slot', logo: esSlot, category: 'slot' }
 ]
 
 const casinoProviders = [
-  { id: 'evolution', name: 'Evolution Casino', logo: evolutionCasino, category: 'casino' },
-  { id: 'big_gaming', name: 'Big Gaming Casino', logo: bigGamingCasino, category: 'casino' },
-  { id: 'all_bet', name: 'All Bet Casino', logo: allBetCasino, category: 'casino' },
-  { id: 'dream_gaming', name: 'Dream Gaming Casino', logo: dreamGamingCasino, category: 'casino' },
-  { id: 'wm', name: 'WM Casino', logo: wmCasino, category: 'casino' },
+  { id: 'sa', name: 'SA Casino', logo: saCasino, category: 'casino' },
   { id: 'ae_sexy', name: 'AE Sexy Casino', logo: aeSexyCasino, category: 'casino' },
-  { id: 'sa', name: 'SA Casino', logo: saCasino, category: 'casino' }
+  { id: 'wm', name: 'WM Casino', logo: wmCasino, category: 'casino' },
+  { id: 'dream_gaming', name: 'Dream Gaming Casino', logo: dreamGamingCasino, category: 'casino' },
+  { id: 'all_bet', name: 'All Bet Casino', logo: allBetCasino, category: 'casino' },
+  { id: 'big_gaming', name: 'Big Gaming Casino', logo: bigGamingCasino, category: 'casino' },
+  { id: 'evolution', name: 'Evolution Casino', logo: evolutionCasino, category: 'casino' },
 ]
 
 const sportsProviders = [
-  { id: 'afb88', name: 'AFB 88', logo: afb88, category: 'sports' },
-  { id: 'saba_ports', name: 'Saba Sports Casino', logo: sabaPortsCasin, category: 'sports' },
   { id: 'sbobet', name: 'SBOBET Casino', logo: sbobetCasino, category: 'sports' },
-  { id: 'ufa_bet', name: 'UFA Bet Casino', logo: ufaBetCasino, category: 'sports' }
+  { id: 'saba_ports', name: 'Saba Sports Casino', logo: sabaPortsCasin, category: 'sports' },
+  { id: 'ufa_bet', name: 'UFA Bet Casino', logo: ufaBetCasino, category: 'sports' },
+  { id: 'afb88', name: 'AFB 88', logo: afb88, category: 'sports' },
 ]
 
 const lottoProviders = [
+  { id: 'siamlot', name: 'Siamlot Lotto', logo: siamlotLotto, category: 'lotto' },
+  { id: 'lottovip', name: 'Lotto Vip', logo: lottovip, category: 'lotto' },
   { id: 'lottery', name: 'Lottery Lotto', logo: lotteryLotto, category: 'lotto' },
-  { id: 'siamlot', name: 'Siamlot Lotto', logo: siamlotLotto, category: 'lotto' }
 ]
 
 const router = useRouter()
