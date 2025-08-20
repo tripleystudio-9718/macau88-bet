@@ -117,8 +117,8 @@ export default {
     },
 
     handleOverlayClick() {
-      // When clicking outside, move to next banner or close
-      this.nextBannerOrClose()
+      // UPDATED: When clicking outside, directly close all popups
+      this.closePopup()
     },
 
     // NEW: Method to open contact link

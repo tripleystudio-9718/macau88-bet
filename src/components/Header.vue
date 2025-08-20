@@ -331,11 +331,24 @@ body {
 .logo-link {
   display: flex;
   align-items: center;
+  transition: transform 0.3s ease;
 }
 
 .logo-image {
   height: 38px;
   width: auto;
+  transition: transform 0.3s ease;
+}
+
+/* Desktop hover effects for logo */
+@media (hover: hover) and (pointer: fine) {
+  .logo-link:hover {
+    transform: scale(1.1);
+  }
+  
+  .logo-link:hover .logo-image {
+    transform: scale(1.05);
+  }
 }
 
 .right-section {

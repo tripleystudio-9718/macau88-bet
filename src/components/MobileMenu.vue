@@ -76,39 +76,36 @@
         <span class="menu-label">{{ $t('nav.home') }}</span>
       </router-link>
 
-      <!-- Play Link - FIXED -->
+      <!-- Play Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'play' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'play' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/play.png" :alt="$t('nav.play')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.play') }}</span>
       </router-link>
 
-      <!-- Withdraw Link - FIXED -->
+      <!-- Withdraw Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'withdraw' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'withdraw' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/withdraw.png" :alt="$t('nav.withdraw')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.withdraw') }}</span>
       </router-link>
 
-      <!-- Deposit Link - FIXED -->
+      <!-- Deposit Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'deposit' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'deposit' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/deposit.png" :alt="$t('nav.deposit')" class="menu-icon" />
@@ -127,65 +124,60 @@
         <span class="menu-label">{{ $t('nav.promotions') }}</span>
       </router-link>
 
-      <!-- Cashback Link - FIXED -->
+      <!-- Cashback Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'cashback' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'cashback' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/cashback.png" :alt="$t('nav.cashback')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.cashback') }}</span>
       </router-link>
 
-      <!-- History Link - FIXED -->
+      <!-- History Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'history' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'history' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/history.png" :alt="$t('nav.history')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.history') }}</span>
       </router-link>
 
-      <!-- Account Link - FIXED -->
+      <!-- Account Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'account' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'account' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/account-info.png" :alt="$t('nav.account')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.account') }}</span>
       </router-link>
 
-      <!-- Lucky Wheel Link - FIXED -->
+      <!-- Lucky Wheel Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'luckywheel' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'luckywheel' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/lucky-wheel.png" :alt="$t('nav.luckyWheel')" class="menu-icon" />
         <span class="menu-label">{{ $t('nav.luckyWheel') }}</span>
       </router-link>
 
-      <!-- Collect Points Link - FIXED -->
+      <!-- Collect Points Link - UPDATED -->
       <router-link
-        :to="{ path: loginPath, query: { src: 'collectpoints' } }"
+        :to="loginPath"
         class="menu-item"
-        :class="{ 'is-active': $route.path.includes('/login') && $route.query.src === 'collectpoints' }"
-        active-class=""           
-        exact-active-class=""      
+        active-class=""
+        exact-active-class=""
         @click="closeMobileMenu"
       >
         <img src="@/assets/icons/collect-point.png" :alt="$t('nav.collectPoints')" class="menu-icon" />
@@ -454,6 +446,8 @@ export default {
 .menu-logo {
   height: 40px;
   width: auto;
+  transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
 .close-btn {
@@ -532,6 +526,10 @@ export default {
   
   .language-section:hover .dropdown-arrow {
     transform: rotate(180deg);
+  }
+
+  .menu-logo:hover {
+    transform: scale(1.1); 
   }
 }
 
@@ -737,8 +735,8 @@ export default {
 /* Responsive Design */
 @media (max-width: 980px) {
   .menu-grid {
-    width: 50%;
-    max-width: 50vw;
+    width: 100%;
+    max-width: 80vw;
   }
 }
 
@@ -750,7 +748,7 @@ export default {
   }
 
   .version-info {
-    bottom: -30px;
+    bottom: -100px !important;
   }
 
   .menu-grid.fade-up {
@@ -861,10 +859,6 @@ export default {
   .globe-icon {
     width: 14px;
     height: 14px;
-  }
-
-  .version-info {
-    bottom: 70px;
   }
 }
 </style>
