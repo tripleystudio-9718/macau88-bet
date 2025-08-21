@@ -231,7 +231,7 @@ const emit = defineEmits(['provider-selected'])
   
   .provider-card {
     width: 33.333%;
-    height: 180px;
+    height: 190px;
     padding: 6px;
   }
 

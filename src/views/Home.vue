@@ -758,7 +758,7 @@ onBeforeUnmount(() => {
 
 @keyframes hub-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-.hub-panel { margin: 14px auto 0; background: #0b0b0b; padding: 0; color: #e8e8e8; width: 100%; }
+.hub-panel { margin: 14px auto 0;  padding: 0; color: #e8e8e8; width: 100%; }
 
 /* --- desktop/mobile switch --- */
 .only-desktop { display: block; }
